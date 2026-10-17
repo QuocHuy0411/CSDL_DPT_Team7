@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "corpus_sha256": "f42acebb1ac34084e859f378243145a3f8e981869350edb41a3dc27e86320fa7",
+  "queries_sha256": "a46100f23d937133a82d709b4b45ded5dcc0125520fe59ead647644e58be692e",
+  "vocabulary_size": 31194,
+  "pooled_pairs": 669,
+  "queries": 20,
+  "depth_per_baseline": 20,
+  "pool_size_min": 26,
+  "pool_size_max": 41,
+  "pool_size_mean": 33.45,
+  "max_possible_pool_size": 60,
+  "queries_with_maximal_pool": 0,
+  "retrieved_counts": {
+    "binary_cosine": 400,
+    "bm25": 400,
+    "tfidf_cosine": 400
+  },
+  "documents_in_pool": 605,
+  "pairs_by_number_of_baselines": {
+    "1": 310,
+    "2": 187,
+    "3": 172
+  },
+  "search_engine_parity": {
+    "status": "passed",
+    "engine": "engine.indexer.search_engine",
+    "queries_checked": 20,
+    "depth": 20,
+    "max_score_delta": 1.6653345369377348e-16,
+    "tolerance": 1e-08
+  },
+  "label_status": "pending_human_annotation",
+  "notes": [
+    "A pooled pair is a candidate only. Relevance must be judged per query.",
+    "Category is never a substitute for a relevance judgment.",
+    "Evidence ids in queries.json are authoring support, not relevance."
+  ]
+}

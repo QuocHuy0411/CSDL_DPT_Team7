@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "corpus_sha256": "f42acebb1ac34084e859f378243145a3f8e981869350edb41a3dc27e86320fa7",
+  "sample_sha256": "37112c076cc9e54e335b2f0930a42dc6cbd672908994ac3ac7189bcf1fd59fb3",
+  "n_samples": 150,
+  "confirmed": 0,
+  "official": false,
+  "metrics_status": "unmeasured",
+  "reason": "Need all 150 human-confirmed labels (15/category)"
+}

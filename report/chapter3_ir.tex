@@ -1,0 +1,257 @@
+% Chương 3 — nội dung IR của M2. Dùng bằng \input{chapter3_ir} trong main.tex.
+% Chỉ dùng các gói đã khai báo trong main.tex: report, vietnamese, amsmath,
+% amssymb, graphicx, hyperref, geometry. Không thêm gói mới.
+\chapter{THIẾT KẾ HỆ THỐNG TÌM KIẾM VĂN BẢN}
+
+\section{Phạm vi trách nhiệm của M2 trong kiến trúc}
+
+Kiến trúc tổng thể chia thành ba lớp trách nhiệm. M1 sở hữu tiền xử lý ngôn ngữ
+tự nhiên, M2 sở hữu biến các từ đã tách thành dữ liệu lập chỉ mục và truy xuất,
+M3 sở hữu giao diện người dùng. Chương này trình bày phần của M2.
+
+Các lớp và ranh giới tích hợp được trình bày trong Bảng~\ref{tab:kien-truc-m2}.
+\begin{table}[ht]
+\centering
+\begin{tabular}{|p{0.08\textwidth}|p{0.43\textwidth}|p{0.35\textwidth}|}
+\hline
+Lớp & Thành phần & File chính \\
+\hline
+M1 & Maximum Matching, stopword tầng 1 & \texttt{engine/tokenizer/} \\
+M2 & Adapter M1 có fingerprint & \texttt{engine/preprocessing.py} \\
+M2 & TDV, TF-IDF, chỉ mục đảo, tìm kiếm & \texttt{engine/indexer/} \\
+M2 & Đánh giá, đo độ trễ, biểu đồ & \texttt{evaluator/}, \texttt{benchmarks/} \\
+M3 & Giao diện Streamlit & \texttt{app/} \\
+\hline
+\end{tabular}
+\caption{Các lớp chức năng và ranh giới tích hợp của M2.}
+\label{tab:kien-truc-m2}
+\end{table}
+
+Phiên bản tích hợp nhận BiMM và bộ lọc tầng 1 từ M1 qua hai callable độc lập.
+Baseline âm tiết và fixture tầng 1 chỉ còn dùng cho kiểm thử/phát triển,
+được đánh dấu \texttt{development\_only}. Khi nạp chỉ mục,
+đối tượng tiền xử lý phải có cùng fingerprint của mã nguồn, cấu hình và tài
+nguyên như lúc lập chỉ mục. Cờ tiền xử lý chính thức xác nhận triển khai đã tích
+hợp, không thay cho phép đánh giá chất lượng trên gold segmentation do người gán.
+
+\input{chapter3_nlp}
+
+\section{Độ đo TF-IDF và chuẩn hóa}
+
+Với tài liệu $d$ và từ $t$:
+
+\begin{align}
+TF(t,d) &= 1+\ln f_{t,d} \quad (f_{t,d}>0), \\
+IDF(t) &= \ln\frac{N+1}{df(t)+1}+1, \\
+w_{t,d} &= TF(t,d)\times IDF(t), \\
+\vec{x}_d &= \frac{w_d}{\lVert w_d\rVert_2}.
+\end{align}
+
+Ba lựa chọn cần nêu rõ vì chúng ảnh hưởng trực tiếp tới kết quả đo. Thứ nhất,
+dùng sublinear TF nghĩa là một từ xuất hiện ba lần không được coi là gấp ba lần
+một từ xuất hiện một lần. Thứ hai, IDF làm mượt $\ln\frac{N+1}{df+1}+1$ không bao
+giờ bằng không, nên không mất thông tin ở từ xuất hiện trong mọi tài liệu. Thứ
+ba, chuẩn L2 biến tích số vào thành cosin, cho phép so sánh vector có độ dài
+khác nhau.
+
+\section{Độ đo TDV và lọc stopword tầng 2}
+
+\subsection{Vì sao cần TDV}
+
+Bộ stopword tĩnh C2 là danh sách tiếng Việt có nguồn và phiên bản cố định. Với
+tin tức tiếng Việt theo mười chủ đề, có những từ rất phổ biến nhưng lại chỉ xuất
+hiện trong một vài chủ đề; loại chúng đi có thể làm mất thông tin phân biệt. TDV
+(Salton) đo trực tiếp câu hỏi đó: bỏ một từ khỏi không gian thì các tài liệu có
+dễ phân biệt nhau hơn hay không?
+
+\subsection{Định nghĩa mật độ}
+
+Với $N$ tài liệu đã chuẩn hóa L2, mật độ không gian tài liệu là mật độ cosin
+pairwise, loại trừ self-pair:
+
+\begin{equation}
+D(X)=\frac{1}{N(N-1)}\sum_{i\neq j}\cos(x_i,x_j).
+\end{equation}
+
+Mẫu số $N(N-1)$ là số cặp có thứ tự, được giữ cố định bất kể có bao nhiêu tài
+liệu thực sự khác nhau. Với $N<2$ ta đặt $D=0$. Vectơ tất cả bằng không thì
+$\cos=0$ với mọi tài liệu khác, nên nó đóng góp bằng không cho mọi cặp chứ không
+bị loại khỏi mẫu số.
+
+\subsection{Định nghĩa TDV}
+
+\begin{equation}
+TDV(t)=D_{-t}-D_{base},
+\end{equation}
+
+trong đó $D_{-t}$ là mật độ sau khi xoá hẳn chiều $t$. Điểm dễ sai nhất nằm
+đúng ở chỗ này. Xoá một chiều làm thay đổi hai thứ cùng lúc: độ dài vector của
+từng tài liệu, và do đó toàn bộ tổng vector. Vì vậy sau khi xoá chiều, mỗi tài
+liệu phải được chuẩn hóa L2 lại, và tổng vector phải được tính lại trên tập
+vector đã chuẩn hóa mới.
+
+\subsection{Trọng số đo TDV và tính một lần duy nhất}
+
+TDV được đo trên TF-IDF sơ bộ, tức là trước khi áp bất kỳ bộ lọc TDV nào, và
+\textbf{giữ nguyên IDF sơ bộ} khi loại một chiều. Nếu tính lại IDF sau mỗi lần
+loại thì hai hiệu ứng trộn vào nhau và con số thu được không còn là TDV của riêng
+từ đang xét.
+
+Điểm thứ hai cần nhấn mạnh là TDV được tính \textbf{một lần duy nhất trên toàn
+bộ corpus}: mọi từ cùng chia sẻ một ma trận gốc. Không lấy điểm của từ đã bị loại
+ở bước trước rồi mới xoá thêm từ sau, vì khi đó điểm đo phụ thuộc thứ tự xoá và
+không còn là thuộc tính của từ.
+
+\subsection{Cách cài đặt và kiểm chứng}
+
+Gọi $v_i$ là thành phần chiều $t$ của tài liệu $i$, $S=X X^{\mathsf T}$. Sau khi
+xoá chiều $t$, vector của tài liệu $i$ là $x_i - v_i e_t$ với độ dài
+$n_i=\sqrt{\lVert x_i\rVert^2-v_i^2}$. Đặt $u_i=1/n_i$, và $u_i=0$ khi vectơ sau
+khi xoá bằng không. Khi đó tổng cosin ngoài đường chéo sau khi xoá là
+
+\begin{equation}
+\sum_{i\neq j} u_iu_j\,(S_{ij}-v_iv_j)
+= \lVert X^{\mathsf T}u\rVert^2 - \sum_i u_i^2 S_{ii}
+- \Bigl(\langle u,v\rangle^2-\sum_i u_i^2 v_i^2\Bigr).
+\end{equation}
+
+Nhờ đẳng thức này, mỗi từ chỉ cần duyệt posting list của nó thay vì dựng lại ma
+trận cosin đầy đủ $N\times N$.
+
+Cách làm sai mà đề cương cảnh báo, tức là xoá chiều mà không tái chuẩn hóa và
+không cập nhật tổng vector, được cài sẵn trong bộ kiểm thử dưới dạng một hàm tham
+chiếu thứ hai. Bộ test khẳng định kết quả của engine khác kết quả của cách làm
+sai, đồng thời khớp với một hàm tham chiếu thứ ba hoàn toàn trực tiếp: xoá cột,
+tái chuẩn hóa từng dòng, nhân ma trận cosin đầy đủ.
+
+\subsection{Ngưỡng lọc}
+
+\begin{equation}
+\text{giữ từ } t \iff TDV(t)\geq -\varepsilon,\qquad \varepsilon=10^{-12}.
+\end{equation}
+
+$\varepsilon$ là dung sai số học chứ không phải siêu tham số thuật toán truy xuất;
+giá trị này được ghi vào metadata của mọi lần chạy. Không ép đường cong hình chữ
+U, và không suy ra từ dấu của TDV rằng một cấu hình lọc nào sẽ cho kết quả tốt
+hơn: việc loại một từ có cải thiện truy xuất hay không chỉ trả lời được bằng phép
+đo với qrels đã gán nhãn.
+
+\section{Bốn cấu hình ablation}
+
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+Mã & Cấu hình & Ghi chú \\
+\hline
+C1 & Không lọc stopword & baseline \\
+C2 & Stoplist tĩnh, độc lập với corpus & nguồn và số mục thực tế được ghi kèm \\
+C3 & Chỉ stopword ngữ pháp tầng 1 của M1 & \\
+C4 & Tầng 1 cộng TDV tầng 2 & giữ các từ phủ định bằng guard ngữ nghĩa \\
+\hline
+\end{tabular}
+\end{center}
+
+Mỗi cấu hình nằm trong một thư mục riêng kèm metadata: SHA256 corpus, tokenizer,
+cấu hình, stoplist và số phần tử stoplist. Bốn chỉ mục dùng chung một corpus, một
+bộ truy vấn và một bộ nhãn, nên so sánh giữa chúng là so sánh đúng yếu tố lọc
+stopword.
+
+\subsection{Về lớp tầng 1 tạm thời}
+
+Hợp đồng dự án quy định: vì đồ án chưa có Maximum Matching chính thức của M1, nếu
+C3/C4 dùng bộ lọc tầng 1 tạm thì kết quả phải được ghi là provisional, không
+coi là Maximum Matching chính thức. Bộ đánh giá vì vậy chặn tuyệt đối mọi kết quả
+chính thức khi metadata còn trỏ tới bộ lọc tạm hoặc tokenizer phát triển, kể cả
+khi metadata ghi nhầm trạng thái là official.
+
+\subsection{Giữ từ phủ định}
+
+Bộ TDV theo bản chất thiên về việc loại từ phổ biến, mà các từ phủ định như
+``không'', ``chưa'', ``chẳng'', ``vì'' lại mang thông tin quan trọng cho truy vấn
+dạng phủ định. Vì vậy sau khi TDV chọn stoplist, một danh sách guard ngữ nghĩa
+được gỡ lại khỏi stoplist. Với corpus chính, TDV chọn 498 từ và sau bước guard còn
+494 từ, với bốn từ được giữ lại là ``chưa'', ``chẳng'', ``không'' và ``vì''.
+
+\subsection{Cơ chế fallback của C4 và giới hạn của nó}
+
+Khi một truy vấn mà mọi token đều đã bị lọc khỏi từ vựng của C4, vectơ truy vấn
+bằng không và không thể có kết quả. Cơ chế dự phòng là tra cứu bằng một chỉ mục
+C3 riêng, có cùng corpus và cùng tiền xử lý. Cần nói rõ hai điều. Một, giữ lại một
+từ đã bị xoá khỏi chỉ mục không phục hồi được khả năng truy xuất bằng chỉ mục đó;
+fallback chỉ cứu được truy vấn mà không còn token nào. Hai, hệ thống khi đó phải
+giữ cả hai chỉ mục, nên dung lượng triển khai tăng lên chứ không giảm; số liệu
+mục 6.1 của Chương 4 đo riêng cả chỉ mục C4 thuần lẫn gói C4 cộng C3.
+
+\section{Cấu trúc chỉ mục và đường đi của một truy vấn}
+
+\begin{enumerate}
+\item Chuẩn hóa văn bản và tách từ theo đối tượng tiền xử lý của M1.
+\item Lọc stopword theo đúng cấu hình đã dùng khi lập chỉ mục.
+\item Vector hoá truy vấn bằng bảng IDF ngoại tuyến của corpus.
+\item Lấy ứng viên bằng hợp các posting list trong chỉ mục đảo.
+\item Tính cosin trên tập ứng viên, chấm điểm chỉ những kết quả có điểm dương.
+\item Sắp xếp giảm dần điểm; hòa điểm sắp theo \texttt{doc\_id} tăng dần để kết
+quả tái lập được.
+\end{enumerate}
+
+Chỉ mục được lưu dạng thưa: posting list và vector trọng số. Hàm giải thích
+(\texttt{explain}) trả về từng đóng góp vào tích vô hướng, và tổng các đóng góp
+bằng đúng điểm cosin đã trả về, để người đọc có thể kiểm tra lại cách xếp hạng.
+
+\section{Giao diện đánh giá và cổng chặn kết quả chính thức}
+
+Bộ đánh giá dùng các định nghĩa chỉ số sau, với $K$ mặc định là 10 và có thể cấu
+hình:
+
+\begin{align}
+P@K &= \frac{\text{số trúng trong Top-}K}{K}, \\
+Recall@K &= \frac{\text{số trúng trong Top-}K}{\text{tổng số relevant đã confirmed}}, \\
+F1@K &= \frac{2 \cdot P@K \cdot Recall@K}{P@K + Recall@K}, \\
+AP &= \frac{1}{R}\sum_{i=1}^{L} P@i \cdot rel_i, \\
+NDCG@K &= \frac{DCG}{IDCG},\quad DCG=\sum_{i=1}^{K}\frac{2^{rel_i}-1}{\log_2(i+1)} .
+\end{align}
+
+Ba quyết định thiết kế đáng ghi lại. Mẫu số của $P@K$ là $K$ cố định, kể cả khi
+hệ thống trả về ít hơn $K$ kết quả; thiếu kết quả là sai chứ không phải là không
+tính. $AP$ tính trên toàn bộ ranking có sẵn, không cắt theo $K$, nên bộ đánh giá
+từ chối chạy nếu độ sâu lấy ranking nhỏ hơn số tài liệu corpus. $IDCG$ lấy từ
+qrels chứ không lấy từ lần chạy, nên điểm không thể bị đẩy lên bằng cách chỉ
+trả về một phần kết quả.
+
+Query không có tài liệu relevant nào vẫn được giữ trong bình quân với giá trị 0 và
+được đếm riêng, để người đọc biết chính xác MAP bị kéo xuống bao nhiêu do những
+query đó. Tương tự, một truy vấn không có kết quả trả về vẫn sinh ra dòng chỉ số
+bằng 0 chứ không bị loại khỏi bình quân.
+
+\subsection{Điều kiện để coi là đánh giá chính thức}
+
+Bộ đánh gia từ chối ghi kết quả chính thức khi có bất kỳ điều kiện nào sau đây:
+
+\begin{itemize}
+\item dưới 20 truy vấn;
+\item SHA256 corpus lệch giữa manifest, qrels, tập truy vấn hoặc chỉ mục, hoặc
+thiếu hẳn hash ở bất kỳ nguồn nào;
+\item còn phán quyết chưa confirmed, hoặc nhãn confirmed mà điểm relevance còn
+null, hoặc nhãn confirmed không ghi người gán;
+\item trùng cặp (truy vấn, tài liệu), điểm relevance ngoài tập $\{0,1,2\}$, hoặc
+truy vấn trong qrels không tồn tại trong tập truy vấn;
+\item metadata tiền xử lý chưa nhất quán ở trạng thái official, hoặc đang dùng
+tokenizer phát triển hay bộ lọc tầng 1 tạm.
+\end{itemize}
+
+SHA256 corpus cần đánh giá không bao giờ được lấy từ qrels: nếu không xác định
+được từ manifest đã khóa hoặc từ chính file corpus thì kết quả chính thức bị chặn.
+
+\subsection{Khi chưa đủ nhãn thì không xuất chỉ số}
+
+Nếu bất kỳ truy vấn nào chưa có nhãn confirmed, bộ đánh giá ghi
+\texttt{metrics\_status = unmeasured} và không ghi bảng chỉ số. Lý do rất cụ thể:
+với qrels rỗng, mọi chỉ số đều bằng không một cách máy móc, và một bảng toàn số
+không dễ bị đọc nhầm là hệ thống không tìm được gì.
+
+\section{Tách kết quả kiểm thử khỏi kết quả chính thức}
+
+Các bài kiểm thử dùng dữ liệu tạm trong thư mục làm việc của pytest. Để ngăn
+tình huống số liệu kiểm thử lọt vào báo cáo, bộ đánh giá chặn ghi kết quả không
+chính thức vào các thư mục kết quả chính thức; kết quả chạy thử bắt buộc ghi ra
+thư mục khác, ví dụ \texttt{results/development\_eval}.

@@ -12,13 +12,15 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.13'
 
       - name: Install dependencies
         run: |
-          pip install flake8 pytest
+          pip install flake8 -r requirements-dev.txt
 
       - name: Lint with flake8
         run: |
           # Kiểm tra toàn bộ mã nguồn hiện tại, bỏ qua nếu chưa có file python nào
           flake8 . --count --exit-zero --max-line-length=100
+      - name: Test M2
+        run: python -m pytest -q

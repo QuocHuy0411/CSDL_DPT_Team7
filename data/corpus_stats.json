@@ -1,0 +1,253 @@
+{
+  "schema_version": 1,
+  "corpus_documents": 2500,
+  "corpus_bytes": 8522544,
+  "raw_input": {
+    "txt_files_scanned": 33759,
+    "folder_file_counts": {
+      "Chinh tri Xa hoi": 5219,
+      "Doi song": 3159,
+      "Khoa hoc": 1820,
+      "Kinh doanh": 2552,
+      "Phap luat": 3868,
+      "Suc khoe": 3384,
+      "The gioi": 2898,
+      "The thao": 5298,
+      "Van hoa": 3080,
+      "Vi tinh": 2481
+    },
+    "folder_bytes": {
+      "Chinh tri Xa hoi": 22440892,
+      "Doi song": 16754480,
+      "Khoa hoc": 8143398,
+      "Kinh doanh": 10813446,
+      "Phap luat": 13742818,
+      "Suc khoe": 13680938,
+      "The gioi": 11818012,
+      "The thao": 27241702,
+      "Van hoa": 14863410,
+      "Vi tinh": 9058122
+    },
+    "detected_encodings": {
+      "utf-16-le-bom": 33759
+    },
+    "undecodable_files": 0,
+    "undecodable_examples": [],
+    "empty_after_normalization": 0
+  },
+  "selection": {
+    "eligible_documents": 32748,
+    "rejected_below_min_whitespace_units": 1011,
+    "rejected_below_min_by_folder": {
+      "Chinh tri Xa hoi": 308,
+      "Doi song": 114,
+      "Khoa hoc": 16,
+      "Kinh doanh": 44,
+      "Phap luat": 114,
+      "Suc khoe": 97,
+      "The gioi": 35,
+      "The thao": 119,
+      "Van hoa": 80,
+      "Vi tinh": 84
+    },
+    "rejected_below_min_max_whitespace_units": 99,
+    "deduplication": {
+      "scope": "all eligible input documents, before sampling",
+      "eligible_documents": 32748,
+      "unique_documents": 32699,
+      "duplicate_copies_removed": 49,
+      "cross_category_duplicate_copies": 49,
+      "within_category_duplicate_copies": 0,
+      "cross_category_folder_pairs": {
+        "Chinh tri Xa hoi <-> Doi song": 1,
+        "Chinh tri Xa hoi <-> Khoa hoc": 1,
+        "Chinh tri Xa hoi <-> Phap luat": 6,
+        "Doi song <-> Khoa hoc": 11,
+        "Doi song <-> Kinh doanh": 1,
+        "Khoa hoc <-> Suc khoe": 17,
+        "Khoa hoc <-> The gioi": 1,
+        "Khoa hoc <-> Van hoa": 1,
+        "Khoa hoc <-> Vi tinh": 2,
+        "Kinh doanh <-> Phap luat": 2,
+        "Kinh doanh <-> Vi tinh": 4,
+        "Phap luat <-> The thao": 1,
+        "The gioi <-> Van hoa": 1
+      },
+      "examples": [
+        {
+          "source_file": "Doi song/DS_ VNE_ (1572).txt",
+          "duplicate_of": "Chinh tri Xa hoi/XH_VNE_ (718).txt",
+          "content_md5": "c907619d26fbf7c984304c20dbe4a75b",
+          "source_folder": "Doi song",
+          "kept_folder": "Chinh tri Xa hoi",
+          "cross_category": true
+        },
+        {
+          "source_file": "Khoa hoc/KH_VNE_ (11).txt",
+          "duplicate_of": "Chinh tri Xa hoi/XH_VNE_ (5).txt",
+          "content_md5": "91d26c9d59f62c2e1676b8f81e1d7b5c",
+          "source_folder": "Khoa hoc",
+          "kept_folder": "Chinh tri Xa hoi",
+          "cross_category": true
+        },
+        {
+          "source_file": "Khoa hoc/KH_VNE_ (139).txt",
+          "duplicate_of": "Doi song/DS_ VNE_ (289).txt",
+          "content_md5": "2b257eddc1c7529407d780649a997632",
+          "source_folder": "Khoa hoc",
+          "kept_folder": "Doi song",
+          "cross_category": true
+        },
+        {
+          "source_file": "Khoa hoc/KH_VNE_ (145).txt",
+          "duplicate_of": "Doi song/DS_ VNE_ (301).txt",
+          "content_md5": "d2a76dba5b9b3f215c7e36b73eb6d17e",
+          "source_folder": "Khoa hoc",
+          "kept_folder": "Doi song",
+          "cross_category": true
+        },
+        {
+          "source_file": "Khoa hoc/KH_VNE_ (148).txt",
+          "duplicate_of": "Doi song/DS_ VNE_ (307).txt",
+          "content_md5": "bda8ae0e63aef041e41c9905cdd6cfdb",
+          "source_folder": "Khoa hoc",
+          "kept_folder": "Doi song",
+          "cross_category": true
+        },
+        {
+          "source_file": "Khoa hoc/KH_VNE_ (161).txt",
+          "duplicate_of": "Doi song/DS_ VNE_ (334).txt",
+          "content_md5": "a3cd6e73d6f1a3cad21b5be3b613934b",
+          "source_folder": "Khoa hoc",
+          "kept_folder": "Doi song",
+          "cross_category": true
+        },
+        {
+          "source_file": "Khoa hoc/KH_VNE_ (162).txt",
+          "duplicate_of": "Doi song/DS_ VNE_ (335).txt",
+          "content_md5": "dfdcf287409e26d68f84f5002d4a59e9",
+          "source_folder": "Khoa hoc",
+          "kept_folder": "Doi song",
+          "cross_category": true
+        },
+        {
+          "source_file": "Khoa hoc/KH_VNE_ (233).txt",
+          "duplicate_of": "Doi song/DS_ VNE_ (478).txt",
+          "content_md5": "aa89b9e22c23203217fde81c45cc06e6",
+          "source_folder": "Khoa hoc",
+          "kept_folder": "Doi song",
+          "cross_category": true
+        },
+        {
+          "source_file": "Khoa hoc/KH_VNE_ (235).txt",
+          "duplicate_of": "Doi song/DS_ VNE_ (488).txt",
+          "content_md5": "be43f28e9bb4a7915aca9e528052c0ce",
+          "source_folder": "Khoa hoc",
+          "kept_folder": "Doi song",
+          "cross_category": true
+        },
+        {
+          "source_file": "Khoa hoc/KH_VNE_ (32).txt",
+          "duplicate_of": "Doi song/DS_ VNE_ (70).txt",
+          "content_md5": "3356f2bd9628d3ac1575edb077089c2f",
+          "source_folder": "Khoa hoc",
+          "kept_folder": "Doi song",
+          "cross_category": true
+        }
+      ]
+    },
+    "pool_size_after_dedup": {
+      "Chính trị – Xã hội": 4911,
+      "Đời sống": 3044,
+      "Khoa học": 1792,
+      "Kinh doanh": 2507,
+      "Pháp luật": 3746,
+      "Sức khỏe": 3270,
+      "Thế giới": 2862,
+      "Thể thao": 5178,
+      "Văn hóa": 2998,
+      "Vi tính": 2391
+    },
+    "selected_per_category": {
+      "Chính trị – Xã hội": 250,
+      "Đời sống": 250,
+      "Khoa học": 250,
+      "Kinh doanh": 250,
+      "Pháp luật": 250,
+      "Sức khỏe": 250,
+      "Thế giới": 250,
+      "Thể thao": 250,
+      "Văn hóa": 250,
+      "Vi tính": 250
+    },
+    "seed": 2026,
+    "per_category_target": 250,
+    "empty_documents_skipped": 0,
+    "undecodable_documents_skipped": 0,
+    "undecodable_examples": []
+  },
+  "length": {
+    "definition": "whitespace_unit_count == len(content.split()) after NFC + whitespace collapsing",
+    "min_whitespace_units_threshold": 100,
+    "whitespace_units": {
+      "count": 2500,
+      "min": 100,
+      "p25": 238,
+      "median": 385,
+      "mean": 489.61,
+      "p75": 628,
+      "p90": 947,
+      "max": 11623,
+      "total": 1224025
+    },
+    "title_whitespace_units": {
+      "count": 2500,
+      "min": 2,
+      "p25": 9,
+      "median": 12,
+      "mean": 14.32,
+      "p75": 21,
+      "p90": 21,
+      "max": 21,
+      "total": 35801
+    },
+    "documents_below_threshold": 0
+  },
+  "category_counts": {
+    "Chính trị – Xã hội": 250,
+    "Đời sống": 250,
+    "Khoa học": 250,
+    "Kinh doanh": 250,
+    "Pháp luật": 250,
+    "Sức khỏe": 250,
+    "Thế giới": 250,
+    "Thể thao": 250,
+    "Văn hóa": 250,
+    "Vi tính": 250
+  },
+  "raw_folder_counts_in_corpus": {
+    "Chinh tri Xa hoi": 250,
+    "Doi song": 250,
+    "Khoa hoc": 250,
+    "Kinh doanh": 250,
+    "Phap luat": 250,
+    "Suc khoe": 250,
+    "The gioi": 250,
+    "The thao": 250,
+    "Van hoa": 250,
+    "Vi tinh": 250
+  },
+  "title_origin_counts": {
+    "inferred_excerpt": 1140,
+    "source_line": 1360
+  },
+  "title_truncated_count": 1140,
+  "source_encoding_counts": {
+    "utf-16-le-bom": 2500
+  },
+  "duplicates": {
+    "dedup_algorithm": "MD5 of NFC + whitespace-collapsed content, global across categories",
+    "unique_content_md5": 2500,
+    "duplicate_records": 0
+  }
+}

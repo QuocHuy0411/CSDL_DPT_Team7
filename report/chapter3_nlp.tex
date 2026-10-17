@@ -1,0 +1,162 @@
+% Phần M1 cho Chương 3 — được \input bên trong chapter3_ir.tex nên KHÔNG có \chapter.
+% Chỉ dùng các gói đã khai báo trong main.tex; không thêm gói mới.
+\section{Thiết kế tầng ngôn ngữ M1}
+\label{sec:m1-thiet-ke}
+
+Tầng ngôn ngữ M1 biến văn bản thô thành dãy token sạch để M2 lập chỉ mục. Tầng này
+gồm ba khối độc lập: chuẩn hóa chuỗi, tách từ theo so khớp cực đại trên từ điển, và
+lọc từ dừng tầng~1 kèm danh sách bảo vệ. Toàn bộ tầng hoạt động ngoại tuyến, không
+gọi dịch vụ ngoài, và mọi tài nguyên mà nó dùng đều được ghim bằng hàm băm.
+
+\subsection{Chuẩn hóa văn bản và bảo toàn ranh giới}
+
+Hàm chuẩn hóa \texttt{normalize(text)} trả về dạng hiển thị: chuẩn hóa Unicode
+NFC, hạ chữ thường, loại bỏ thẻ đánh dấu, đường dẫn và địa chỉ thư điện tử, giữ
+lại chữ cái tiếng Việt cùng khoảng trắng, và thu gọn mọi khoảng trắng về một dấu
+cách. Một ví dụ:
+
+\begin{quote}
+\texttt{"Tri thức, nhân loại! 2026"} $\rightarrow$ \texttt{"tri thức nhân loại"}.
+\end{quote}
+
+Một quyết định thiết kế quan trọng là \emph{dấu câu là ranh giới, không phải
+nhiễu}. Dạng hiển thị gộp khoảng trắng nên trông như một chuỗi liên tục, nhưng bộ
+tách từ phải không bao giờ ghép một từ xuyên qua dấu câu. Vì lý do đó, bộ tách từ
+tiêu thụ một dạng trung gian giữ lại ranh giới, ở đó đoạn văn bản bị cắt tại mỗi
+dấu câu và tại mỗi khoảng trắng không phải dấu cách thường (xuống dòng, tab). Các
+khoảng được gỡ bỏ (đường dẫn, thư điện tử, thẻ đánh dấu) cũng được thay bằng một
+ranh giới cứng chứ không phải bằng dấu cách; nếu thay bằng dấu cách thì hai mảnh
+văn bản hai bên sẽ bị dính thành một từ, ví dụ \texttt{"học<br>sinh"} phải tách
+thành hai âm tiết chứ không được ghép thành một từ.
+
+Cũng trong khối này có một chỉnh sửa so với mẫu biểu thức chính quy ban đầu. Mẫu
+cũ chỉ giữ chữ cái tiếng Việt nên đã vô tình xóa mọi chữ cái Latin, biến
+``Windows'' thành ``indows'' và ``Java'' thành ``ava''. Bốn chữ cái Latin
+\texttt{f}, \texttt{j}, \texttt{w}, \texttt{z} được giữ lại vì chúng phân biệt
+trong các tên vay mượn phổ biến (Windows, WWW, Java, Zalo). Chúng \emph{không}
+được thêm vào từ điển; kết quả trung thực là chúng trở thành token đơn ngoài từ
+điển thay vì bị bóp méo thành từ sai.
+
+\subsection{Từ điển và cây Trie}
+
+Tách từ dựa trên từ điển Viet74K \cite{viet74k} gồm 69.858 mục, được ghim hàm băm
+SHA256 \texttt{175e8b1b...d8ab} và đi kèm thông tin giấy phép cùng nguồn gốc trong
+kho. Từ điển được nạp vào một cây Trie hỗ trợ truy vấn theo tiền tố, cho phép bộ
+tách từ kiểm tra đoạn ứng viên có trong từ điển hay không mà không phải so khớp
+toàn bộ danh sách. Cửa sổ trượt mặc định lấy bằng độ dài mục dài nhất trong từ
+điển, nên không bỏ sót từ nào; người dùng vẫn có thể chỉ định một giới hạn cửa sổ
+nhỏ hơn khi cần quan sát thuật toán.
+
+\subsection{Thuật toán FMM, BMM và BiMM}
+
+Ba phương pháp dùng chung một cửa sổ trượt nhưng khác hướng duyệt. FMM duyệt tiến,
+BMM duyệt lùi. BiMM chạy cả hai rồi chọn theo bộ quy tắc phân xử sau, xét theo
+thứ tự:
+
+\begin{enumerate}
+  \item ít token hơn;
+  \item ít token một âm tiết hơn;
+  \item ít token ngoài từ điển hơn;
+  \item nếu vẫn hòa, chọn BMM.
+\end{enumerate}
+
+Tiêu chí thứ ba là lưới an toàn tường minh: với cài đặt Trie thuần, mọi token
+ngoài từ điển đều được phát ra dưới dạng một âm tiết, nên tiêu chí này được suy ra
+từ tiêu chí thứ hai; nhóm vẫn giữ nó cùng khóa so sánh đầy đủ để người đọc kiểm
+chứng lại quyết định thay vì tin vào phần tóm tắt.
+
+Ví dụ nhập nhằng kinh điển minh họa vì sao cần phân xử. Với câu ``học sinh học
+sinh học'' và một từ điển fixture có cả ``học sinh'' lẫn ``sinh học'':
+
+\begin{quote}
+FMM: \texttt{học\_sinh, học\_sinh, học}\\
+BMM: \texttt{học, sinh\_học, sinh\_học}\\
+BiMM: \texttt{học, sinh\_học, sinh\_học}
+\end{quote}
+
+Hai phương án có cùng số token và cùng số token một âm tiết, nên hòa và BiMM chọn
+BMM. Ví dụ này dùng một từ điển fixture minh bạch, không phụ thuộc từ điển đóng
+gói, để phép so sánh là một khẳng định về \emph{thuật toán} chứ không về một từ
+điển cụ thể.
+
+Mỗi lần chạy đều sinh một \emph{vết} từng bước. Mỗi dòng vết ghi số thứ tự bước,
+hướng duyệt, chỉ số âm tiết bắt đầu và kết thúc (kết thúc mở), đoạn ứng viên, độ
+dài cửa sổ, cờ có khớp từ điển hay không, và hành động -- một trong
+\texttt{MATCHED}, \texttt{SHRINK} hoặc \texttt{SINGLE}. Vết dùng đúng từ điển và
+cửa sổ của lần chạy, nên người đọc có thể tái lập từng quyết định thay vì chỉ thấy
+kết quả cuối cùng. Với đầu vào rỗng hoặc chỉ gồm dấu câu, kết quả là dãy token rỗng
+và vết rỗng.
+
+\subsection{Lọc từ dừng tầng 1 và danh sách bảo vệ}
+
+Khối thứ ba loại các hư từ ngữ pháp -- đại từ, giới từ, trợ từ, phó từ chỉ mức độ,
+liên từ -- vốn đóng góp ít cho phân biệt truy xuất. Hai tài nguyên có nguồn và quy
+tắc biên soạn điều khiển bước này: danh sách hư từ ngữ pháp và danh sách bảo vệ
+(guard). Tập từ dừng hiệu lực là hiệu của hai danh sách: \emph{guard luôn thắng}.
+
+Quy tắc bảo vệ có phạm vi rộng hơn một so khớp đơn giản: một token được bảo vệ nếu
+chính nó là guard, hoặc nếu một thành phần của nó (tách theo dấu gạch nối âm tiết)
+cũng là guard. Nhờ đó việc bảo vệ ``không'' cũng giữ nguyên ``không\_thể'', bảo vệ
+``vì'' giữ nguyên ``vì\_dầu'', bảo vệ ``chẳng'' giữ nguyên ``chẳng\_hạn''. Điểm
+tinh tế là chỉ những thành phần \emph{tự chúng là guard} mới có thể bảo vệ: nếu mọi
+âm tiết của mọi guard đều có thể bảo vệ thì ``thể'' sẽ được bảo vệ và ``thể\_thao''
+bị bảo vệ nhầm. Chính vì vậy các từ ghép cần bảo vệ vì lý do khác được liệt kê
+tường minh trong tệp guard.
+
+Ví dụ minh họa:
+
+\begin{quote}
+\texttt{filter\_tier1(["bóng", "đá", "và", "của", "bóng\_đá"])}
+$\rightarrow$ \texttt{["bóng", "đá", "bóng\_đá"]}
+\end{quote}
+
+Ở đây ``và'' và ``của'' bị loại, còn ``bóng\_đá'' là một từ ghép nội dung được giữ
+nguyên. Cùng cơ chế bảo vệ này được tái dùng cho tầng~2 khi TDV chọn stoplist, để
+các từ phủ định không bị xóa ở cả hai tầng.
+
+\subsection{Tài nguyên và xuất xứ}
+
+Ba tài nguyên ngôn ngữ học được đóng gói kèm số mục thực tế và hàm băm, để kết quả
+tái lập được và để bất kỳ ai cũng kiểm tra lại được dữ liệu đầu vào.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{|p{0.30\textwidth}|p{0.38\textwidth}|p{0.18\textwidth}|}
+\hline
+Tài nguyên & Vai trò & Số mục \\
+\hline
+\texttt{dict.txt} & Từ điển tách từ (Viet74K) & 69.858 \\
+\texttt{grammar\_\allowbreak stopwords.txt} & Hư từ ngữ pháp tầng 1 & 181 \\
+\texttt{guard\_\allowbreak whitelist.txt} & Danh sách bảo vệ (guard) & 110 \\
+\hline
+\end{tabular}
+\caption{Ba tài nguyên của tầng ngôn ngữ M1 (đặt trong thư mục \texttt{resources/})
+và số mục tại thời điểm viết. Số mục được đọc trực tiếp từ tệp; danh sách hư từ sau
+khi trừ guard còn 124 từ dừng hiệu lực.}
+\label{tab:m1-tai-nguyen}
+\end{table}
+
+Từ điển là danh sách mã nguồn mở có ghi giấy phép \cite{viet74k}. Danh sách từ
+dừng tĩnh dùng cho cấu hình C2 là một bản chụp có nguồn, phiên bản và thông báo
+giấy phép MIT \cite{static_stopwords}. Hai danh sách tầng~1 do nhóm biên soạn kèm
+quy tắc và số mục thực tế; các từ dừng được gỡ lại chỉ là các từ phủ định và logic
+có lý do ngữ nghĩa rõ ràng, không bù danh sách bằng thực từ để đạt một con số.
+
+\subsection{Kiểm chứng tầng ngôn ngữ}
+
+Ba phương pháp tách từ được kiểm chứng bằng từ điển fixture minh bạch và bằng một
+đường tham chiếu trực tiếp trên từ điển/câu ngẫu nhiên. Vết thuật toán cho biết ứng
+viên và quyết định tại từng bước; dãy token do \texttt{tokenize} trả về được kiểm
+riêng bằng fixture, vì với BMM các dòng ứng viên được đánh dấu có thể chồng lấn nên
+không dùng chúng để tái dựng kết quả. Bộ lọc tầng~1 được kiểm chứng
+bằng các ca guard: phủ định và từ ghép chứa guard phải được giữ nguyên, còn hư từ
+không nằm trong guard phải bị loại. Các ca kiểm thử này chứng minh \emph{luật hoạt
+động đúng}, không đo \emph{chất lượng} tách từ.
+
+Chất lượng tách từ chỉ đo được khi có nhãn người. Nhóm đã dựng sẵn một bộ mẫu 150
+câu (15 câu mỗi lĩnh vực) rút từ kho ngữ liệu đã khóa, kèm công cụ gán nhãn ngoại
+tuyến và bộ đo khớp span từ. Tại thời điểm viết, toàn bộ 150 câu còn ở trạng thái
+chờ người gán, nên \textbf{chưa có chỉ số F1 tách từ nào được công bố}. Gợi ý của
+máy chỉ phục vụ gán nhãn nhanh và không bao giờ tự động trở thành nhãn vàng. Quy
+trình đo, các ràng buộc theo hàm băm và những giới hạn của phép đo được trình bày
+trong Chương~4.

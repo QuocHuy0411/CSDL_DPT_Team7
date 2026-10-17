@@ -1,0 +1,128 @@
+% Chương 5 — Kết luận. Nạp bằng \input{chapter5}. Chỉ dùng các gói đã khai báo.
+\chapter{KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN}
+\label{ch:ch5-ketluan}
+
+\section{Kết quả đạt được}
+
+Đồ án đã hoàn thành một hệ thống truy xuất văn bản tiếng Việt chạy hoàn toàn ngoại
+tuyến, gồm ba tầng trách nhiệm rõ ràng. Tầng ngôn ngữ M1 thực hiện chuẩn hóa chuỗi,
+tách từ theo so khớp cực đại trên từ điển Viet74K \cite{viet74k} và lọc từ dừng
+tầng~1 kèm danh sách bảo vệ phủ định. Tầng truy xuất M2 biến dãy token thành chỉ
+mục đảo, tính trọng số TF-IDF theo mô hình không gian vector \cite{salton1975vsm}
+và xếp hạng bằng tương đồng cosin, đồng thời cài đặt độ đo Giá trị phân biệt từ
+theo hướng tiếp cận của Salton và cộng sự \cite{salton1975theory} làm tầng lọc thứ
+hai. Tầng tích hợp M3 cung cấp ứng dụng minh họa, hợp đồng API và bộ công cụ đóng
+gói.
+
+Bốn cấu hình thực nghiệm C1--C4 đã được dựng trên cùng một kho ngữ liệu gồm 2.500
+bài thuộc 10 lĩnh vực và cùng một bộ 20 truy vấn: C1 không lọc, C2 lọc bằng danh
+sách tĩnh, C3 lọc bằng hư từ tầng~1 của M1, và C4 lọc tầng~1 cộng thêm tầng~2 bằng
+TDV. Các chỉ mục đã được dựng lại trên Maximum Matching chính thức của M1, với
+metadata ghi rõ tokenizer, tài nguyên và hàm băm nguồn, nên so sánh giữa bốn cấu
+hình là so sánh đúng một yếu tố: chiến lược lọc từ dừng.
+
+\section{Những gì đã được kiểm chứng}
+
+Phần tính toán cốt lõi đã được kiểm chứng bằng các đường tham chiếu độc lập, không
+chỉ bằng các ca kiểm thử tự viết:
+
+\begin{itemize}
+  \item \textbf{TDV.} Đường tính nhanh trên cấu trúc thưa khớp với đường tham
+        chiếu dựng ma trận cosin đầy đủ sau khi xóa từng chiều và tái chuẩn hóa,
+        trong sai số số thực dưới $10^{-15}$. Bộ kiểm thử còn dựng sẵn một hàm mô
+        phỏng ``cách làm sai'' (xóa chiều mà không tái chuẩn hóa) và khẳng định kết
+        quả của engine khác kết quả sai đó, qua đó chứng minh tầm quan trọng của
+        bước tái chuẩn hóa.
+  \item \textbf{Chỉ số đánh giá.} Các định nghĩa $P@K$, $Recall@K$, $F1@K$, $AP$ và
+        $NDCG@K$ được kiểm chứng bằng fixture tính tay; trọng số TF-IDF được đối
+        soát với thư viện scikit-learn \cite{sklearn_tfidf} trên cùng cấu hình
+        analyzer, sublinear TF, IDF làm mượt và chuẩn hóa L2.
+  \item \textbf{Tách từ.} Ba phương pháp FMM/BMM/BiMM được kiểm chứng bằng từ điển
+        fixture minh bạch, với quy tắc phân xử của BiMM được phát biểu tường minh.
+        Vết thuật toán cho thấy ứng viên và quyết định tại từng bước; dãy token do
+        \texttt{tokenize} trả về được kiểm riêng bằng fixture, không dùng các dòng
+        ứng viên được đánh dấu của BMM để tái dựng kết quả.
+  \item \textbf{Toàn vẹn dữ liệu.} Bộ đánh giá từ chối ghi kết quả chính thức khi
+        hàm băm kho ngữ liệu, hàm băm tập truy vấn, trạng thái nhãn hoặc metadata
+        tiền xử lý không đạt yêu cầu. Cơ chế khóa hàm băm tập truy vấn ngăn việc
+        dùng nhầm nhãn cho một phiên bản truy vấn đã bị sửa.
+  \item \textbf{Độ trễ và dung lượng.} Cả bốn cấu hình đã được đo độ trễ truy vấn và
+        dung lượng chỉ mục trên máy cục bộ, với quy trình đo có bước khởi động làm
+        nóng và có báo cáo theo từng truy vấn. Số đo chi tiết cùng trạng thái đạt
+        hoặc không đạt mục tiêu được trình bày ở Chương~4.
+\end{itemize}
+
+\section{Những gì chưa đo được}
+
+Báo cáo nêu rõ hai khoảng trống dữ liệu, và không thay thế chúng bằng kết luận định
+tính:
+
+\begin{enumerate}
+  \item \textbf{Chỉ số chất lượng truy xuất chưa được đo.} Pool đánh giá có hàng
+        trăm cặp ứng viên do ba đường cơ sở đóng góp, nhưng tại thời điểm viết
+        \textbf{chưa có cặp nào được người gán xác nhận}; trạng thái nhãn là
+        \texttt{pending\_human\_annotation}. Vì vậy bộ đánh giá ghi
+        \texttt{metrics\_status = unmeasured} và cố ý không xuất bảng $P@K, R@K,
+        F1@K, MAP, NDCG@K$. Không có kết luận nào về việc cấu hình nào cho chất
+        lượng truy xuất tốt hơn, kể cả khi dung lượng chỉ mục của một cấu hình nhỏ
+        hơn hay truy vấn của nó nhanh hơn.
+  \item \textbf{Chất lượng tách từ chưa được đo.} Bộ mẫu 150 câu (15 câu mỗi lĩnh
+        vực) rút từ kho ngữ liệu đã khóa vẫn ở trạng thái chờ người gán. Do đó
+        không có chỉ số $F1$ tách từ nào cho cả ba phương pháp. Gợi ý của máy chỉ
+        là công cụ hỗ trợ gán nhãn, không phải nhãn vàng.
+\end{enumerate}
+
+Việc giữ nguyên trạng thái ``chưa đo'' là một phần của kết quả: nó buộc mọi kết
+luận về chất lượng phải chờ dữ liệu người, thay vì dựa vào các con số thời gian và
+dung lượng vốn không phản ánh mức độ liên quan.
+
+\section{Hạn chế}
+
+Các hạn chế dưới đây cần được đọc kèm với các kết quả đã nêu:
+
+\begin{itemize}
+  \item \textbf{Phụ thuộc từ điển.} Chất lượng tách từ gắn chặt với từ điển đóng
+        gói. Đổi từ điển thì mọi số đo tách từ phải được đo lại; từ điển rộng có
+        thể chứa cả thành ngữ không đồng nghĩa với một phân đoạn từ tốt.
+  \item \textbf{Lọc quá tay.} Cơ chế lọc theo tầng có thể loại cả những từ mang
+        nghĩa với một số truy vấn cụ thể. Dung lượng nhỏ và truy vấn nhanh không
+        chứng minh chất lượng tốt; vấn đề này chỉ giải quyết được khi có nhãn.
+  \item \textbf{Phủ định ở mức túi từ.} Giữ lại từ phủ định tránh mất dấu hiệu phủ
+        định ở mức từ vựng, nhưng mô hình túi từ vẫn không suy luận được ngữ nghĩa
+        phủ định.
+  \item \textbf{Quy mô đánh giá nhỏ và có thiên lệch.} Bộ truy vấn chỉ có 20 câu,
+        khoảng hai câu mỗi lĩnh vực; pool được gộp từ chính các đường cơ sở nên có
+        thể bỏ sót tài liệu liên quan không được đường nào trả về. Bộ mẫu tách từ
+        150 câu, nếu chỉ một người gán, cũng không đo được đồng thuận giữa người gán.
+  \item \textbf{Chi phí dự phòng.} Cơ chế dự phòng cho C4 khi mọi token truy vấn
+        đều đã bị lọc đòi hỏi giữ thêm một chỉ mục C3. Việc giữ hai chỉ mục làm
+        tổng dung lượng triển khai tăng lên, trái với mục tiêu giảm dung lượng của
+        một chỉ mục đơn. Số liệu đo riêng chỉ mục C4 thuần và gói C4 cộng C3 được
+        trình bày ở Chương~4.
+  \item \textbf{Điều kiện đo độ trễ.} Độ trễ được đo trên tiến trình đã làm nóng
+        trên một máy đơn, không phải cam kết về độ trễ trên mọi máy hay mọi kích
+        thước kho ngữ liệu.
+\end{itemize}
+
+\section{Hướng phát triển}
+
+Các bước tiếp theo được xác định theo thứ tự ưu tiên rõ ràng:
+
+\begin{enumerate}
+  \item Gán nhãn và xác nhận toàn bộ pool liên quan, sau đó chạy bộ đánh giá chính
+        thức để có $P@K, R@K, F1@K, MAP, NDCG@K$ cho bốn cấu hình và cho từng lĩnh
+        vực.
+  \item Hoàn tất gán nhãn 150 câu mẫu tách từ, rồi chạy bộ đo khớp span để có $F1$
+        cho FMM, BMM, BiMM.
+  \item So sánh thêm với một bộ tách từ ngoài đã được công bố, trong điều kiện cho
+        phép, để đặt kết quả của nhóm vào một mốc tham chiếu.
+  \item Mở rộng bộ mẫu và số người gán để đo đồng thuận giữa người gán và để giảm
+        độ dao động của chỉ số theo lĩnh vực.
+  \item Nghiên cứu thay thế túi từ bằng một biểu diễn xử lý được phủ định ở mức
+        ngữ nghĩa, và đánh giá lại tác động của việc bảo vệ guard.
+\end{enumerate}
+
+Cho tới khi các bước gán nhãn hoàn tất, kết luận đúng mực của đồ án là: hệ thống đã
+hoàn tất về mặt triển khai và đã kiểm chứng được phần tính toán, thời gian và dung
+lượng; phần kết luận về chất lượng truy xuất và chất lượng tách từ vẫn đang chờ
+nhãn người.

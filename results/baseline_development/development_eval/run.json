@@ -1,0 +1,859 @@
+{
+  "official": false,
+  "mode": "development",
+  "mode_reason": "[qrels_status_not_final] qrels đang ở trạng thái 'pending_human_annotation', chưa phải 'human_annotation_confirmed' (pending_human_annotation); [pending_judgments] Còn 704 phán quyết chưa confirmed trong phạm vi đánh giá ({'count': 704, 'example': ['Q01/vn_035517f7ccc0dcab', 'Q01/vn_2e7e9a143583639e', 'Q01/vn_afd514544c0680a6', 'Q01/vn_25dcea512ebf34a1', 'Q01/vn_9cf88eab9678b319']}); [query_without_confirmed_judgments] Query chưa có nhãn confirmed nào nên không thể tính Recall/MAP (['Q01', 'Q02', 'Q03', 'Q04', 'Q05', 'Q06', 'Q07', 'Q08', 'Q09', 'Q10', 'Q11', 'Q12', 'Q13', 'Q14', 'Q15', 'Q16', 'Q17', 'Q18', 'Q19', 'Q20']); [preprocessing_not_official] Metadata tiền xử lý chưa nhất quán ở trạng thái official nên kết quả chỉ là provisional ({'preprocessing_status': 'development_only', 'official_preprocessing': False, 'm1_verified': False, 'tokenizer': 'engine.preprocessing:baseline_tokenize', 'tier1_filter': 'engine.preprocessing:fixture_tier1', 'tier1_enabled': False}); [development_tokenizer] Tokenizer baseline của M1 không phải tách từ Maximum Matching chính thức ({'tokenizer': 'engine.preprocessing:baseline_tokenize', 'note': 'Chặn tuyệt đối, kể cả khi metadata ghi nhầm là official'}); [fixture_tier1_filter] C3/C4 đang dùng fixture tầng 1, không phải Maximum Matching chính thức của M1 ({'tier1_filter': 'engine.preprocessing:fixture_tier1', 'tier1_enabled': False, 'note': 'Chặn tuyệt đối, kể cả khi metadata ghi nhầm là official'}); [qrels_status_not_final] qrels đang ở trạng thái 'pending_human_annotation', chưa phải 'human_annotation_confirmed' (pending_human_annotation); [pending_judgments] Còn 704 phán quyết chưa confirmed trong phạm vi đánh giá ({'count': 704, 'example': ['Q01/vn_035517f7ccc0dcab', 'Q01/vn_2e7e9a143583639e', 'Q01/vn_afd514544c0680a6', 'Q01/vn_25dcea512ebf34a1', 'Q01/vn_9cf88eab9678b319']}); [query_without_confirmed_judgments] Query chưa có nhãn confirmed nào nên không thể tính Recall/MAP (['Q01', 'Q02', 'Q03', 'Q04', 'Q05', 'Q06', 'Q07', 'Q08', 'Q09', 'Q10', 'Q11', 'Q12', 'Q13', 'Q14', 'Q15', 'Q16', 'Q17', 'Q18', 'Q19', 'Q20']); [preprocessing_not_official] Metadata tiền xử lý chưa nhất quán ở trạng thái official nên kết quả chỉ là provisional ({'preprocessing_status': 'development_only', 'official_preprocessing': False, 'm1_verified': False, 'tokenizer': 'engine.preprocessing:baseline_tokenize', 'tier1_filter': 'engine.preprocessing:fixture_tier1', 'tier1_enabled': False}); [development_tokenizer] Tokenizer baseline của M1 không phải tách từ Maximum Matching chính thức ({'tokenizer': 'engine.preprocessing:baseline_tokenize', 'note': 'Chặn tuyệt đối, kể cả khi metadata ghi nhầm là official'}); [fixture_tier1_filter] C3/C4 đang dùng fixture tầng 1, không phải Maximum Matching chính thức của M1 ({'tier1_filter': 'engine.preprocessing:fixture_tier1', 'tier1_enabled': False, 'note': 'Chặn tuyệt đối, kể cả khi metadata ghi nhầm là official'}); [qrels_status_not_final] qrels đang ở trạng thái 'pending_human_annotation', chưa phải 'human_annotation_confirmed' (pending_human_annotation); [pending_judgments] Còn 704 phán quyết chưa confirmed trong phạm vi đánh giá ({'count': 704, 'example': ['Q01/vn_035517f7ccc0dcab', 'Q01/vn_2e7e9a143583639e', 'Q01/vn_afd514544c0680a6', 'Q01/vn_25dcea512ebf34a1', 'Q01/vn_9cf88eab9678b319']}); [query_without_confirmed_judgments] Query chưa có nhãn confirmed nào nên không thể tính Recall/MAP (['Q01', 'Q02', 'Q03', 'Q04', 'Q05', 'Q06', 'Q07', 'Q08', 'Q09', 'Q10', 'Q11', 'Q12', 'Q13', 'Q14', 'Q15', 'Q16', 'Q17', 'Q18', 'Q19', 'Q20']); [preprocessing_not_official] Metadata tiền xử lý chưa nhất quán ở trạng thái official nên kết quả chỉ là provisional ({'preprocessing_status': 'development_only', 'official_preprocessing': False, 'm1_verified': False, 'tokenizer': 'engine.preprocessing:baseline_tokenize', 'tier1_filter': 'engine.preprocessing:fixture_tier1', 'tier1_enabled': True}); [development_tokenizer] Tokenizer baseline của M1 không phải tách từ Maximum Matching chính thức ({'tokenizer': 'engine.preprocessing:baseline_tokenize', 'note': 'Chặn tuyệt đối, kể cả khi metadata ghi nhầm là official'}); [fixture_tier1_filter] C3/C4 đang dùng fixture tầng 1, không phải Maximum Matching chính thức của M1 ({'tier1_filter': 'engine.preprocessing:fixture_tier1', 'tier1_enabled': True, 'note': 'Chặn tuyệt đối, kể cả khi metadata ghi nhầm là official'}); [qrels_status_not_final] qrels đang ở trạng thái 'pending_human_annotation', chưa phải 'human_annotation_confirmed' (pending_human_annotation); [pending_judgments] Còn 704 phán quyết chưa confirmed trong phạm vi đánh giá ({'count': 704, 'example': ['Q01/vn_035517f7ccc0dcab', 'Q01/vn_2e7e9a143583639e', 'Q01/vn_afd514544c0680a6', 'Q01/vn_25dcea512ebf34a1', 'Q01/vn_9cf88eab9678b319']}); [query_without_confirmed_judgments] Query chưa có nhãn confirmed nào nên không thể tính Recall/MAP (['Q01', 'Q02', 'Q03', 'Q04', 'Q05', 'Q06', 'Q07', 'Q08', 'Q09', 'Q10', 'Q11', 'Q12', 'Q13', 'Q14', 'Q15', 'Q16', 'Q17', 'Q18', 'Q19', 'Q20']); [preprocessing_not_official] Metadata tiền xử lý chưa nhất quán ở trạng thái official nên kết quả chỉ là provisional ({'preprocessing_status': 'development_only', 'official_preprocessing': False, 'm1_verified': False, 'tokenizer': 'engine.preprocessing:baseline_tokenize', 'tier1_filter': 'engine.preprocessing:fixture_tier1', 'tier1_enabled': True}); [development_tokenizer] Tokenizer baseline của M1 không phải tách từ Maximum Matching chính thức ({'tokenizer': 'engine.preprocessing:baseline_tokenize', 'note': 'Chặn tuyệt đối, kể cả khi metadata ghi nhầm là official'}); [fixture_tier1_filter] C3/C4 đang dùng fixture tầng 1, không phải Maximum Matching chính thức của M1 ({'tier1_filter': 'engine.preprocessing:fixture_tier1', 'tier1_enabled': True, 'note': 'Chặn tuyệt đối, kể cả khi metadata ghi nhầm là official'})",
+  "metrics_status": "unmeasured",
+  "metrics_reason": "20/20 query chưa có nhãn relevance confirmed",
+  "metrics_readiness": {
+    "ready": false,
+    "n_evaluated_queries": 20,
+    "n_queries_without_confirmed_labels": 20,
+    "queries_without_confirmed_labels": [
+      "Q01",
+      "Q02",
+      "Q03",
+      "Q04",
+      "Q05",
+      "Q06",
+      "Q07",
+      "Q08",
+      "Q09",
+      "Q10",
+      "Q11",
+      "Q12",
+      "Q13",
+      "Q14",
+      "Q15",
+      "Q16",
+      "Q17",
+      "Q18",
+      "Q19",
+      "Q20"
+    ],
+    "n_usable_judgments": 0,
+    "reason": "20/20 query chưa có nhãn relevance confirmed"
+  },
+  "k": 10,
+  "ranking_depth": 2500,
+  "ranking_depth_check": {
+    "ranking_depth": 2500,
+    "n_documents": 2500,
+    "truncated": false,
+    "average_precision_scope": "mean_average_precision_over_full_available_ranking",
+    "warning": null
+  },
+  "average_precision_scope": "mean_average_precision_over_full_available_ranking",
+  "corpus_sha256": "f42acebb1ac34084e859f378243145a3f8e981869350edb41a3dc27e86320fa7",
+  "corpus_sha256_source": "locked_manifest",
+  "queries_sha256": "a46100f23d937133a82d709b4b45ded5dcc0125520fe59ead647644e58be692e",
+  "queries": {
+    "source": "D:\\N23DCCN155- Dang Van Hiep\\HK7\\Hệ csdl dpt\\CSDL_DPT_Team7\\data\\queries.json",
+    "schema_version": 1,
+    "corpus_sha256": "f42acebb1ac34084e859f378243145a3f8e981869350edb41a3dc27e86320fa7",
+    "queries_sha256": null,
+    "file_sha256": "a46100f23d937133a82d709b4b45ded5dcc0125520fe59ead647644e58be692e",
+    "n_queries": 20,
+    "query_ids": [
+      "Q01",
+      "Q02",
+      "Q03",
+      "Q04",
+      "Q05",
+      "Q06",
+      "Q07",
+      "Q08",
+      "Q09",
+      "Q10",
+      "Q11",
+      "Q12",
+      "Q13",
+      "Q14",
+      "Q15",
+      "Q16",
+      "Q17",
+      "Q18",
+      "Q19",
+      "Q20"
+    ]
+  },
+  "qrels": {
+    "source": "D:\\N23DCCN155- Dang Van Hiep\\HK7\\Hệ csdl dpt\\CSDL_DPT_Team7\\data\\ground_truth\\qrels.json",
+    "schema_version": 1,
+    "corpus_sha256": "f42acebb1ac34084e859f378243145a3f8e981869350edb41a3dc27e86320fa7",
+    "queries_sha256": "a46100f23d937133a82d709b4b45ded5dcc0125520fe59ead647644e58be692e",
+    "status": "pending_human_annotation",
+    "n_judgments": 704,
+    "n_confirmed": 0,
+    "n_pending": 704,
+    "n_relevant_pairs": 0,
+    "n_query_ids": 20,
+    "assessors": []
+  },
+  "validation": {
+    "official_allowed": false,
+    "issues": [
+      {
+        "code": "qrels_status_not_final",
+        "message": "qrels đang ở trạng thái 'pending_human_annotation', chưa phải 'human_annotation_confirmed'",
+        "detail": "pending_human_annotation"
+      },
+      {
+        "code": "pending_judgments",
+        "message": "Còn 704 phán quyết chưa confirmed trong phạm vi đánh giá",
+        "detail": {
+          "count": 704,
+          "example": [
+            "Q01/vn_035517f7ccc0dcab",
+            "Q01/vn_2e7e9a143583639e",
+            "Q01/vn_afd514544c0680a6",
+            "Q01/vn_25dcea512ebf34a1",
+            "Q01/vn_9cf88eab9678b319"
+          ]
+        }
+      },
+      {
+        "code": "query_without_confirmed_judgments",
+        "message": "Query chưa có nhãn confirmed nào nên không thể tính Recall/MAP",
+        "detail": [
+          "Q01",
+          "Q02",
+          "Q03",
+          "Q04",
+          "Q05",
+          "Q06",
+          "Q07",
+          "Q08",
+          "Q09",
+          "Q10",
+          "Q11",
+          "Q12",
+          "Q13",
+          "Q14",
+          "Q15",
+          "Q16",
+          "Q17",
+          "Q18",
+          "Q19",
+          "Q20"
+        ]
+      },
+      {
+        "code": "preprocessing_not_official",
+        "message": "Metadata tiền xử lý chưa nhất quán ở trạng thái official nên kết quả chỉ là provisional",
+        "detail": {
+          "preprocessing_status": "development_only",
+          "official_preprocessing": false,
+          "m1_verified": false,
+          "tokenizer": "engine.preprocessing:baseline_tokenize",
+          "tier1_filter": "engine.preprocessing:fixture_tier1",
+          "tier1_enabled": false
+        }
+      },
+      {
+        "code": "development_tokenizer",
+        "message": "Tokenizer baseline của M1 không phải tách từ Maximum Matching chính thức",
+        "detail": {
+          "tokenizer": "engine.preprocessing:baseline_tokenize",
+          "note": "Chặn tuyệt đối, kể cả khi metadata ghi nhầm là official"
+        }
+      },
+      {
+        "code": "fixture_tier1_filter",
+        "message": "C3/C4 đang dùng fixture tầng 1, không phải Maximum Matching chính thức của M1",
+        "detail": {
+          "tier1_filter": "engine.preprocessing:fixture_tier1",
+          "tier1_enabled": false,
+          "note": "Chặn tuyệt đối, kể cả khi metadata ghi nhầm là official"
+        }
+      },
+      {
+        "code": "qrels_status_not_final",
+        "message": "qrels đang ở trạng thái 'pending_human_annotation', chưa phải 'human_annotation_confirmed'",
+        "detail": "pending_human_annotation"
+      },
+      {
+        "code": "pending_judgments",
+        "message": "Còn 704 phán quyết chưa confirmed trong phạm vi đánh giá",
+        "detail": {
+          "count": 704,
+          "example": [
+            "Q01/vn_035517f7ccc0dcab",
+            "Q01/vn_2e7e9a143583639e",
+            "Q01/vn_afd514544c0680a6",
+            "Q01/vn_25dcea512ebf34a1",
+            "Q01/vn_9cf88eab9678b319"
+          ]
+        }
+      },
+      {
+        "code": "query_without_confirmed_judgments",
+        "message": "Query chưa có nhãn confirmed nào nên không thể tính Recall/MAP",
+        "detail": [
+          "Q01",
+          "Q02",
+          "Q03",
+          "Q04",
+          "Q05",
+          "Q06",
+          "Q07",
+          "Q08",
+          "Q09",
+          "Q10",
+          "Q11",
+          "Q12",
+          "Q13",
+          "Q14",
+          "Q15",
+          "Q16",
+          "Q17",
+          "Q18",
+          "Q19",
+          "Q20"
+        ]
+      },
+      {
+        "code": "preprocessing_not_official",
+        "message": "Metadata tiền xử lý chưa nhất quán ở trạng thái official nên kết quả chỉ là provisional",
+        "detail": {
+          "preprocessing_status": "development_only",
+          "official_preprocessing": false,
+          "m1_verified": false,
+          "tokenizer": "engine.preprocessing:baseline_tokenize",
+          "tier1_filter": "engine.preprocessing:fixture_tier1",
+          "tier1_enabled": false
+        }
+      },
+      {
+        "code": "development_tokenizer",
+        "message": "Tokenizer baseline của M1 không phải tách từ Maximum Matching chính thức",
+        "detail": {
+          "tokenizer": "engine.preprocessing:baseline_tokenize",
+          "note": "Chặn tuyệt đối, kể cả khi metadata ghi nhầm là official"
+        }
+      },
+      {
+        "code": "fixture_tier1_filter",
+        "message": "C3/C4 đang dùng fixture tầng 1, không phải Maximum Matching chính thức của M1",
+        "detail": {
+          "tier1_filter": "engine.preprocessing:fixture_tier1",
+          "tier1_enabled": false,
+          "note": "Chặn tuyệt đối, kể cả khi metadata ghi nhầm là official"
+        }
+      },
+      {
+        "code": "qrels_status_not_final",
+        "message": "qrels đang ở trạng thái 'pending_human_annotation', chưa phải 'human_annotation_confirmed'",
+        "detail": "pending_human_annotation"
+      },
+      {
+        "code": "pending_judgments",
+        "message": "Còn 704 phán quyết chưa confirmed trong phạm vi đánh giá",
+        "detail": {
+          "count": 704,
+          "example": [
+            "Q01/vn_035517f7ccc0dcab",
+            "Q01/vn_2e7e9a143583639e",
+            "Q01/vn_afd514544c0680a6",
+            "Q01/vn_25dcea512ebf34a1",
+            "Q01/vn_9cf88eab9678b319"
+          ]
+        }
+      },
+      {
+        "code": "query_without_confirmed_judgments",
+        "message": "Query chưa có nhãn confirmed nào nên không thể tính Recall/MAP",
+        "detail": [
+          "Q01",
+          "Q02",
+          "Q03",
+          "Q04",
+          "Q05",
+          "Q06",
+          "Q07",
+          "Q08",
+          "Q09",
+          "Q10",
+          "Q11",
+          "Q12",
+          "Q13",
+          "Q14",
+          "Q15",
+          "Q16",
+          "Q17",
+          "Q18",
+          "Q19",
+          "Q20"
+        ]
+      },
+      {
+        "code": "preprocessing_not_official",
+        "message": "Metadata tiền xử lý chưa nhất quán ở trạng thái official nên kết quả chỉ là provisional",
+        "detail": {
+          "preprocessing_status": "development_only",
+          "official_preprocessing": false,
+          "m1_verified": false,
+          "tokenizer": "engine.preprocessing:baseline_tokenize",
+          "tier1_filter": "engine.preprocessing:fixture_tier1",
+          "tier1_enabled": true
+        }
+      },
+      {
+        "code": "development_tokenizer",
+        "message": "Tokenizer baseline của M1 không phải tách từ Maximum Matching chính thức",
+        "detail": {
+          "tokenizer": "engine.preprocessing:baseline_tokenize",
+          "note": "Chặn tuyệt đối, kể cả khi metadata ghi nhầm là official"
+        }
+      },
+      {
+        "code": "fixture_tier1_filter",
+        "message": "C3/C4 đang dùng fixture tầng 1, không phải Maximum Matching chính thức của M1",
+        "detail": {
+          "tier1_filter": "engine.preprocessing:fixture_tier1",
+          "tier1_enabled": true,
+          "note": "Chặn tuyệt đối, kể cả khi metadata ghi nhầm là official"
+        }
+      },
+      {
+        "code": "qrels_status_not_final",
+        "message": "qrels đang ở trạng thái 'pending_human_annotation', chưa phải 'human_annotation_confirmed'",
+        "detail": "pending_human_annotation"
+      },
+      {
+        "code": "pending_judgments",
+        "message": "Còn 704 phán quyết chưa confirmed trong phạm vi đánh giá",
+        "detail": {
+          "count": 704,
+          "example": [
+            "Q01/vn_035517f7ccc0dcab",
+            "Q01/vn_2e7e9a143583639e",
+            "Q01/vn_afd514544c0680a6",
+            "Q01/vn_25dcea512ebf34a1",
+            "Q01/vn_9cf88eab9678b319"
+          ]
+        }
+      },
+      {
+        "code": "query_without_confirmed_judgments",
+        "message": "Query chưa có nhãn confirmed nào nên không thể tính Recall/MAP",
+        "detail": [
+          "Q01",
+          "Q02",
+          "Q03",
+          "Q04",
+          "Q05",
+          "Q06",
+          "Q07",
+          "Q08",
+          "Q09",
+          "Q10",
+          "Q11",
+          "Q12",
+          "Q13",
+          "Q14",
+          "Q15",
+          "Q16",
+          "Q17",
+          "Q18",
+          "Q19",
+          "Q20"
+        ]
+      },
+      {
+        "code": "preprocessing_not_official",
+        "message": "Metadata tiền xử lý chưa nhất quán ở trạng thái official nên kết quả chỉ là provisional",
+        "detail": {
+          "preprocessing_status": "development_only",
+          "official_preprocessing": false,
+          "m1_verified": false,
+          "tokenizer": "engine.preprocessing:baseline_tokenize",
+          "tier1_filter": "engine.preprocessing:fixture_tier1",
+          "tier1_enabled": true
+        }
+      },
+      {
+        "code": "development_tokenizer",
+        "message": "Tokenizer baseline của M1 không phải tách từ Maximum Matching chính thức",
+        "detail": {
+          "tokenizer": "engine.preprocessing:baseline_tokenize",
+          "note": "Chặn tuyệt đối, kể cả khi metadata ghi nhầm là official"
+        }
+      },
+      {
+        "code": "fixture_tier1_filter",
+        "message": "C3/C4 đang dùng fixture tầng 1, không phải Maximum Matching chính thức của M1",
+        "detail": {
+          "tier1_filter": "engine.preprocessing:fixture_tier1",
+          "tier1_enabled": true,
+          "note": "Chặn tuyệt đối, kể cả khi metadata ghi nhầm là official"
+        }
+      }
+    ],
+    "warnings": [],
+    "checked": {
+      "C1": {
+        "corpus_sha256": "f42acebb1ac34084e859f378243145a3f8e981869350edb41a3dc27e86320fa7",
+        "actual_queries_sha256": "a46100f23d937133a82d709b4b45ded5dcc0125520fe59ead647644e58be692e",
+        "qrels_queries_sha256": "a46100f23d937133a82d709b4b45ded5dcc0125520fe59ead647644e58be692e",
+        "qrels": {
+          "source": "D:\\N23DCCN155- Dang Van Hiep\\HK7\\Hệ csdl dpt\\CSDL_DPT_Team7\\data\\ground_truth\\qrels.json",
+          "schema_version": 1,
+          "corpus_sha256": "f42acebb1ac34084e859f378243145a3f8e981869350edb41a3dc27e86320fa7",
+          "queries_sha256": "a46100f23d937133a82d709b4b45ded5dcc0125520fe59ead647644e58be692e",
+          "status": "pending_human_annotation",
+          "n_judgments": 704,
+          "n_confirmed": 0,
+          "n_pending": 704,
+          "n_relevant_pairs": 0,
+          "n_query_ids": 20,
+          "assessors": []
+        },
+        "queries": {
+          "source": "D:\\N23DCCN155- Dang Van Hiep\\HK7\\Hệ csdl dpt\\CSDL_DPT_Team7\\data\\queries.json",
+          "schema_version": 1,
+          "corpus_sha256": "f42acebb1ac34084e859f378243145a3f8e981869350edb41a3dc27e86320fa7",
+          "queries_sha256": null,
+          "file_sha256": "a46100f23d937133a82d709b4b45ded5dcc0125520fe59ead647644e58be692e",
+          "n_queries": 20,
+          "query_ids": [
+            "Q01",
+            "Q02",
+            "Q03",
+            "Q04",
+            "Q05",
+            "Q06",
+            "Q07",
+            "Q08",
+            "Q09",
+            "Q10",
+            "Q11",
+            "Q12",
+            "Q13",
+            "Q14",
+            "Q15",
+            "Q16",
+            "Q17",
+            "Q18",
+            "Q19",
+            "Q20"
+          ]
+        },
+        "evaluated_query_ids": [
+          "Q01",
+          "Q02",
+          "Q03",
+          "Q04",
+          "Q05",
+          "Q06",
+          "Q07",
+          "Q08",
+          "Q09",
+          "Q10",
+          "Q11",
+          "Q12",
+          "Q13",
+          "Q14",
+          "Q15",
+          "Q16",
+          "Q17",
+          "Q18",
+          "Q19",
+          "Q20"
+        ],
+        "required_queries": 20,
+        "preprocessing": {
+          "known": true,
+          "status": "development_only",
+          "status_is_official": false,
+          "flag_is_official": false,
+          "official_preprocessing": false,
+          "consistent": false,
+          "official": false,
+          "tokenizer": "engine.preprocessing:baseline_tokenize",
+          "tier1_filter": "engine.preprocessing:fixture_tier1",
+          "tier1_enabled": false,
+          "m1_verified": false,
+          "fingerprint": "530144b42c3a9885ac4af8609a4e6cc41a48d285a408e844df02c92323951b25",
+          "corpus_sha256": "f42acebb1ac34084e859f378243145a3f8e981869350edb41a3dc27e86320fa7"
+        },
+        "allowed_relevance_grades": [
+          0,
+          1,
+          2
+        ]
+      },
+      "C2": {
+        "corpus_sha256": "f42acebb1ac34084e859f378243145a3f8e981869350edb41a3dc27e86320fa7",
+        "actual_queries_sha256": "a46100f23d937133a82d709b4b45ded5dcc0125520fe59ead647644e58be692e",
+        "qrels_queries_sha256": "a46100f23d937133a82d709b4b45ded5dcc0125520fe59ead647644e58be692e",
+        "qrels": {
+          "source": "D:\\N23DCCN155- Dang Van Hiep\\HK7\\Hệ csdl dpt\\CSDL_DPT_Team7\\data\\ground_truth\\qrels.json",
+          "schema_version": 1,
+          "corpus_sha256": "f42acebb1ac34084e859f378243145a3f8e981869350edb41a3dc27e86320fa7",
+          "queries_sha256": "a46100f23d937133a82d709b4b45ded5dcc0125520fe59ead647644e58be692e",
+          "status": "pending_human_annotation",
+          "n_judgments": 704,
+          "n_confirmed": 0,
+          "n_pending": 704,
+          "n_relevant_pairs": 0,
+          "n_query_ids": 20,
+          "assessors": []
+        },
+        "queries": {
+          "source": "D:\\N23DCCN155- Dang Van Hiep\\HK7\\Hệ csdl dpt\\CSDL_DPT_Team7\\data\\queries.json",
+          "schema_version": 1,
+          "corpus_sha256": "f42acebb1ac34084e859f378243145a3f8e981869350edb41a3dc27e86320fa7",
+          "queries_sha256": null,
+          "file_sha256": "a46100f23d937133a82d709b4b45ded5dcc0125520fe59ead647644e58be692e",
+          "n_queries": 20,
+          "query_ids": [
+            "Q01",
+            "Q02",
+            "Q03",
+            "Q04",
+            "Q05",
+            "Q06",
+            "Q07",
+            "Q08",
+            "Q09",
+            "Q10",
+            "Q11",
+            "Q12",
+            "Q13",
+            "Q14",
+            "Q15",
+            "Q16",
+            "Q17",
+            "Q18",
+            "Q19",
+            "Q20"
+          ]
+        },
+        "evaluated_query_ids": [
+          "Q01",
+          "Q02",
+          "Q03",
+          "Q04",
+          "Q05",
+          "Q06",
+          "Q07",
+          "Q08",
+          "Q09",
+          "Q10",
+          "Q11",
+          "Q12",
+          "Q13",
+          "Q14",
+          "Q15",
+          "Q16",
+          "Q17",
+          "Q18",
+          "Q19",
+          "Q20"
+        ],
+        "required_queries": 20,
+        "preprocessing": {
+          "known": true,
+          "status": "development_only",
+          "status_is_official": false,
+          "flag_is_official": false,
+          "official_preprocessing": false,
+          "consistent": false,
+          "official": false,
+          "tokenizer": "engine.preprocessing:baseline_tokenize",
+          "tier1_filter": "engine.preprocessing:fixture_tier1",
+          "tier1_enabled": false,
+          "m1_verified": false,
+          "fingerprint": "530144b42c3a9885ac4af8609a4e6cc41a48d285a408e844df02c92323951b25",
+          "corpus_sha256": "f42acebb1ac34084e859f378243145a3f8e981869350edb41a3dc27e86320fa7"
+        },
+        "allowed_relevance_grades": [
+          0,
+          1,
+          2
+        ]
+      },
+      "C3": {
+        "corpus_sha256": "f42acebb1ac34084e859f378243145a3f8e981869350edb41a3dc27e86320fa7",
+        "actual_queries_sha256": "a46100f23d937133a82d709b4b45ded5dcc0125520fe59ead647644e58be692e",
+        "qrels_queries_sha256": "a46100f23d937133a82d709b4b45ded5dcc0125520fe59ead647644e58be692e",
+        "qrels": {
+          "source": "D:\\N23DCCN155- Dang Van Hiep\\HK7\\Hệ csdl dpt\\CSDL_DPT_Team7\\data\\ground_truth\\qrels.json",
+          "schema_version": 1,
+          "corpus_sha256": "f42acebb1ac34084e859f378243145a3f8e981869350edb41a3dc27e86320fa7",
+          "queries_sha256": "a46100f23d937133a82d709b4b45ded5dcc0125520fe59ead647644e58be692e",
+          "status": "pending_human_annotation",
+          "n_judgments": 704,
+          "n_confirmed": 0,
+          "n_pending": 704,
+          "n_relevant_pairs": 0,
+          "n_query_ids": 20,
+          "assessors": []
+        },
+        "queries": {
+          "source": "D:\\N23DCCN155- Dang Van Hiep\\HK7\\Hệ csdl dpt\\CSDL_DPT_Team7\\data\\queries.json",
+          "schema_version": 1,
+          "corpus_sha256": "f42acebb1ac34084e859f378243145a3f8e981869350edb41a3dc27e86320fa7",
+          "queries_sha256": null,
+          "file_sha256": "a46100f23d937133a82d709b4b45ded5dcc0125520fe59ead647644e58be692e",
+          "n_queries": 20,
+          "query_ids": [
+            "Q01",
+            "Q02",
+            "Q03",
+            "Q04",
+            "Q05",
+            "Q06",
+            "Q07",
+            "Q08",
+            "Q09",
+            "Q10",
+            "Q11",
+            "Q12",
+            "Q13",
+            "Q14",
+            "Q15",
+            "Q16",
+            "Q17",
+            "Q18",
+            "Q19",
+            "Q20"
+          ]
+        },
+        "evaluated_query_ids": [
+          "Q01",
+          "Q02",
+          "Q03",
+          "Q04",
+          "Q05",
+          "Q06",
+          "Q07",
+          "Q08",
+          "Q09",
+          "Q10",
+          "Q11",
+          "Q12",
+          "Q13",
+          "Q14",
+          "Q15",
+          "Q16",
+          "Q17",
+          "Q18",
+          "Q19",
+          "Q20"
+        ],
+        "required_queries": 20,
+        "preprocessing": {
+          "known": true,
+          "status": "development_only",
+          "status_is_official": false,
+          "flag_is_official": false,
+          "official_preprocessing": false,
+          "consistent": false,
+          "official": false,
+          "tokenizer": "engine.preprocessing:baseline_tokenize",
+          "tier1_filter": "engine.preprocessing:fixture_tier1",
+          "tier1_enabled": true,
+          "m1_verified": false,
+          "fingerprint": "bf31f09e30e9331474ec0959ea510c6b47997709d7739ac115024fca44e1d307",
+          "corpus_sha256": "f42acebb1ac34084e859f378243145a3f8e981869350edb41a3dc27e86320fa7"
+        },
+        "allowed_relevance_grades": [
+          0,
+          1,
+          2
+        ]
+      },
+      "C4": {
+        "corpus_sha256": "f42acebb1ac34084e859f378243145a3f8e981869350edb41a3dc27e86320fa7",
+        "actual_queries_sha256": "a46100f23d937133a82d709b4b45ded5dcc0125520fe59ead647644e58be692e",
+        "qrels_queries_sha256": "a46100f23d937133a82d709b4b45ded5dcc0125520fe59ead647644e58be692e",
+        "qrels": {
+          "source": "D:\\N23DCCN155- Dang Van Hiep\\HK7\\Hệ csdl dpt\\CSDL_DPT_Team7\\data\\ground_truth\\qrels.json",
+          "schema_version": 1,
+          "corpus_sha256": "f42acebb1ac34084e859f378243145a3f8e981869350edb41a3dc27e86320fa7",
+          "queries_sha256": "a46100f23d937133a82d709b4b45ded5dcc0125520fe59ead647644e58be692e",
+          "status": "pending_human_annotation",
+          "n_judgments": 704,
+          "n_confirmed": 0,
+          "n_pending": 704,
+          "n_relevant_pairs": 0,
+          "n_query_ids": 20,
+          "assessors": []
+        },
+        "queries": {
+          "source": "D:\\N23DCCN155- Dang Van Hiep\\HK7\\Hệ csdl dpt\\CSDL_DPT_Team7\\data\\queries.json",
+          "schema_version": 1,
+          "corpus_sha256": "f42acebb1ac34084e859f378243145a3f8e981869350edb41a3dc27e86320fa7",
+          "queries_sha256": null,
+          "file_sha256": "a46100f23d937133a82d709b4b45ded5dcc0125520fe59ead647644e58be692e",
+          "n_queries": 20,
+          "query_ids": [
+            "Q01",
+            "Q02",
+            "Q03",
+            "Q04",
+            "Q05",
+            "Q06",
+            "Q07",
+            "Q08",
+            "Q09",
+            "Q10",
+            "Q11",
+            "Q12",
+            "Q13",
+            "Q14",
+            "Q15",
+            "Q16",
+            "Q17",
+            "Q18",
+            "Q19",
+            "Q20"
+          ]
+        },
+        "evaluated_query_ids": [
+          "Q01",
+          "Q02",
+          "Q03",
+          "Q04",
+          "Q05",
+          "Q06",
+          "Q07",
+          "Q08",
+          "Q09",
+          "Q10",
+          "Q11",
+          "Q12",
+          "Q13",
+          "Q14",
+          "Q15",
+          "Q16",
+          "Q17",
+          "Q18",
+          "Q19",
+          "Q20"
+        ],
+        "required_queries": 20,
+        "preprocessing": {
+          "known": true,
+          "status": "development_only",
+          "status_is_official": false,
+          "flag_is_official": false,
+          "official_preprocessing": false,
+          "consistent": false,
+          "official": false,
+          "tokenizer": "engine.preprocessing:baseline_tokenize",
+          "tier1_filter": "engine.preprocessing:fixture_tier1",
+          "tier1_enabled": true,
+          "m1_verified": false,
+          "fingerprint": "bf31f09e30e9331474ec0959ea510c6b47997709d7739ac115024fca44e1d307",
+          "corpus_sha256": "f42acebb1ac34084e859f378243145a3f8e981869350edb41a3dc27e86320fa7"
+        },
+        "allowed_relevance_grades": [
+          0,
+          1,
+          2
+        ]
+      }
+    }
+  },
+  "environment": {
+    "python": "3.13.5",
+    "implementation": "CPython",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "processor": "AMD64 Family 25 Model 117 Stepping 2, AuthenticAMD",
+    "machine": "AMD64"
+  },
+  "created_utc": "2026-10-16T09:26:29.958075+00:00",
+  "configurations": {
+    "C1": {
+      "summary": null,
+      "by_category": null,
+      "statistics": {
+        "configuration": "C1",
+        "corpus_sha256": "f42acebb1ac34084e859f378243145a3f8e981869350edb41a3dc27e86320fa7",
+        "n_documents": 2500,
+        "stoplist_count": 0,
+        "stoplist_matched_vocabulary_count": 0,
+        "fallback_policy": null,
+        "tdv_seconds": null,
+        "preprocessing_status": "development_only",
+        "official_preprocessing": false,
+        "tokenizer": "engine.preprocessing:baseline_tokenize",
+        "tier1_filter": "engine.preprocessing:fixture_tier1",
+        "build_seconds": null,
+        "serving_bytes": 10127659,
+        "tdv_analysis_bytes": 0,
+        "total_bytes": 10127659
+      },
+      "metrics_status": "unmeasured"
+    },
+    "C2": {
+      "summary": null,
+      "by_category": null,
+      "statistics": {
+        "configuration": "C2",
+        "corpus_sha256": "f42acebb1ac34084e859f378243145a3f8e981869350edb41a3dc27e86320fa7",
+        "n_documents": 2500,
+        "stoplist_count": 1942,
+        "stoplist_matched_vocabulary_count": 340,
+        "fallback_policy": null,
+        "tdv_seconds": null,
+        "preprocessing_status": "development_only",
+        "official_preprocessing": false,
+        "tokenizer": "engine.preprocessing:baseline_tokenize",
+        "tier1_filter": "engine.preprocessing:fixture_tier1",
+        "build_seconds": null,
+        "serving_bytes": 7369530,
+        "tdv_analysis_bytes": 0,
+        "total_bytes": 7369530
+      },
+      "metrics_status": "unmeasured"
+    },
+    "C3": {
+      "summary": null,
+      "by_category": null,
+      "statistics": {
+        "configuration": "C3",
+        "corpus_sha256": "f42acebb1ac34084e859f378243145a3f8e981869350edb41a3dc27e86320fa7",
+        "n_documents": 2500,
+        "stoplist_count": 0,
+        "stoplist_matched_vocabulary_count": 0,
+        "fallback_policy": null,
+        "tdv_seconds": null,
+        "preprocessing_status": "development_only",
+        "official_preprocessing": false,
+        "tokenizer": "engine.preprocessing:baseline_tokenize",
+        "tier1_filter": "engine.preprocessing:fixture_tier1",
+        "build_seconds": null,
+        "serving_bytes": 9716238,
+        "tdv_analysis_bytes": 0,
+        "total_bytes": 9716238
+      },
+      "metrics_status": "unmeasured"
+    },
+    "C4": {
+      "summary": null,
+      "by_category": null,
+      "statistics": {
+        "configuration": "C4",
+        "corpus_sha256": "f42acebb1ac34084e859f378243145a3f8e981869350edb41a3dc27e86320fa7",
+        "n_documents": 2500,
+        "stoplist_count": 494,
+        "stoplist_matched_vocabulary_count": 494,
+        "fallback_policy": "optional_separate_C3_index_if_C4_query_vector_zero",
+        "tdv_seconds": 11.645827100001043,
+        "preprocessing_status": "development_only",
+        "official_preprocessing": false,
+        "tokenizer": "engine.preprocessing:baseline_tokenize",
+        "tier1_filter": "engine.preprocessing:fixture_tier1",
+        "build_seconds": null,
+        "serving_bytes": 5221953,
+        "tdv_analysis_bytes": 935717,
+        "total_bytes": 6157670
+      },
+      "metrics_status": "unmeasured"
+    }
+  },
+  "note": "Chưa đủ nhãn relevance confirmed nên KHÔNG ghi bất kỳ chỉ số nào. Các số 0 ở đây sẽ là số giả; bộ đánh giá từ chối xuất chúng."
+}

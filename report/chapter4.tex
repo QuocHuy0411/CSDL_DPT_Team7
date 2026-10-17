@@ -1,0 +1,124 @@
+\chapter{THỰC NGHIỆM VÀ ĐÁNH GIÁ}
+
+\input{experiment_tables}
+
+\section{Định nghĩa chỉ số chất lượng và điều kiện công bố}
+
+Cả bốn cấu hình dùng cùng corpus, query và qrels. Relevance là nhãn theo nội
+dung của từng cặp query--document, không phải cùng lĩnh vực. Grade 0 là không
+liên quan, grade 1 là liên quan một phần, grade 2 là đáp ứng trực tiếp;
+grade lớn hơn 0 là relevant khi tính các chỉ số nhị phân.
+
+Với $R_q$ là tập relevant đã biết của truy vấn $q$, $L_q^K$ là Top-$K$ kết quả:
+\begin{align}
+P@K &= \frac{|R_q\cap L_q^K|}{K},\\
+Recall@K &= \frac{|R_q\cap L_q^K|}{|R_q|},\\
+F1@K &= \frac{2\,P@K\,Recall@K}{P@K+Recall@K}.
+\end{align}
+Khi mẫu số bằng 0 quy ước kết quả bằng 0. Query không có relevant giữ điểm 0
+trong bình quân macro và được đếm riêng; ranking rỗng cũng giữ 0, không loại khỏi
+bình quân để làm đẹp kết quả. Mặc định $K=10$ cho Precision/Recall/F1/NDCG.
+
+\begin{equation}
+AP(q)=\frac{1}{|R_q|}\sum_{r=1}^{L}P@r\;rel(r),\qquad
+MAP=\frac{1}{|Q|}\sum_{q\in Q}AP(q).
+\end{equation}
+$L$ là toàn ranking có sẵn (độ sâu mặc định bằng số tài liệu trong corpus).
+Nếu cố ý cắt ranking phải ghi AP@depth, không gọi là MAP toàn ranking.
+Document không có điểm dương không được bịa thành kết quả để đủ độ sâu.
+
+\begin{equation}
+DCG@K=\sum_{r=1}^{K}\frac{2^{grade(r)}-1}{\log_2(r+1)},\qquad
+NDCG@K=\frac{DCG@K}{IDCG@K}.
+\end{equation}
+$IDCG$ lấy thứ tự grade lý tưởng từ qrels, không chỉ từ tài liệu đã trả về.
+Nếu $IDCG=0$ thì NDCG bằng 0.
+
+Bộ đánh giá chính thức kiểm tra schema, SHA256 corpus thực/manifest, SHA256
+query, trạng thái nhãn, assessor và metadata preprocessing. Pending không được
+tự diễn giải thành nhãn đã xác nhận. Khi chưa sẵn sàng, kết quả ghi
+\texttt{unmeasured} và không xuất bảng điểm 0 như một phép đo chất lượng.
+Các bảng theo query và 10 lĩnh vực được evaluator xuất khi qrels đủ điều kiện.
+
+\section{Kiểm định tách từ và cấu trúc tra cứu}
+
+Tập chuẩn bị cho M1 gồm 150 câu có nguồn từ corpus chính, 15 câu/lĩnh vực,
+được lưu ở \texttt{data/gold/}. Gợi ý FMM/BMM/BiMM chỉ phục vụ gán nhãn;
+không gọi output của thuật toán là gold. Người gán cần xác nhận phân đoạn,
+assessor, nội dung chuẩn hóa và hash trước khi đo.
+
+Đánh giá dùng khớp span từ trên cùng chuỗi âm tiết chuẩn hóa: một từ chỉ đúng
+khi cả đầu và cuối span đều khớp. Precision là số span khớp chia span dự đoán,
+Recall chia span gold, F1 là trung bình điều hòa. Không dùng tỷ lệ khớp ký tự
+thay cho độ chính xác phân đoạn từ. Quy trình nhập nhãn phải từ chối phân đoạn
+làm mất/thêm/đổi thứ tự âm tiết. Chỉ số chính thức còn chờ gold do người gán.
+
+Đối chứng Trie và Set phải dùng cùng từ điển, câu, cửa sổ và luật BiMM. Kiểm tra
+output parity trước khi so tốc độ. Thời gian khởi tạo và bộ nhớ Python qua
+\texttt{tracemalloc} tách khỏi thời gian tách câu; không gọi đây là toàn bộ RAM
+tiến trình. Không mặc định Trie luôn nhanh hơn hash set.
+Phép đo thật trên 150 câu mẫu và 100 bài đầu của corpus khóa (10 vòng lặp,
+2 lượt warm-up) có 750 đối soát FMM/BMM/BiMM, không có token nào lệch.
+Trên mẫu câu, mean FMM là 0,2328~ms (Trie) so với 0,1147~ms (Set), BiMM là
+0,4557 so với 0,1958~ms; trên lát cắt corpus, BiMM là 6,5355 so với
+2,6611~ms/bài. Như vậy bản Trie emph{hiện tại} chậm hơn Set khoảng 2--2,5
+lần trong hai workload này. Nguyên nhân triển khai là mỗi độ dài ứng viên lại
+tra từ gốc Trie thay vì dùng một lượt dò tiền tố; đây không phải kết luận rằng
+Trie nói chung chậm hơn. Đỉnh heap Python khi dựng Trie/Set lần lượt là
+20.985.701/15.368.109 byte, không phải RSS. Chi tiết và dữ liệu gốc nằm trong
+\texttt{results/lookup/trie\_vs\_set.json} và tài liệu benchmark kèm repo.
+\IfFileExists{segmentation_results.tex}{\input{segmentation_results}}{}
+
+\section{Kiểm chứng triển khai}
+
+\subsection{TF-IDF, Cosine và persistence}
+
+Kiểm thử toán học dùng fixture tính tay và đối soát scikit-learn với cùng
+analyzer/sublinear TF/smoothed IDF/L2, gồm từ lặp và token một ký tự.
+Kiểm tra query rỗng, OOV, vector 0, stopword, hòa điểm, query dùng IDF corpus.
+Kiểm thử save/load kiểm tra SHA256 artifact, source và tài nguyên; từ chối
+tokenizer không thể kiểm chứng và nguồn bị thay đổi.
+
+\texttt{explain()} phân rã bằng tích trọng số query/document đã L2; tổng phải
+bằng điểm Cosine trong sai số số thực. Audit đầu-cuối đối chiếu từng kết quả
+Top-10 của cả 20 query ở bốn cấu hình và kiểm tra nội dung pool với corpus khóa.
+
+\subsection{TDV}
+
+Đường tham chiếu độc lập dựng ma trận Cosine trực tiếp sau khi xóa từng chiều,
+chuẩn hóa lại rồi tính mật độ. Đường nhanh dùng cấu trúc thưa và cập nhật tổng
+vector chính xác. Kiểm thử gồm zero vector, một tài liệu, term xuất hiện mọi
+tài liệu, dữ liệu ngẫu nhiên, và phản ví dụ cho cách xóa chiều mà không L2 lại.
+Không sao chép kết quả tham chiếu làm output của đường tối ưu.
+
+\subsection{Maximum Matching và giao diện}
+
+FMM/BMM/BiMM được kiểm tra bằng từ điển fixture minh bạch, thứ tự trọng tài,
+OOV xen kẽ từ đã biết và ranh giới dấu câu. Lead còn dùng oracle Set trực tiếp
+độc lập trên từ điển/câu ngẫu nhiên; trace phải tái dựng đúng output khi sắp
+terminal action theo vị trí, trong khi thứ tự bước BMM vẫn phản ánh quét lùi.
+AppTest chạy mã Streamlit thật cho trang chủ, ba phương pháp, tầng 1, tìm kiếm,
+explain, OOV và Analytics.
+
+Báo cáo kiểm chứng đầy đủ và số test cuối nằm ở
+\texttt{docs/integration\_status.md}; audit JSON ghi hash, số bài và sai số
+phân rã Cosine. Fixture không được đưa vào bảng kết quả corpus chính.
+
+\section{Giới hạn và kết luận}
+
+Chưa có phép đo chất lượng IR/gold tách từ do nhãn con người chưa đủ. Vì vậy
+chưa kết luận cấu hình nào có MAP/NDCG hay F1 phân đoạn tốt nhất. Tập query nhỏ
+(hai/lĩnh vực) và qrels pooling có thiên lệch theo hệ thống đóng góp; tài liệu
+relevant bị cả ba baseline bỏ sót không có nhãn, không có hướng sai lệch cố định
+của MAP/Recall so với relevance đầy đủ.
+
+Maximum Matching phụ thuộc từ điển, dễ nhập nhằng với tên riêng, từ mới và cụm
+dài; từ điển rộng có cả thành ngữ không đồng nghĩa là phân đoạn tốt. Chính sách
+chuẩn hóa bỏ số/URL/email và giữ chữ Latin vay mượn cần được cân nhắc khi đọc
+query chuyên ngành. Bag-of-words giữ phủ định không có nghĩa đã suy luận đúng
+ngữ nghĩa phủ định.
+
+Số đo latency là warm process trên một máy, không phải cam kết độ trễ mọi máy
+hay mọi kích thước corpus. Kết quả kích thước phải tách chỉ mục C4 thuần khỏi gói
+C4+C3. Phần triển khai, tích hợp và kiểm thử có thể hoàn tất trước; phần kết luận
+chất lượng chỉ hoàn tất sau gán nhãn và đo thật.

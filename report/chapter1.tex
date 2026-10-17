@@ -1,0 +1,111 @@
+% Chương 1 — Giới thiệu. Được nạp bằng \input{chapter1} trong main.tex.
+% Chỉ dùng các gói đã khai báo trong main.tex; không thêm gói mới.
+\chapter{GIỚI THIỆU}
+
+\section{Bối cảnh và lý do chọn đề tài}
+
+Truy xuất văn bản là bài toán tìm trong một kho tài liệu những văn bản liên quan
+nhất tới một câu hỏi của người dùng. Với tiếng Việt, bài toán này khó hơn so với
+các ngôn ngữ dùng khoảng trắng để phân tách từ, vì khoảng trắng trong tiếng Việt
+phân tách \emph{âm tiết} chứ không phân tách \emph{từ}: một từ như ``trí tuệ nhân
+tạo'' gồm bốn âm tiết được viết rời nhau. Nếu lập chỉ mục trên từng âm tiết, các
+âm tiết riêng lẻ như ``tuệ'' hay ``tạo'' trở thành đơn vị chỉ mục rời rạc và làm
+loãng tín hiệu phân biệt của tài liệu. Vì vậy tách từ tiếng Việt là bước bắt buộc
+trước khi biểu diễn và lập chỉ mục văn bản.
+
+Một khó khăn thứ hai là lọc từ dừng. Loại các từ chức năng rất phổ biến (như
+``của'', ``và'', ``là'') làm giảm nhiễu và kích thước chỉ mục, nhưng danh sách
+cố định không tính đến đặc thù của từng miền dữ liệu. Trong kho tin tức tiếng
+Việt theo nhiều chủ đề, có những từ phổ biến nhưng chỉ tập trung ở vài chủ đề;
+loại chúng đi có thể làm mất thông tin phân biệt. Đề tài này tiếp cận bằng một
+tầng lọc thứ hai dựa trên độ đo cấu trúc hình học chứ không dựa trên tần suất đặt
+tay, nhằm trả lời câu hỏi: khi bỏ một từ khỏi không gian biểu diễn, các tài liệu
+có trở nên dễ phân biệt nhau hơn hay không?
+
+Đề tài được thực hiện trong phạm vi môn học đa phương tiện, với dữ liệu, thuật
+toán và quy trình đo đều nằm lại trong kho mã nguồn của nhóm. Yêu cầu gốc của bài
+tập nhóm bao gồm tách từ, loại từ dừng, biểu diễn TF-IDF, tính tương đồng cosin
+và đánh giá kết quả \cite{baigiang}.
+
+\section{Mục tiêu của đồ án}
+
+Đồ án hướng tới các mục tiêu sau:
+
+\begin{enumerate}
+  \item Xây dựng một quy trình xử lý ngôn ngữ tiếng Việt hoàn chỉnh và có thể
+        kiểm chứng: chuẩn hóa Unicode, tách từ theo ba phương pháp, và lọc từ
+        dừng theo hai tầng.
+  \item Cài đặt một hệ thống truy xuất văn bản trên nền TF-IDF và tương đồng
+        cosin, có chỉ mục đảo, có khả năng giải thích điểm số theo từng từ.
+  \item Cài đặt độ đo Giá trị phân biệt từ (Term Discrimination Value -- TDV)
+        một cách chính xác để tự động phát hiện từ dừng đặc thù của miền dữ liệu.
+  \item Bốn cấu hình thực nghiệm đối chứng (C1--C4) để so sánh các chiến lược
+        lọc từ dừng trên cùng một kho ngữ liệu, cùng một bộ truy vấn và cùng một
+        bộ nhãn liên quan.
+  \item Đo độ trễ truy vấn và dung lượng chỉ mục bằng số liệu thật, có quy trình
+        đo tách bạch khỏi các chỉ số chất lượng phụ thuộc nhãn người.
+\end{enumerate}
+
+\section{Phạm vi số liệu}
+
+Kho ngữ liệu của đồ án gồm 2.500 bài báo tiếng Việt thuộc 10 lĩnh vực, mỗi lĩnh
+vực 250 bài, được khóa bằng hàm băm SHA256 trong
+\texttt{data/corpus\_manifest.json}. Bộ truy vấn gồm 20 câu, khoảng hai câu mỗi
+lĩnh vực, phủ các dạng ngắn, dài, phủ định và chuyên ngành. Tập ứng viên đánh giá
+được gộp từ kết quả của các đường cơ sở và được đưa cho người gán nhãn.
+
+Một điểm được nêu rõ ngay từ đầu: báo cáo này \textbf{phân biệt rõ} giữa phần đã
+đo và phần chưa đo. Trạng thái nhãn liên quan tại thời điểm viết là
+\texttt{pending\_human\_annotation}: pool ứng viên đã hình thành nhưng \textbf{chưa
+có cặp nào được người gán xác nhận}. Do đó các chỉ số chất lượng truy xuất
+(P@K, R@K, F1@K, MAP, NDCG@K) \textbf{chưa được đo} và không được trình bày như
+một kết quả đã có. Việc này là quyết định thiết kế: một bảng toàn số không khi
+thiếu nhãn dễ bị đọc nhầm là hệ thống không tìm được gì, trong khi nguyên nhân là
+thiếu dữ liệu gán nhãn.
+
+\section{Yêu cầu của đề tài}
+
+Theo yêu cầu bài tập nhóm \cite{baigiang}, sản phẩm cần thể hiện đủ ba phần lý
+thuyết, cài đặt và thực nghiệm. Cụ thể đồ án phải có: (i) tách từ tiếng Việt bằng
+\emph{so khớp cực đại} trên từ điển và cây Trie; (ii) loại từ dừng có nguồn và
+quy tắc rõ ràng, không tự bù danh sách để đủ số lượng; (iii) biểu diễn văn bản và
+truy vấn bằng TF-IDF, xếp hạng bằng tương đồng cosin; (iv) bộ công cụ đo lường và
+biểu đồ kết quả. Nền tảng lý thuyết về biểu diễn văn bản và chỉ mục đảo được tham
+chiếu từ giáo trình môn học \cite{giaotrinh}.
+
+\section{Tổ chức thực hiện}
+
+Công việc được chia thành ba nhóm trách nhiệm, ranh giới giữa các nhóm được ghi
+thành hợp đồng API trong kho mã nguồn để tránh chồng lấn:
+
+\begin{itemize}
+  \item \textbf{M1 -- Xử lý ngôn ngữ tự nhiên:} chuẩn hóa chuỗi, từ điển và cây
+        Trie, tách từ FMM/BMM/BiMM, lọc từ dừng tầng 1 cùng danh sách bảo vệ
+        phủ định.
+  \item \textbf{M2 -- Truy xuất thông tin:} TF-IDF, chỉ mục đảo, tương đồng
+        cosin, độ đo TDV tầng 2, bộ đánh giá chỉ số và bộ đo độ trễ, dung lượng.
+  \item \textbf{M3 -- Tích hợp và giao diện:} ứng dụng minh họa, hợp đồng API,
+        quản trị mã nguồn và đóng gói.
+\end{itemize}
+
+Đồ án được thực hiện bởi Nhóm 7. Báo cáo dùng cách gọi nhất quán ``Nhóm 7'' trong
+toàn bộ tài liệu.
+
+\section{Đóng góp chính}
+
+Các đóng góp được trình bày trong báo cáo gồm: một quy trình tách từ tiếng Việt
+có vết thuật toán từng bước, tái lập được; một cài đặt TDV chính xác có đường
+tham chiếu độc lập để kiểm chứng, kèm cả một phiên bản ``cách làm sai'' có chủ
+đích để chứng minh rằng việc tái chuẩn hóa sau khi xóa một chiều là bắt buộc; một
+bộ đánh giá có cổng chặn chống công bố kết quả giả khi thiếu nhãn hoặc sai hàm
+băm; và một quy trình đo chất lượng tách từ bằng nhãn người với ràng buộc toàn vẹn
+theo hàm băm.
+
+\section{Cấu trúc báo cáo}
+
+Phần còn lại của báo cáo được tổ chức như sau. Chương~2 trình bày nền tảng xử lý
+ngôn ngữ tiếng Việt và lý do của từng bước tiền xử lý. Chương~3 trình bày thiết kế
+hệ thống tìm kiếm, bao gồm thiết kế tầng ngôn ngữ M1, độ đo TF-IDF, độ đo TDV và
+bốn cấu hình lọc. Chương~4 trình bày thực nghiệm và đánh giá. Chương~5 kết luận,
+nêu rõ phần đã kiểm chứng và phần còn chờ nhãn người, cùng các hạn chế và hướng
+phát triển.

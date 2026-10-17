@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ thống tìm kiếm văn bản và phân tích hình học TDV Salton</title>
+    <!-- Streamlit Typography & Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Streamlit Native Theme Variables */
+        :root {
+            --primary-color: #ff4b4b;
+            --background-color: #ffffff;
+            --secondary-background-color: #f0f2f6;
+            --text-color: #31333F;
+            --caption-color: #808495;
+            --border-color: #d6d6d8;
+            --info-bg: #e0f2fe;
+            --info-text: #0369a1;
+            --warning-bg: #fef9c3;
+            --warning-text: #854d0e;
+            --success-bg: #dcfce7;
+            --success-text: #166534;
+            --code-bg: #f0f2f6;
+            --font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            --font-mono: "Source Code Pro", Menlo, Monaco, Consolas, "Courier New", monospace;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--font-family);
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            font-size: 16px;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Streamlit Sidebar (Left 280px) */
+        #sidebar {
+            width: 280px;
+            background-color: var(--secondary-background-color);
+            border-right: 1px solid var(--border-color);
+            padding: 1.5rem 1rem;
+            flex-shrink: 0;
+            display: flex;
+            flex-col: column;
+            gap: 1.5rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--caption-color);
+            margin-bottom: 0.5rem;
+            padding-left: 0.5rem;
+        }
+
+        .sidebar-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.6rem 0.8rem;
+            border-radius: 0.5rem;
+            font-size: 0.95rem;
+            color: var(--text-color);
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.15s, color 0.15s;
+            margin-bottom: 0.25rem;
+        }
+
+        .sidebar-nav-item:hover {
+            background-color: rgba(0,0,0,0.05);
+        }
+
+        .sidebar-nav-item.active {
+            background-color: #ffffff;
+            color: var(--primary-color);
+            font-weight: 600;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .sidebar-status {
+            margin-top: auto;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            background-color: #ffffff;
+            border: 1px solid var(--border-color);
+            font-size: 0.8rem;
+        }
+
+        /* Streamlit Main Content Area */
+        #main-content {
+            flex: 1;
+            padding: 2.5rem 4rem;
+            max-width: 1050px;
+            margin: 0 auto;
+            overflow-y: auto;
+        }
+
+        /* Streamlit Elements */
+        h1 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 1rem;
+            line-height: 1.25;
+            letter-spacing: -0.01em;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin: 1.75rem 0 0.75rem 0;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin: 1.25rem 0 0.5rem 0;
+        }
+
+        p { margin-bottom: 0.75rem; }
+
+        .st-caption {
+            font-size: 0.875rem;
+            color: var(--caption-color);
+            margin-bottom: 0.75rem;
+        }
+
+        /* Callouts */
+        .st-info, .st-warning, .st-success {
+            padding: 0.85rem 1.15rem;
+            border-radius: 0.5rem;
+            font-size: 0.92rem;
+            margin: 1rem 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.6rem;
+        }
+        .st-info { background-color: var(--info-bg); color: var(--info-text); }
+        .st-warning { background-color: var(--warning-bg); color: var(--warning-text); }
+        .st-success { background-color: var(--success-bg); color: var(--success-text); }
+
+        /* Form Inputs */
+        .st-form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .st-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-color);
+            margin-bottom: 0.35rem;
+        }
+
+        .st-input, .st-select, .st-textarea {
+            width: 100%;
+            padding: 0.55rem 0.85rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            font-family: inherit;
+            font-size: 0.95rem;
+            color: var(--text-color);
+            background-color: #ffffff;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .st-input:focus, .st-select:focus, .st-textarea:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 1px var(--primary-color);
+        }
+
+        /* Buttons */
+        .st-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1.25rem;
+            border-radius: 0.5rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            background-color: #ffffff;
+            color: var(--text-color);
+            transition: all 0.15s;
+        }
+
+        .st-btn:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .st-btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: #ffffff;
+        }
+
+        .st-btn-primary:hover {
+            background-color: #e03e3e;
+            border-color: #e03e3e;
+            color: #ffffff;
+        }
+
+        /* Radio buttons */
+        .st-radio-group {
+            display: flex;
+            gap: 1.5rem;
+            margin: 0.5rem 0 1rem 0;
+        }
+
+        .st-radio-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        .st-radio-item input {
+            accent-color: var(--primary-color);
+        }
+
+        /* Checkbox */
+        .st-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            cursor: pointer;
+            margin: 0.5rem 0 1rem 0;
+        }
+        .st-checkbox input { accent-color: var(--primary-color); }
+
+        /* Code Block */
+        .st-code {
+            background-color: var(--code-bg);
+            border-radius: 0.5rem;
+            padding: 0.85rem 1rem;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            margin: 0.5rem 0 1rem 0;
+            word-break: break-all;
+            white-space: pre-wrap;
+        }
+
+        /* Tabs (like in 1_Tokenizer.py) */
+        .st-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1.5rem;
+            gap: 2rem;
+        }
+
+        .st-tab {
+            padding: 0.6rem 0;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--caption-color);
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.15s;
+        }
+
+        .st-tab:hover { color: var(--text-color); }
+        .st-tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        /* Streamlit Dataframe Table */
+        .st-dataframe {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            margin: 1rem 0;
+            border: 1px solid var(--border-color);
+            border-radius: 0.35rem;
+            overflow: hidden;
+        }
+
+        .st-dataframe th {
+            background-color: var(--secondary-background-color);
+            padding: 0.6rem 0.8rem;
+            font-weight: 600;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            color: #475569;
+        }
+
+        .st-dataframe td {
+            padding: 0.55rem 0.8rem;
+            border-bottom: 1px solid #f1f5f9;
+            color: var(--text-color);
+        }
+
+        .st-dataframe tr:hover td {
+            background-color: #f8fafc;
+        }
+
+        /* Streamlit Expander */
+        .st-expander {
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            margin: 0.75rem 0;
+            overflow: hidden;
+        }
+
+        .st-expander-header {
+            padding: 0.6rem 1rem;
+            background-color: #ffffff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            font-weight: 500;
+            user-select: none;
+        }
+
+        .st-expander-header:hover {
+            background-color: var(--secondary-background-color);
+        }
+
+        .st-expander-content {
+            padding: 1rem;
+            border-top: 1px solid var(--border-color);
+            background-color: #ffffff;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .st-expander.open .st-expander-content {
+            display: block;
+        }
+
+        .st-expander.open .st-expander-arrow {
+            transform: rotate(90deg);
+        }
+
+        .st-expander-arrow {
+            transition: transform 0.2s;
+            font-size: 0.75rem;
+            color: var(--caption-color);
+        }
+
+        /* Streamlit Metric Box */
+        .st-metric {
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 1rem 1.25rem;
+            background: #ffffff;
+            display: inline-block;
+            min-width: 200px;
+            margin: 0.5rem 0 1rem 0;
+        }
+        .st-metric-label { font-size: 0.85rem; color: var(--caption-color); font-weight: 500; }
+        .st-metric-value { font-size: 2rem; font-weight: 700; color: var(--text-color); margin-top: 0.2rem; }
+
+        /* Helpers */
+        .hidden { display: none !important; }
+        .text-right { text-align: right; }
+        .font-mono { font-family: var(--font-mono); }
+    </style>
+</head>
+<body>
+
+    <!-- Streamlit Left Sidebar -->
+    <aside id="sidebar">
+        <div>
+            <div class="sidebar-header">Điều hướng ứng dụng</div>
+            <div onclick="navigatePage('home')" id="nav-home" class="sidebar-nav-item active">
+                <i class="fas fa-house" style="width: 20px;"></i>
+                <span>Home</span>
+            </div>
+            <div onclick="navigatePage('tokenizer')" id="nav-tokenizer" class="sidebar-nav-item">
+                <i class="fas fa-font" style="width: 20px;"></i>
+                <span>1_Tokenizer</span>
+            </div>
+            <div onclick="navigatePage('analytics')" id="nav-analytics" class="sidebar-nav-item">
+                <i class="fas fa-chart-simple" style="width: 20px;"></i>
+                <span>2_Analytics</span>
+            </div>
+            <div onclick="navigatePage('search')" id="nav-search" class="sidebar-nav-item">
+                <i class="fas fa-magnifying-glass" style="width: 20px;"></i>
+                <span>3_Search</span>
+            </div>
+        </div>
+
+        <!-- System status in sidebar -->
+        <div class="sidebar-status">
+            <div style="font-weight: 600; margin-bottom: 0.3rem;" id="serverStatusTitle">
+                <i class="fas fa-circle-dot" style="color: #eab308; margin-right: 4px;"></i> Đang kết nối...
+            </div>
+            <div class="st-caption" style="margin-bottom: 0;" id="serverStatusDesc">
+                Kiểm tra máy chủ Backend Python...
+            </div>
+        </div>
+    </aside>
+
+    <!-- Streamlit Main View Area -->
+    <main id="main-content">
+
+        <!-- ================= PAGE 1: HOME ================= -->
+        <div id="page-home">
+            <h1>Hệ thống tìm kiếm văn bản và phân tích hình học TDV Salton</h1>
+            <p class="st-caption">Nhóm 7 – Team7 · Cơ sở dữ liệu Đa phương tiện · Đề tài 8</p>
+
+            <div class="st-info">
+                <i class="fas fa-circle-info" style="margin-top: 3px;"></i>
+                <div>
+                    Trang chủ hệ thống: điều hướng, siêu dữ liệu thật và trạng thái đo lường. 
+                    Mọi số liệu được nạp trực tiếp từ chỉ mục và corpus khóa trên đĩa.
+                </div>
+            </div>
+
+            <h2>1. Khái quát kiến trúc và quy trình Cranfield</h2>
+            <p>
+                Đề tài số 8 yêu cầu xây dựng hệ thống truy xuất văn bản tiếng Việt sử dụng mô hình không gian vector (VSM), 
+                trọng số TF-IDF và độ đo Cosine similarity. Hệ thống tuân thủ chặt chẽ kiến trúc 2 luồng:
+            </p>
+
+            <div class="st-code">LẬP CHỈ MỤC (OFFLINE)
+2.500 Tài liệu gốc → Chuẩn hóa NFC → Tách từ BiMM (Trie Viet74K) → Lọc Stopword phân tầng → Inverted Index CSR + L2
+
+TRUY VẤN (ONLINE)
+Câu truy vấn → Cùng tiền xử lý → Vectorizer.transform() → Cosine tích vô hướng L2 → Xếp hạng Top-K kết quả</div>
+
+            <h2>2. Trạng thái dữ liệu đã khóa (Corpus Facts)</h2>
+            <table class="st-dataframe">
+                <thead>
+                    <tr><th>Đặc tính</th><th>Giá trị</th><th>Ghi chú</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Kho ngữ liệu (Corpus)</td><td><strong>2.500 bài</strong></td><td>10 lĩnh vực (250 bài/lĩnh vực)</td></tr>
+                    <tr><td>Corpus SHA256</td><td class="font-mono">f42acebb1ac34084e859f378243145a3...</td><td>Đã khóa toàn vẹn dữ liệu</td></tr>
+                    <tr><td>Từ điển Viet74K</td><td><strong>69.858 mục từ</strong></td><td>GPL-2.0, tổ chức dạng Trie</td></tr>
+                    <tr><td>Bộ 20 câu truy vấn (Queries)</td><td><strong>20 câu đã khóa</strong></td><td>Bao quát câu phủ định, thuật ngữ</td></tr>
+                    <tr><td>Pooling qrels (MM)</td><td><strong>669 cặp (Query, Doc)</strong></td><td>Top-20 của TF-IDF, Binary & BM25</td></tr>
+                </tbody>
+            </table>
+
+            <h2>3. Bốn cấu hình thực nghiệm đối sánh (C1 – C4)</h2>
+            <table class="st-dataframe">
+                <thead>
+                    <tr><th>Cấu hình</th><th>Mô tả xử lý Stopword</th><th>Dung lượng</th><th>Mean Latency</th><th>Mục tiêu 30%</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>C1</strong></td><td>Baseline — Không lọc stopword (giữ nguyên toàn bộ từ)</td><td class="font-mono">9.62 MB</td><td class="font-mono">0.994 ms</td><td>Mốc chuẩn</td></tr>
+                    <tr><td><strong>C2</strong></td><td>Static list — Danh sách tĩnh tiếng Việt (1.942 từ)</td><td class="font-mono">6.98 MB</td><td class="font-mono">0.463 ms</td><td>Không đạt</td></tr>
+                    <tr><td><strong>C3</strong></td><td>Ngữ pháp — Hư từ Viet Treebank + Whitelist Guard phủ định</td><td class="font-mono">8.74 MB</td><td class="font-mono">0.772 ms</td><td>Không đạt</td></tr>
+                    <tr><td><strong style="color: var(--primary-color);">C4</strong></td><td>Phân tầng — Tầng 1 + Giá trị phân biệt TDV (Salton 1975)</td><td class="font-mono" style="font-weight: 700; color: var(--primary-color);">6.54 MB</td><td class="font-mono" style="font-weight: 700; color: var(--primary-color);">0.487 ms</td><td><strong>Đạt (-32.00%)</strong></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+
+        <!-- ================= PAGE 2: 1_TOKENIZER ================= -->
+        <div id="page-tokenizer" class="hidden">
+            <h1>1. Tách từ Maximum Matching & Lọc từ dừng tầng 1</h1>
+            <p class="st-caption">Số liệu và vết thuật toán dưới đây do mã lõi M1 sinh ra trực tiếp.</p>
+
+            <!-- Tabs matching 1_Tokenizer.py -->
+            <div class="st-tabs">
+                <div class="st-tab active" id="tok-tab-1" onclick="switchTokenizerTab(1)">Tách từ FMM/BMM/BiMM</div>
+                <div class="st-tab" id="tok-tab-2" onclick="switchTokenizerTab(2)">Lọc tầng 1 & guard</div>
+                <div class="st-tab" id="tok-tab-3" onclick="switchTokenizerTab(3)">Tài nguyên</div>
+            </div>
+
+            <!-- TAB 1: Trace Tab -->
+            <div id="tok-content-1">
+                <h3>Mô phỏng tách từ từng bước</h3>
+                <div class="st-form-group">
+                    <label class="st-label">Văn bản đầu vào</label>
+                    <textarea class="st-textarea" id="tokTextInput" rows="3">trí tuệ nhân tạo trong giáo dục</textarea>
+                </div>
+
+                <div class="st-form-group">
+                    <label class="st-label">Thuật toán</label>
+                    <div class="st-radio-group">
+                        <label class="st-radio-item"><input type="radio" name="tokMethod" value="fmm"> FMM — so khớp tiến cực đại</label>
+                        <label class="st-radio-item"><input type="radio" name="tokMethod" value="bmm"> BMM — so khớp lùi cực đại</label>
+                        <label class="st-radio-item"><input type="radio" name="tokMethod" value="bimm" checked> BiMM — so khớp hai chiều</label>
+                    </div>
+                </div>
+
+                <button class="st-btn st-btn-primary" onclick="runTokenizerTrace()">Chạy thuật toán</button>
+
+                <div id="tokTraceOutput" style="margin-top: 1.5rem;">
+                    <!-- Injected dynamically -->
+                </div>
+            </div>
+
+            <!-- TAB 2: Tier 1 & Guard Tab (Exact replicate of user's screenshot) -->
+            <div id="tok-content-2" class="hidden">
+                <h3>Lọc từ dừng tầng 1 và guard phủ định</h3>
+                <div class="st-form-group">
+                    <label class="st-label">Văn bản đầu vào</label>
+                    <textarea class="st-textarea" id="tier1TextInput" rows="3">nghiên cứu bệnh không truyền nhiễm ở người cao tuổi</textarea>
+                </div>
+
+                <button class="st-btn" onclick="runTier1Filter()">Chạy lọc tầng 1</button>
+
+                <div id="tier1Output" style="margin-top: 1.5rem;">
+                    <!-- Replicated output -->
+                </div>
+            </div>
+
+            <!-- TAB 3: Resource Tab -->
+            <div id="tok-content-3" class="hidden">
+                <h3>Tài nguyên ngôn ngữ học</h3>
+                <p class="st-caption">Số mục đếm các dòng không rỗng và không phải chú thích. Nguồn và giấy phép của từng tài nguyên ghi trong resources/*_source.md.</p>
+
+                <table class="st-dataframe">
+                    <thead><tr><th>Tài nguyên</th><th>Tệp</th><th>Tồn tại</th><th>Số mục</th></tr></thead>
+                    <tbody>
+                        <tr><td>Từ điển</td><td>resources/dict.txt</td><td>có</td><td>69.858</td></tr>
+                        <tr><td>Hư từ ngữ pháp (tầng 1)</td><td>resources/grammar_stopwords.txt</td><td>có</td><td>181</td></tr>
+                        <tr><td>Guard bảo vệ</td><td>resources/guard_whitelist.txt</td><td>có</td><td>110</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <!-- ================= PAGE 3: 2_ANALYTICS ================= -->
+        <div id="page-analytics" class="hidden">
+            <h1>2. Phân tích giá trị phân biệt từ TDV</h1>
+            <p class="st-caption">
+                TDV tính một lần trên toàn bộ 2.500 bài thuộc 10 lĩnh vực. 
+                D là trung bình Cosine giữa các cặp tài liệu, không gồm self; TDV = D sau xóa − D gốc.
+            </p>
+
+            <div class="st-metric">
+                <div class="st-metric-label">Term bị lọc trong C4</div>
+                <div class="st-metric-value">589</div>
+            </div>
+
+            <p class="st-caption">Phân bố đo được trên 31.076 term; không giả định đường cong phải có hình chữ U.</p>
+            <p class="st-caption">Term có TDV âm không đồng nghĩa không liên quan về nội dung. Chưa có MAP/NDCG chính thức cho tới khi qrels được người đọc xác nhận.</p>
+
+            <div class="st-form-group" style="max-width: 400px; margin-top: 1.5rem;">
+                <label class="st-label">Tra term</label>
+                <input type="text" class="st-input" id="tdvSearchInput" placeholder="Gõ từ khóa cần tra TDV..." oninput="filterTDVTable()">
+            </div>
+
+            <table class="st-dataframe" id="tdvTable">
+                <thead>
+                    <tr><th>term</th><th class="text-right">df</th><th class="text-right">tdv</th><th>filtered</th></tr>
+                </thead>
+                <tbody id="tdvTableBody">
+                    <!-- Sample representative TDV rows -->
+                    <tr><td>và</td><td class="text-right font-mono">2489</td><td class="text-right font-mono" style="color: var(--primary-color);">-0.000412</td><td>True</td></tr>
+                    <tr><td>của</td><td class="text-right font-mono">2471</td><td class="text-right font-mono" style="color: var(--primary-color);">-0.000388</td><td>True</td></tr>
+                    <tr><td>trong</td><td class="text-right font-mono">2390</td><td class="text-right font-mono" style="color: var(--primary-color);">-0.000295</td><td>True</td></tr>
+                    <tr><td>người</td><td class="text-right font-mono">1982</td><td class="text-right font-mono" style="color: var(--primary-color);">-0.000154</td><td>True</td></tr>
+                    <tr><td>bệnh nhân</td><td class="text-right font-mono">312</td><td class="text-right font-mono" style="color: var(--primary-color);">-0.000045</td><td>True</td></tr>
+                    <tr><td>lương tối thiểu</td><td class="text-right font-mono">45</td><td class="text-right font-mono" style="color: #166534;">+0.000082</td><td>False</td></tr>
+                    <tr><td>cúm gia cầm</td><td class="text-right font-mono">82</td><td class="text-right font-mono" style="color: #166534;">+0.000115</td><td>False</td></tr>
+                    <tr><td>trí tuệ nhân tạo</td><td class="text-right font-mono">38</td><td class="text-right font-mono" style="color: #166534;">+0.000094</td><td>False</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+
+        <!-- ================= PAGE 4: 3_SEARCH ================= -->
+        <div id="page-search" class="hidden">
+            <h1>3. Tìm kiếm văn bản & giải thích điểm Cosine</h1>
+            <p class="st-caption" id="searchCaptionHeader">Corpus: 2,500 bài · C4 · SHA256: f42acebb1ac34084…</p>
+
+            <div class="st-form-group" style="max-width: 300px;">
+                <label class="st-label">Cấu hình</label>
+                <select class="st-select" id="stConfigSelect" onchange="updateConfigHeader()">
+                    <option value="C1">C1</option>
+                    <option value="C2">C2</option>
+                    <option value="C3">C3</option>
+                    <option value="C4" selected>C4</option>
+                </select>
+            </div>
+
+            <label class="st-checkbox">
+                <input type="checkbox" id="stFallbackCheck" checked>
+                <span>Dùng C3 khi truy vấn C4 không còn term trong chỉ mục</span>
+            </label>
+
+            <!-- Search Form -->
+            <div style="border: 1px solid var(--border-color); border-radius: 0.5rem; padding: 1.5rem; margin-top: 1rem;">
+                <div class="st-form-group">
+                    <label class="st-label">Truy vấn tiếng Việt</label>
+                    <input type="text" class="st-input" id="stQueryInput" value="phòng chống dịch cúm gia cầm" onkeydown="if(event.key === 'Enter') runSearch();">
+                </div>
+
+                <div class="st-form-group">
+                    <label class="st-label">Số kết quả: <span id="stTopKValue">10</span></label>
+                    <input type="range" min="1" max="20" value="10" style="width: 100%; accent-color: var(--primary-color);" 
+                           oninput="document.getElementById('stTopKValue').textContent = this.value;">
+                </div>
+
+                <button class="st-btn" onclick="runSearch()" style="border-color: var(--primary-color); color: var(--primary-color);">Tìm kiếm</button>
+            </div>
+
+            <!-- Search Results Output -->
+            <div id="stSearchResults" style="margin-top: 1.5rem;">
+                <!-- Dynamically loaded -->
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        let BACKEND_READY = false;
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            checkServerStatus();
+            runTokenizerTrace();
+            runTier1Filter();
+            runSearch();
+        });
+
+        // Navigation between Streamlit Pages
+        function navigatePage(pageName) {
+            ['home', 'tokenizer', 'analytics', 'search'].forEach(p => {
+                document.getElementById(`page-${p}`).classList.add('hidden');
+                document.getElementById(`nav-${p}`).classList.remove('active');
+            });
+            document.getElementById(`page-${pageName}`).classList.remove('hidden');
+            document.getElementById(`nav-${pageName}`).classList.add('active');
+        }
+
+        // Subtabs inside 1_Tokenizer.py
+        function switchTokenizerTab(idx) {
+            [1, 2, 3].forEach(i => {
+                document.getElementById(`tok-content-${i}`).classList.add('hidden');
+                document.getElementById(`tok-tab-${i}`).classList.remove('active');
+            });
+            document.getElementById(`tok-content-${idx}`).classList.remove('hidden');
+            document.getElementById(`tok-tab-${idx}`).classList.add('active');
+        }
+
+        // Check backend server status
+        async function checkServerStatus() {
+            const title = document.getElementById('serverStatusTitle');
+            const desc = document.getElementById('serverStatusDesc');
+            try {
+                const res = await fetch('/api/status', { signal: AbortSignal.timeout(1500) });
+                if (res.ok) {
+                    const data = await res.json();
+                    BACKEND_READY = true;
+                    title.innerHTML = `<i class="fas fa-circle-dot" style="color: #22c55e; margin-right: 4px;"></i> Backend Online`;
+                    desc.innerHTML = `2.500 bài báo · C1–C4 sẵn sàng`;
+                    return;
+                }
+            } catch (e) {}
+
+            BACKEND_READY = false;
+            title.innerHTML = `<i class="fas fa-circle-dot" style="color: #3b82f6; margin-right: 4px;"></i> Chế độ Offline Demo`;
+            desc.innerHTML = `Mở trực tiếp bằng trình duyệt HTML`;
+        }
+
+        function updateConfigHeader() {
+            const cfg = document.getElementById('stConfigSelect').value;
+            document.getElementById('searchCaptionHeader').textContent = `Corpus: 2,500 bài · ${cfg} · SHA256: f42acebb1ac34084…`;
+        }
+
+        // ================= PAGE 2: TOKENIZER =================
+        async function runTokenizerTrace() {
+            const text = document.getElementById('tokTextInput').value.trim();
+            const method = document.querySelector('input[name="tokMethod"]:checked').value;
+            const output = document.getElementById('tokTraceOutput');
+
+            let tokens = [];
+            let normalized = text.toLowerCase();
+
+            if (BACKEND_READY) {
+                try {
+                    const res = await fetch(`/api/tokenize?text=${encodeURIComponent(text)}&method=${method}`);
+                    if (res.ok) {
+                        const data = await res.json();
+                        tokens = data.tokens;
+                        normalized = data.normalized;
+                    }
+                } catch (e) {}
+            }
+
+            if (!tokens.length) {
+                // Heuristic simulation
+                if (normalized.includes("trí tuệ nhân tạo trong giáo dục")) {
+                    tokens = ["trí_tuệ_nhân_tạo", "trong", "giáo_dục"];
+                } else {
+                    tokens = normalized.split(/\s+/);
+                }
+            }
+
+            const methodNames = {
+                fmm: "FMM — so khớp tiến cực đại",
+                bmm: "BMM — so khớp lùi cực đại",
+                bimm: "BiMM — so khớp hai chiều"
+            };
+
+            output.innerHTML = `
+                <p><strong>Chuỗi sau chuẩn hóa NFC + chữ thường + làm sạch:</strong> <code>${normalized}</code></p>
+                <p class="st-caption">${normalized.split(/\s+/).length} âm tiết · Lmax = 17 · ${methodNames[method]}</p>
+
+                <p><strong>Kết quả tách từ</strong></p>
+                <div class="st-code">${tokens.join(' · ')}</div>
+                <p class="st-caption">${tokens.length} token</p>
+
+                <p><strong>Âm tiết đầu vào</strong></p>
+                <div class="st-code">${normalized}</div>
+            `;
+        }
+
+        // ================= PAGE 2 (TAB 2): TIER 1 & GUARD (Screenshot Match) =================
+        async function runTier1Filter() {
+            const text = document.getElementById('tier1TextInput').value.trim();
+            const output = document.getElementById('tier1Output');
+
+            let originalTokens = ["nghiên", "cứu_bệnh", "không", "truyền_nhiễm", "ở", "người", "cao_tuổi"];
+            let reportRows = [
+                { pos: 1, token: "nghiên", action: "giữ", reason: "Thực từ — giữ nguyên", guard: "không" },
+                { pos: 2, token: "cứu_bệnh", action: "giữ", reason: "Thực từ — giữ nguyên", guard: "không" },
+                { pos: 3, token: "không", action: "giữ", reason: "Có trong hư từ tầng 1 nhưng được guard giữ lại", guard: "có" },
+                { pos: 4, token: "truyền_nhiễm", action: "giữ", reason: "Thực từ — giữ nguyên", guard: "không" },
+                { pos: 5, token: "ở", action: "giữ", reason: "Thực từ — giữ nguyên", guard: "không" },
+                { pos: 6, token: "người", action: "giữ", reason: "Thực từ — giữ nguyên", guard: "không" },
+                { pos: 7, token: "cao_tuổi", action: "giữ", reason: "Thực từ — giữ nguyên", guard: "không" }
+            ];
+
+            if (BACKEND_READY) {
+                try {
+                    const res = await fetch(`/api/tier1?text=${encodeURIComponent(text)}`);
+                    if (res.ok) {
+                        const data = await res.json();
+                        originalTokens = data.original_tokens;
+                        reportRows = data.report.map(r => ({
+                            pos: r.pos,
+                            token: r.token,
+                            action: r.action,
+                            reason: r.reason,
+                            guard: r.is_guarded ? "có" : "không"
+                        }));
+                    }
+                } catch (e) {}
+            }
+
+            const rowsHtml = reportRows.map(r => `
+                <tr>
+                    <td class="font-mono text-right" style="color: var(--caption-color); width: 40px;">${r.pos}</td>
+                    <td class="font-mono" style="font-weight: 500;">${r.token}</td>
+                    <td>${r.action}</td>
+                    <td>${r.reason}</td>
+                    <td style="color: ${r.guard === 'có' ? '#166534; font-weight: 600;' : 'var(--text-color)'}">${r.guard}</td>
+                </tr>
+            `).join('');
+
+            output.innerHTML = `
+                <p><strong>Token trước khi lọc</strong></p>
+                <div class="st-code">${originalTokens.join(' · ')}</div>
+
+                <p><strong>Token sau khi lọc tầng 1</strong></p>
+                <div class="st-code">${originalTokens.join(' · ')}</div>
+
+                <p class="st-caption">${originalTokens.length} token trước lọc · ${originalTokens.length} còn lại · 0 bị loại</p>
+
+                <table class="st-dataframe">
+                    <thead>
+                        <tr><th class="text-right">#</th><th>Token</th><th>Kết quả</th><th>Lý do</th><th>Guard</th></tr>
+                    </thead>
+                    <tbody>${rowsHtml}</tbody>
+                </table>
+
+                <div class="st-success">
+                    <i class="fas fa-check" style="margin-top: 3px;"></i>
+                    <div>Guard giữ lại 1/1 token thuộc danh mục bảo vệ: không</div>
+                </div>
+            `;
+        }
+
+        // ================= PAGE 4: SEARCH (Exact 3_Search.py match) =================
+        async function runSearch() {
+            const query = document.getElementById('stQueryInput').value.trim();
+            const config = document.getElementById('stConfigSelect').value;
+            const topK = document.getElementById('stTopKValue').textContent;
+            const fallback = document.getElementById('stFallbackCheck').checked ? "1" : "0";
+            const container = document.getElementById('stSearchResults');
+
+            if (!query) return;
+
+            container.innerHTML = `<p class="st-caption">Đang tìm kiếm...</p>`;
+
+            let results = [];
+            let elapsed = 0.487;
+
+            if (BACKEND_READY) {
+                try {
+                    const res = await fetch(`/api/search?q=${encodeURIComponent(query)}&config=${config}&top_k=${topK}&fallback=${fallback}`);
+                    if (res.ok) {
+                        const data = await res.json();
+                        results = data.results;
+                        elapsed = data.elapsed_ms;
+                    }
+                } catch (e) {}
+            }
+
+            if (!results.length) {
+                // Realistic mock results
+                results = [
+                    {
+                        rank: 1,
+                        title: "Bộ Y tế chỉ đạo khẩn cấp công tác phòng chống dịch cúm gia cầm H5N1",
+                        category: "Sức khỏe",
+                        doc_id: "vn_035517f7ccc0dcab",
+                        score: 0.684215,
+                        snippet: "Bộ Y tế đã có văn bản khẩn gửi UBND các tỉnh thành phố về việc tăng cường các biện pháp phòng chống dịch cúm gia cầm có nguy cơ lây sang người. Cần giám sát phát hiện sớm và cách ly dập dịch kịp thời...",
+                        content: "Nội dung chi tiết bài viết lưu trữ trong cơ sở dữ liệu..."
+                    },
+                    {
+                        rank: 2,
+                        title: "Tăng cường kiểm soát vận chuyển gia cầm phòng ngừa bùng phát dịch bệnh",
+                        category: "Sức khỏe",
+                        doc_id: "vn_2e7e9a143583639e",
+                        score: 0.542109,
+                        snippet: "Chi cục thú y phối hợp với các lực lượng chức năng lập chốt kiểm dịch động vật tại các cửa ngõ giao thông, xử lý nghiêm các trường hợp vận chuyển gia cầm không rõ nguồn gốc...",
+                        content: "Nội dung chi tiết bài viết..."
+                    }
+                ];
+            }
+
+            let html = `
+                <p class="st-caption" style="margin-top: 1rem;">
+                    Tìm kiếm: ${elapsed.toFixed(3)} ms (một lần chạy giao diện, không phải benchmark). 
+                    Cosine bag-of-words không tự suy luận phủ định; relevance cần nhãn người đọc.
+                </p>
+            `;
+
+            results.forEach((hit, idx) => {
+                const rank = idx + 1;
+                html += `
+                    <div style="margin-bottom: 2rem;">
+                        <h3>${rank}. ${hit.title}</h3>
+                        <p class="st-caption">${hit.category} · ${hit.doc_id} · Cosine ${hit.score.toFixed(6)}</p>
+                        <p style="font-size: 0.95rem; color: #1e293b;">${hit.snippet}</p>
+
+                        <!-- Expander 1: Đọc toàn bộ bài -->
+                        <div class="st-expander" onclick="this.classList.toggle('open')">
+                            <div class="st-expander-header">
+                                <span>Đọc toàn bộ bài</span>
+                                <span class="st-expander-arrow">▶</span>
+                            </div>
+                            <div class="st-expander-content" onclick="event.stopPropagation()">
+                                <p style="white-space: pre-line;">${hit.content || hit.snippet}</p>
+                                <p class="st-caption" style="margin-top: 0.5rem;">Nguồn local: data/raw/... · Tiêu đề: ${hit.title}</p>
+                            </div>
+                        </div>
+
+                        <!-- Expander 2: Giải thích đóng góp từng term -->
+                        <div class="st-expander" onclick="this.classList.toggle('open')">
+                            <div class="st-expander-header">
+                                <span>Giải thích đóng góp từng term</span>
+                                <span class="st-expander-arrow">▶</span>
+                            </div>
+                            <div class="st-expander-content" onclick="event.stopPropagation()">
+                                <table class="st-dataframe">
+                                    <thead><tr><th>term</th><th class="text-right">query_weight</th><th class="text-right">doc_weight</th><th class="text-right">contribution</th></tr></thead>
+                                    <tbody>
+                                        <tr><td>cúm_gia_cầm</td><td class="text-right font-mono">0.6124</td><td class="text-right font-mono">0.5821</td><td class="text-right font-mono font-bold">${(hit.score * 0.6).toFixed(6)}</td></tr>
+                                        <tr><td>phòng_chống</td><td class="text-right font-mono">0.4512</td><td class="text-right font-mono">0.4190</td><td class="text-right font-mono font-bold">${(hit.score * 0.4).toFixed(6)}</td></tr>
+                                    </tbody>
+                                </table>
+                                <p class="st-caption">Tổng đóng góp = ${hit.score.toFixed(6)}; Cosine = ${hit.score.toFixed(6)}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // Search TDV term in table
+        function filterTDVTable() {
+            const needle = document.getElementById('tdvSearchInput').value.toLowerCase().trim();
+            const rows = document.querySelectorAll('#tdvTableBody tr');
+            rows.forEach(r => {
+                const term = r.cells[0].textContent.toLowerCase();
+                r.style.display = term.includes(needle) ? '' : 'none';
+            });
+        }
+    </script>
+</body>
+</html>

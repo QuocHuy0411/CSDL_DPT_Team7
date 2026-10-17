@@ -1,0 +1,57 @@
+% references.tex — Danh mục tài liệu tham khảo. Nạp bằng \input{references}.
+% Chỉ liệt kê các nguồn đã kiểm chứng, có trong docs/academic_sources.md và
+% trong phần xuất xứ dữ liệu của kho mã nguồn.
+\renewcommand{\bibname}{TÀI LIỆU THAM KHẢO}
+\begin{thebibliography}{9}
+
+\bibitem{baigiang}
+Bộ môn Cơ sở dữ liệu Đa phương tiện.
+\textit{Bài tập nhóm -- D23CQCNHT01}, đề tài 8: tách từ, loại từ dừng, TF-IDF,
+tương đồng cosin và đánh giá kết quả. Tài liệu môn học, trang~2.
+
+\bibitem{giaotrinh}
+\textit{Chương 3 -- Hệ thống truy vấn thông tin văn bản}. Bài giảng môn học.
+Các khái niệm tài liệu, truy vấn, chỉ mục, độ liên quan (tr.~6--9), đặc trưng
+(tr.~12--13), chỉ mục đảo (tr.~20--24) và tách từ, từ dừng, chuẩn hóa (tr.~26--28).
+
+\bibitem{salton1975theory}
+G. Salton, C. S. Yang, and C. T. Yu.
+\newblock A theory of term importance in automatic text analysis.
+\newblock \textit{Journal of the American Society for Information Science},
+26(1):33--44, 1975.
+\newblock DOI: \url{https://doi.org/10.1002/asi.4630260106}.
+
+\bibitem{salton1975vsm}
+G. Salton, A. Wong, and C. S. Yang.
+\newblock A vector space model for automatic indexing.
+\newblock \textit{Communications of the ACM}, 18(11):613--620, 1975.
+\newblock DOI: \url{https://doi.org/10.1145/361219.361220}.
+
+\bibitem{cornell1974}
+G. Salton, C. S. Yang, and C. T. Yu.
+\newblock \textit{A Theory of Term Importance in Automatic Text Analysis}.
+\newblock Technical report, Cornell University, 1974.
+\newblock \url{https://ecommons.cornell.edu/entities/publication/0f17b8d0-4e8d-43b7-81c7-363fe12a51b9}.
+
+\bibitem{sklearn_tfidf}
+scikit-learn developers.
+\newblock \texttt{TfidfTransformer} -- scikit-learn documentation.
+\newblock \url{https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfTransformer.html}.
+\newblock Truy cập năm 2026. Dùng để đối soát cấu hình
+\texttt{sublinear\_tf=True}, \texttt{smooth\_idf=True}, \texttt{norm='l2'}.
+
+\bibitem{viet74k}
+duyet.
+\newblock \textit{Vietnamese wordlist (Viet74K)}, giấy phép GPL-2.0.
+\newblock Kho mã nguồn mở trên GitHub:
+\url{https://github.com/duyet/vietnamese-wordlist}.
+\newblock Bản dùng trong đồ án được ghim ở commit
+\texttt{688b0953c8cdb21ee090ce80b83cefdb052fe2cd}; từ điển đã làm sạch còn 69.858
+mục.
+
+\bibitem{static_stopwords}
+Bản chụp danh sách từ dừng tiếng Việt (giấy phép MIT), dùng cho cấu hình C2.
+\newblock Xuất xứ, phiên bản, số mục và thông báo giấy phép ghi trong
+\texttt{resources/static\_stopwords\_source.md}.
+
+\end{thebibliography}

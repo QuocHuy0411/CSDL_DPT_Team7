@@ -1,0 +1,261 @@
+{
+  "schema_version": 1,
+  "component": "benchmarks.benchmark_lookup",
+  "question": "Trie Maximum Matching có nhanh hơn tra cứu set trên cùng đầu vào?",
+  "measurement_status": "measured",
+  "parity": {
+    "ok": true,
+    "comparisons": 750,
+    "n_mismatches": 0,
+    "examples": [],
+    "checked_methods": [
+      "fmm",
+      "bmm",
+      "bimm"
+    ],
+    "n_texts": 250
+  },
+  "environment": {
+    "python": "3.13.5",
+    "implementation": "CPython",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "machine": "AMD64",
+    "processor": "AMD64 Family 25 Model 117 Stepping 2, AuthenticAMD",
+    "cpu_count": 16,
+    "timer": "time.perf_counter_ns"
+  },
+  "parameters": {
+    "repeat_per_text": 10,
+    "warmup_iterations": 2,
+    "methods": [
+      "fmm",
+      "bmm",
+      "bimm"
+    ],
+    "corpus_docs": 100,
+    "measurement_order": "xen kẽ Trie/Set trên từng câu, đảo thứ tự mỗi vòng"
+  },
+  "dictionary": {
+    "path": "D:/N23DCCN155- Dang Van Hiep/HK7/Hệ csdl dpt/CSDL_DPT_Team7/resources/dict.txt",
+    "sha256": "175e8b1bdd77e81d79b12c3d815cd9caa8f5a48f734c7a59f6124bc8cdc5d8ab",
+    "entries": 69858
+  },
+  "memory": {
+    "trie_build_peak_bytes": 20985701,
+    "set_build_peak_bytes": 15368109,
+    "measurement": "tracemalloc peak during construction (Python heap only, not RSS)"
+  },
+  "structure_stats": {
+    "trie": {
+      "entries": 69858,
+      "max_syllables": 17,
+      "root_children": 7893
+    },
+    "set": {
+      "structure": "set(tuple)",
+      "entries": 69858,
+      "max_syllables": 17
+    }
+  },
+  "workloads": {
+    "sample": {
+      "name": "sample",
+      "description": "150 câu phân đoạn (15/lĩnh vực) từ data/gold, nhãn vẫn pending",
+      "source": "data/gold/segmentation_sample.jsonl",
+      "sha256": "37112c076cc9e54e335b2f0930a42dc6cbd672908994ac3ac7189bcf1fd59fb3",
+      "n_texts": 150,
+      "total_chars": 18096,
+      "measurements": {
+        "fmm": {
+          "trie": {
+            "mean_ms": 0.232801,
+            "median_ms": 0.19119999999999998,
+            "p95_ms": 0.52599,
+            "p99_ms": 0.8825929999999998,
+            "min_ms": 0.0313,
+            "max_ms": 1.5774,
+            "stdev_ms": 0.16423733312597757,
+            "total_ms": 349.2015,
+            "n_measurements": 1500,
+            "texts_per_second": 4295.514194526656
+          },
+          "set": {
+            "mean_ms": 0.11468326666666667,
+            "median_ms": 0.09495,
+            "p95_ms": 0.24585999999999994,
+            "p99_ms": 0.36438099999999995,
+            "min_ms": 0.0256,
+            "max_ms": 1.2784,
+            "stdev_ms": 0.08157733741668427,
+            "total_ms": 172.0249,
+            "n_measurements": 1500,
+            "texts_per_second": 8719.667908541147
+          },
+          "set_over_trie_mean_ratio": 0.49262359984135234,
+          "trie_faster_on_mean": false
+        },
+        "bmm": {
+          "trie": {
+            "mean_ms": 0.2275766,
+            "median_ms": 0.19385,
+            "p95_ms": 0.49874499999999994,
+            "p99_ms": 0.7927459999999998,
+            "min_ms": 0.0284,
+            "max_ms": 1.636,
+            "stdev_ms": 0.15100685584581913,
+            "total_ms": 341.3649,
+            "n_measurements": 1500,
+            "texts_per_second": 4394.12487927142
+          },
+          "set": {
+            "mean_ms": 0.11197633333333333,
+            "median_ms": 0.0956,
+            "p95_ms": 0.24312999999999987,
+            "p99_ms": 0.3590339999999999,
+            "min_ms": 0.0225,
+            "max_ms": 1.0497,
+            "stdev_ms": 0.07366909713863895,
+            "total_ms": 167.9645,
+            "n_measurements": 1500,
+            "texts_per_second": 8930.458519508587
+          },
+          "set_over_trie_mean_ratio": 0.4920379921895895,
+          "trie_faster_on_mean": false
+        },
+        "bimm": {
+          "trie": {
+            "mean_ms": 0.4556522,
+            "median_ms": 0.3826,
+            "p95_ms": 1.043615,
+            "p99_ms": 1.6005309999999997,
+            "min_ms": 0.0571,
+            "max_ms": 4.1615,
+            "stdev_ms": 0.31844012331231125,
+            "total_ms": 683.4783,
+            "n_measurements": 1500,
+            "texts_per_second": 2194.6563629013535
+          },
+          "set": {
+            "mean_ms": 0.19581353333333334,
+            "median_ms": 0.16745,
+            "p95_ms": 0.41085999999999995,
+            "p99_ms": 0.6812769999999999,
+            "min_ms": 0.0338,
+            "max_ms": 1.2109,
+            "stdev_ms": 0.12334350936922281,
+            "total_ms": 293.7203,
+            "n_measurements": 1500,
+            "texts_per_second": 5106.899318841769
+          },
+          "set_over_trie_mean_ratio": 0.42974341687219625,
+          "trie_faster_on_mean": false
+        }
+      }
+    },
+    "corpus": {
+      "name": "corpus",
+      "description": "100 tài liệu đầu của corpus khóa (thứ tự file, xác định)",
+      "source": "data/corpus.jsonl",
+      "sha256": "f42acebb1ac34084e859f378243145a3f8e981869350edb41a3dc27e86320fa7",
+      "n_texts": 100,
+      "total_chars": 180544,
+      "measurements": {
+        "fmm": {
+          "trie": {
+            "mean_ms": 3.0767473,
+            "median_ms": 1.7377,
+            "p95_ms": 10.429334999999991,
+            "p99_ms": 13.192619999999998,
+            "min_ms": 0.4116,
+            "max_ms": 26.3385,
+            "stdev_ms": 3.106850080668958,
+            "total_ms": 3076.7473,
+            "n_measurements": 1000,
+            "texts_per_second": 325.01856749821474
+          },
+          "set": {
+            "mean_ms": 1.4624954000000001,
+            "median_ms": 0.81305,
+            "p95_ms": 4.908104999999996,
+            "p99_ms": 6.463910999999998,
+            "min_ms": 0.2118,
+            "max_ms": 13.2632,
+            "stdev_ms": 1.4932560405700155,
+            "total_ms": 1462.4954,
+            "n_measurements": 1000,
+            "texts_per_second": 683.7628343993423
+          },
+          "set_over_trie_mean_ratio": 0.47533815988072864,
+          "trie_faster_on_mean": false
+        },
+        "bmm": {
+          "trie": {
+            "mean_ms": 3.1993141,
+            "median_ms": 1.7948499999999998,
+            "p95_ms": 10.522999999999989,
+            "p99_ms": 13.844111999999997,
+            "min_ms": 0.425,
+            "max_ms": 23.1769,
+            "stdev_ms": 3.178973223959458,
+            "total_ms": 3199.3141,
+            "n_measurements": 1000,
+            "texts_per_second": 312.5669967822165
+          },
+          "set": {
+            "mean_ms": 1.4849719,
+            "median_ms": 0.84265,
+            "p95_ms": 4.793294999999997,
+            "p99_ms": 6.529187999999998,
+            "min_ms": 0.2218,
+            "max_ms": 13.806,
+            "stdev_ms": 1.5132912833424998,
+            "total_ms": 1484.9719,
+            "n_measurements": 1000,
+            "texts_per_second": 673.413416105719
+          },
+          "set_over_trie_mean_ratio": 0.46415320708898195,
+          "trie_faster_on_mean": false
+        },
+        "bimm": {
+          "trie": {
+            "mean_ms": 6.5355055,
+            "median_ms": 3.57965,
+            "p95_ms": 22.466785,
+            "p99_ms": 27.804232000000003,
+            "min_ms": 0.7972,
+            "max_ms": 79.1085,
+            "stdev_ms": 7.003627146065083,
+            "total_ms": 6535.5055,
+            "n_measurements": 1000,
+            "texts_per_second": 153.0103524509313
+          },
+          "set": {
+            "mean_ms": 2.6610546,
+            "median_ms": 1.42705,
+            "p95_ms": 8.943214999999999,
+            "p99_ms": 12.001127999999998,
+            "min_ms": 0.3421,
+            "max_ms": 36.2576,
+            "stdev_ms": 2.8993718254923495,
+            "total_ms": 2661.0546,
+            "n_measurements": 1000,
+            "texts_per_second": 375.79086126229805
+          },
+          "set_over_trie_mean_ratio": 0.407168902237172,
+          "trie_faster_on_mean": false
+        }
+      }
+    }
+  },
+  "labels": {
+    "sample_labels_status": "pending_human_annotation",
+    "labels_read_or_written": false,
+    "note": "Timing không cần nhãn. 150 nhãn vàng vẫn pending; benchmark không tự gán nhãn và không sửa data/gold."
+  },
+  "notes": [
+    "Hai cấu trúc dùng đúng cùng thuật toán, cùng từ điển và cùng chuẩn hóa; oracle parity phải đạt trước khi ghi số.",
+    "Số bộ nhớ là đỉnh heap Python khi dựng cấu trúc, không phải RSS tiến trình.",
+    "Không kết luận bên nào nhanh hơn ngoài tỉ lệ đo được; chênh lệch nhỏ hơn độ nhiễu của máy thì không đáng coi là thắng."
+  ],
+  "created_utc": "2026-10-16T13:46:15.252527+00:00"
+}
