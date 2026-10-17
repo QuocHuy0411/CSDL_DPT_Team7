@@ -2,22 +2,48 @@
 
 Dự án giữa kỳ Hệ cơ sở dữ liệu đa phương tiện. M1: chuẩn hóa, Trie, FMM/BMM/BiMM, stopword tầng 1 và trace. M2: corpus, chỉ mục đảo, TF-IDF, Cosine/explain, TDV, đánh giá và benchmark. Giao diện Streamlit chạy local, không cần dịch vụ cloud.
 
-Corpus chính đã khóa: **2.500 bài, 10 lĩnh vực, 250 bài/lĩnh vực**. Raw chỉ đọc. Chất lượng IR và tách từ **chưa được công bố** khi qrels/gold còn thiếu nhãn con người; không coi unit test hay tốc độ tìm kiếm là độ chính xác relevance.
+Corpus chính đã khóa: **2.500 bài, 10 lĩnh vực, 250 bài/lĩnh vực**. Raw chỉ đọc. Đã tính chỉ số trên bộ nhãn hiện có, nhưng [rà soát ngữ nghĩa](docs/label_review.md) còn mở; không coi cờ `confirmed`, unit test hay tốc độ tìm kiếm là bằng chứng nhãn đúng nội dung.
 
-## Chạy nhanh bằng PowerShell
+## Hướng dẫn chạy nhanh khi Clone repo về máy
 
-Python 3.13; các lệnh chạy tại thư mục dự án, không phải thư mục cha. Dùng UTF-8 khi console có đường dẫn tiếng Việt.
+Yêu cầu: **Python 3.10+** (khuyến nghị Python 3.12 hoặc 3.13). Mở terminal tại thư mục gốc của dự án:
 
+### Bước 1: Khởi tạo môi trường ảo & cài đặt thư viện
 ```powershell
-Set-Location 'D:\N23DCCN155- Dang Van Hiep\HK7\Hệ csdl dpt\CSDL_DPT_Team7'
-py -3.13 -m venv .venv
-.\.venv\Scripts\python.exe -X utf8 -m pip install -r requirements-dev.txt
-.\.venv\Scripts\python.exe -X utf8 -m pytest -q
-.\.venv\Scripts\python.exe -X utf8 -m scripts.build_indexes
-.\.venv\Scripts\python.exe -X utf8 -m streamlit run app/Home.py
+# Tạo và kích hoạt môi trường ảo (PowerShell trên Windows)
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+
+# Cài đặt các thư viện cần thiết (bao gồm cả dev/test)
+python -X utf8 -m pip install -r requirements-dev.txt
+```
+*(Nếu dùng Linux/macOS, kích hoạt bằng `source .venv/bin/activate`)*
+
+### Bước 2: Dựng chỉ mục tìm kiếm (Bắt buộc cho lần đầu chạy)
+Vì thư mục chỉ mục `data/indexes/` không đẩy lên Git để tối ưu dung lượng, bạn cần chạy lệnh sau để tự động tạo 4 chỉ mục C1–C4 (chỉ mất ~10–15 giây):
+```powershell
+python -X utf8 -m scripts.build_indexes
 ```
 
-Nếu đã kích hoạt venv, thay tiền tố bằng `python -X utf8`. Không cần activate.ps1 hoặc thay ExecutionPolicy. Từ điển, stoplist và corpus đều local; không tải gì khi tìm kiếm. Trang Tokenizer cho so sánh FMM/BMM/BiMM, đọc từng bước và kiểm tra guard. Search cho chọn C1–C4, đọc bài và bảng phân rã Cosine; Analytics hiển thị TDV thực.
+### Bước 3: Chạy ứng dụng và trải nghiệm
+Hệ thống hỗ trợ 2 giao diện trực quan:
+1. **Giao diện Web hiện đại (HTML/CSS/JS + Python HTTP Server - Khuyên dùng)**:
+   ```powershell
+   python -X utf8 app/server.py --port 8000
+   ```
+   Sau đó mở trình duyệt truy cập: `http://localhost:8000`
+
+2. **Giao diện Streamlit (Đầy đủ chức năng phân tích chuyên sâu)**:
+   ```powershell
+   python -X utf8 -m streamlit run app/Home.py
+   ```
+
+### Bước 4: Kiểm thử hệ thống (Automated Testing)
+Chạy toàn bộ bộ test kiểm thử tự động (Unit test, IR Math, Segmentation, IAA Crosscheck):
+```powershell
+python -X utf8 -m pytest -q
+```
+*(Hiện tại 502/502 bài test đều đạt chuẩn `passed`)*
 
 ## Tái tạo dữ liệu và tài nguyên
 
@@ -69,6 +95,26 @@ Invoke-Item .\data\ground_truth\mm\annotation_sheet.html
 
 Pool hợp Top-20 của TF-IDF cosine, binary presence cosine (không IDF), BM25 (`k1=1.2,b=0.75`, IDF một lần). Cả ba cùng corpus/tokenizer; TF-IDF được đối soát với SearchEngine. Mẫu ngẫu nhiên 20% seed 2026 cho kiểm tra chéo. Script migrate chỉ mang nhãn confirmed sang cặp query/doc chung có cùng nội dung/hash, giữ nguyên nguồn và từ chối xung đột.
 
+Hiện qrels có 669/669 cặp mang cờ confirmed, gold tách từ 150/150. Team7 đã gửi [37 quyết định qrels](data/ground_truth/mm/labels.json), rồi xác nhận sửa thêm [Q16/`vn_f4f2b5ae9443c172` thành mức 1](data/ground_truth/mm/q16_amendment_2026-10-18.json). Đánh giá đã chạy lại trên qrels SHA256 `697fafc7a89e40a782428204a4b0df21cb0545f24cbb714477c9328cfc88893f`. [Biên bản đối chiếu](results/label_review_resolution.json) ghi nhãn cuối 36/37 cặp trùng đề xuất AI, một khác có lý do. Gold chưa được sửa sau [audit ba câu](docs/label_review.md), nên kết quả trong `results/ablation/` và `results/segmentation/` vẫn phải đọc cùng cảnh báo ngữ nghĩa. [Tám bất đồng M1](docs/m1_disagreement_review.md) đã có phiếu đề xuất, chưa sửa qrels. Không nhập `results/label_review.json` như nhãn người.
+
+Phiếu 37 cặp cũ gắn hash qrels **trước lần nhập này**, chỉ dùng để truy vết, không nhập lại. Để duyệt ba câu gold mà không thấy nhãn cũ, dùng [phiếu ba câu gold](data/gold/review_SG010_SG053_SG089_sheet.html). Có thể tạo lại phiếu gold bằng:
+
+```powershell
+python -X utf8 -m scripts.annotate_segmentation export --only SG010 SG053 SG089 --out data/gold/review_SG010_SG053_SG089_sheet.html
+```
+
+Các phiếu HTML chứa toàn văn, hiện có trong workspace nhưng được `.gitignore` bỏ qua; chạy lại lệnh `export` gold ở trên và `scripts.crosscheck_m1 export` sau khi lấy repo ở máy khác. Không công khai phiếu nếu quyền dữ liệu raw chưa được xác minh.
+
+Phiếu riêng cho **người M1 thật** chấm độc lập 134 cặp không hiển thị nhãn gốc. Chấm đủ rồi xuất JSON từ trình duyệt; chỉ đối chiếu, không tự ghi đè qrels:
+
+```powershell
+python -X utf8 -m scripts.crosscheck_m1 export
+Invoke-Item .\data\ground_truth\mm\m1_review_sheet.html
+python -X utf8 -m scripts.crosscheck_m1 compare --labels 'DUONG_DAN\m1_review_labels.json'
+```
+
+Tệp `m1_review_labels.json` hiện có tự khai người M1 chấm 134 cặp; [đối chiếu trên qrels cuối](results/m1_crosscheck.json) cho **126 trùng, 8 bất đồng**. Chưa xác minh được danh tính/tính độc lập hoặc phân xử tám cặp, nên **chưa tuyên bố kiểm tra chéo hoàn tất**. Một AI làm thay nhiều vai trò không tạo ra các đánh giá viên độc lập.
+
 Người đọc điền 0=không liên quan, 1=liên quan một phần, 2=đáp ứng trực tiếp; đọc cả nội dung và điều kiện phủ định. Xuất JSON từ phiếu rồi nhập:
 
 ```powershell
@@ -99,7 +145,8 @@ python -X utf8 -m benchmarks.benchmark_latency --repeat 100 --warmup 5 --top-k 1
 python -X utf8 -m scripts.plot_results --latency results/latency --tdv data/indexes/C4 --only latency size tdv --out report/figures
 python -X utf8 -m scripts.render_report
 python -X utf8 -m evaluator.evaluate --mode official --k 10 --out results/ablation
-# Khi pending, lệnh official từ chối; lệnh development ghi unmeasured và trả mã khác 0.
+# Khi pending, lệnh official từ chối; khi đủ cờ confirmed nó kiểm kỹ thuật,
+# không tự phát hiện nhãn sai ngữ nghĩa. Duyệt audit trước khi nộp số đo.
 # Không ghi số 0 thành chất lượng đã đo.
 python -X utf8 -m evaluator.evaluate --allow-development --out results/development_eval
 ```
@@ -108,8 +155,13 @@ Official evaluation bị chặn khi nhãn chưa đủ, hash/schema sai hoặc pr
 
 Số liệu hiện hành: [latency.json](results/latency/latency.json), [toàn bộ query](results/latency/latency_per_query.csv), [audit tích hợp](results/release_audit.json). Snapshot số đo baseline cũ tại `results/baseline_development/`, không dùng làm kết quả MM. Mục tiêu giảm index 30%/mean dưới30ms phải đối chiếu số đo đúng phạm vi; không suy ra chất lượng relevance từ tốc độ.
 
-Báo cáo nguồn tại [report/main.tex](report/main.tex), Markdown M2 tại [m2_report.md](report/m2_report.md). Biên dịch Unicode với XeLaTeX hoặc Tectonic từ thư mục report (Times New Roman/Arial/Consolas):
+### Báo cáo nghiệm thu hoàn chỉnh
 
+1. **Báo cáo Microsoft Word (`.docx`) chính thức (Khuyên dùng khi nộp bài)**:
+   - File: [`report/Bao_Cao_Nghiem_Thu_De_Tai_8_Team7.docx`](report/Bao_Cao_Nghiem_Thu_De_Tai_8_Team7.docx)
+   - Đầy đủ mẫu bìa Học viện Công nghệ Bưu chính Viễn thông (PTIT), thông tin Nhóm 7, SV Đặng Văn Hiệp (B23DCCN155), 6 chương đầy đủ hình ảnh, bảng biểu và công thức toán học.
+2. **Báo cáo nguồn LaTeX & Markdown**:
+   - Báo cáo nguồn tại [report/main.tex](report/main.tex), Markdown M2 tại [m2_report.md](report/m2_report.md). Biên dịch Unicode với XeLaTeX hoặc Tectonic từ thư mục report:
 ```powershell
 Push-Location report
 tectonic main.tex --keep-logs

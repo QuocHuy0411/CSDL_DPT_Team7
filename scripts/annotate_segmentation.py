@@ -31,6 +31,8 @@ def import_labels(directory, input_path, assessor=""):
     if not isinstance(labels, list):
         raise SegmentationError("labels must be a list")
     for label in labels:
+        if not isinstance(label, dict):
+            raise SegmentationError("Each label must be an object")
         sample_id = label.get("sample_id")
         if sample_id not in by_id or sample_id in seen:
             raise SegmentationError("Unknown or duplicate sample ID")
@@ -58,27 +60,39 @@ def import_labels(directory, input_path, assessor=""):
     return len(updates)
 
 
-def export(directory, out):
+def export(directory, out, only_ids=None):
     manifest, records, labels = load_dataset(directory)
+    focused_review = only_ids is not None
+    if only_ids is not None:
+        requested = set(only_ids)
+        if not requested or len(requested) != len(only_ids) or not requested <= {r["sample_id"] for r in records}:
+            raise SegmentationError("Unknown, duplicate or empty sample ID selection")
+        records = [r for r in records if r["sample_id"] in requested]
     esc = html.escape
     sections = []
     for r in records:
         label = labels[r["sample_id"]]
-        answer = " ".join(label["tokens"]) if label.get("label_status") == "confirmed" else ""
+        answer = (" ".join(label["tokens"])
+                  if only_ids is None and label.get("label_status") == "confirmed" else "")
+        suggestion = ("<details><summary>Gợi ý máy, chưa phải gold</summary><code>"
+                      + esc(" ".join(r["suggestion"]["tokens"])) + "</code></details>"
+                      if not focused_review else "")
         sections.append(
             f"<section><h3>{esc(r['sample_id'])} · {esc(r['category'])}</h3>"
             f"<p>{esc(r['sentence_text'])}</p><p>Chuỗi âm tiết: {esc(r['normalized_text'])}</p>"
-            f"<details><summary>Gợi ý máy, chưa phải gold</summary><code>{esc(' '.join(r['suggestion']['tokens']))}</code></details>"
+            f"{suggestion}"
             f"<textarea data-id='{esc(r['sample_id'])}' data-hash='{esc(r['sentence_sha256'])}' rows='3'>{esc(answer)}</textarea>"
             f"<p>Nguồn: {esc(r['doc_id'])}, câu {r['sentence_index']}</p></section>")
     version = {field: manifest[field] for field in ("schema_version", "corpus_sha256", "sample_sha256", "normalizer_sha256")}
     document = (
         "<!doctype html><html lang='vi'><meta charset='utf-8'><title>Gán nhãn tách từ M1</title>"
         "<style>body{font-family:Arial;max-width:60rem;margin:auto}section{border:1px solid #aaa;padding:1rem;margin:1rem 0}"
-        "textarea{width:98%}code{white-space:pre-wrap}</style><h1>150 câu — phân đoạn từ do người gán</h1>"
+        f"textarea{{width:98%}}code{{white-space:pre-wrap}}</style><h1>{len(records)} câu — phân đoạn từ do người gán</h1>"
         "<p>Điền các từ cách nhau bằng khoảng trắng, âm tiết trong từ nối dấu _. "
-        "Không thêm/bỏ/đổi thứ tự âm tiết, không nối từ qua dấu câu. Gợi ý máy có thể sai.</p>"
-        "<label>Tên người gán <input id='assessor'></label><p><label>"
+        "Không thêm/bỏ/đổi thứ tự âm tiết, không nối từ qua dấu câu. "
+        + ("Phiếu rà soát riêng không hiển thị nhãn cũ hoặc gợi ý máy.</p>"
+           if focused_review else "Gợi ý máy có thể sai.</p>")
+        + "<label>Tên người gán <input id='assessor'></label><p><label>"
         "<input type='checkbox' id='reviewed'>Tôi đã tự đọc và kiểm tra các câu đã điền</label></p>"
         "<button onclick='download()'>Xuất JSON để nhập nhãn</button>"
         + "".join(sections) + "<script>var VERSION=" + json.dumps(version) + ";"
@@ -86,10 +100,12 @@ def export(directory, out):
         "p.human_confirmed=document.getElementById('reviewed').checked;p.labels=[];"
         "document.querySelectorAll('textarea').forEach(function(t){if(t.value.trim())p.labels.push({"
         "sample_id:t.dataset.id,sentence_sha256:t.dataset.hash,tokens:t.value.trim().split(/\\s+/)});});return p;}"
-        "function download(){var p=data();if(!p.assessor||!p.human_confirmed){alert('Điền tên và xác nhận đã tự kiểm tra.');return;}"
+        "function download(){var p=data();if(!p.assessor||!p.human_confirmed||!p.labels.length){"
+        "alert('Điền ít nhất một nhãn, tên và xác nhận đã tự kiểm tra.');return;}"
         "var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(p,null,2)],"
         "{type:'application/json'}));a.download='segmentation_labels.json';a.click();}"
-        "var KEY='team7-seg:'+VERSION.sample_sha256;"
+        "var KEY='team7-seg:'+VERSION.sample_sha256+':' + " +
+        json.dumps('review:' + ','.join(sorted(only_ids)) if only_ids else 'all') + ";"
         "try{var d=JSON.parse(localStorage.getItem(KEY)||'null');if(d){document.getElementById('assessor').value=d.assessor||'';"
         "(d.labels||[]).forEach(function(r){document.querySelectorAll('textarea').forEach(function(t){"
         "if(t.dataset.id===r.sample_id&&!t.value)t.value=r.tokens.join(' ');});});}}catch(e){}"
@@ -107,13 +123,14 @@ def main(argv=None):
     sub.add_parser("status")
     exp = sub.add_parser("export")
     exp.add_argument("--out", type=Path, default=DEFAULT_DATA / "annotation_sheet.html")
+    exp.add_argument("--only", nargs="+", help="export only selected IDs with blank answers")
     imp = sub.add_parser("import")
     imp.add_argument("--input", type=Path, required=True)
     imp.add_argument("--assessor", default="")
     args = parser.parse_args(argv)
     try:
         if args.command == "export":
-            print(f"Exported {export(args.data, args.out)} sentences to {args.out}")
+            print(f"Exported {export(args.data, args.out, args.only)} sentences to {args.out}")
         elif args.command == "import":
             print(f"Imported {import_labels(args.data, args.input, args.assessor)} human labels")
         else:

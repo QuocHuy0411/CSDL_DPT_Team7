@@ -33,6 +33,7 @@ from scripts.search import SearchService, load_engine
 
 SERVICES = {}
 CORPUS_CACHE = {}
+TDV_CACHE = None
 
 
 def get_service(config: str, fallback: bool = True):
@@ -106,6 +107,10 @@ class SearchAPIHandler(http.server.SimpleHTTPRequestHandler):
                 self.api_tier1(params)
             elif path == "/api/corpus_doc":
                 self.api_corpus_doc(params)
+            elif path == "/api/tdv":
+                self.api_tdv(params)
+            elif path == "/api/resources":
+                self.api_resources()
             else:
                 self.send_json({"error": f"Endpoint not found: {path}"}, status=404)
         except Exception as e:
@@ -225,7 +230,7 @@ class SearchAPIHandler(http.server.SimpleHTTPRequestHandler):
         matcher = max_matching.MaximumMatching()
         tokens = matcher.tokenize(text)
         flt = stopwords.get_default_filter()
-        filtered = flt.filter(tokens)
+        filtered = flt.filter_tokens(tokens)
 
         # Generate guard report
         kept_set = set(filtered)
@@ -264,22 +269,131 @@ class SearchAPIHandler(http.server.SimpleHTTPRequestHandler):
         else:
             self.send_json({"error": "Không tìm thấy tài liệu"}, status=404)
 
+    def api_tdv(self, params: dict):
+        global TDV_CACHE
+        term = params.get("term", [""])[0].strip().lower()
+        limit = int(params.get("limit", [50])[0])
+
+        if TDV_CACHE is None:
+            c4_dir = ROOT / "data/indexes/C4"
+            if (c4_dir / "tdv_scores.json").is_file():
+                scores = json.loads((c4_dir / "tdv_scores.json").read_text(encoding="utf-8"))
+                df_map = json.loads((c4_dir / "tdv_df.json").read_text(encoding="utf-8"))
+                stopwords = set(json.loads((c4_dir / "tdv_stopwords.json").read_text(encoding="utf-8")))
+                TDV_CACHE = {
+                    "scores": scores,
+                    "df": df_map,
+                    "stopwords": stopwords,
+                    "terms": list(scores.keys()),
+                }
+            else:
+                TDV_CACHE = {}
+
+        if not TDV_CACHE:
+            self.send_json({"error": "Chưa có bảng TDV C4"}, status=404)
+            return
+
+        scores = TDV_CACHE["scores"]
+        df_map = TDV_CACHE["df"]
+        stopwords = TDV_CACHE["stopwords"]
+
+        matched = []
+        if term:
+            for t in TDV_CACHE["terms"]:
+                if term in t.lower():
+                    matched.append({
+                        "term": t,
+                        "df": df_map.get(t, 0),
+                        "tdv": scores.get(t, 0.0),
+                        "filtered": t in stopwords
+                    })
+                    if len(matched) >= limit:
+                        break
+        else:
+            # Sort top lowest (most negative) and top highest (most positive)
+            sorted_terms = sorted(TDV_CACHE["terms"], key=lambda k: scores[k])
+            lowest = [{
+                "term": t,
+                "df": df_map.get(t, 0),
+                "tdv": scores[t],
+                "filtered": t in stopwords
+            } for t in sorted_terms[:25]]
+            highest = [{
+                "term": t,
+                "df": df_map.get(t, 0),
+                "tdv": scores[t],
+                "filtered": t in stopwords
+            } for t in sorted_terms[-25:]]
+            matched = lowest + highest
+
+        self.send_json({
+            "total_terms": len(scores),
+            "negative_terms_count": len(stopwords),
+            "query_term": term,
+            "items": matched
+        })
+
+    def api_resources(self):
+        dict_path = ROOT / "resources/dict.txt"
+        stopwords_path = ROOT / "resources/grammar_stopwords.txt"
+        guard_path = ROOT / "resources/guard_whitelist.txt"
+
+        def count_lines(path):
+            if not path.is_file():
+                return 0
+            try:
+                return sum(1 for line in path.read_text(encoding="utf-8-sig").splitlines()
+                           if line.strip() and not line.lstrip().startswith("#"))
+            except Exception:
+                return 0
+
+        self.send_json({
+            "resources": [
+                {
+                    "name": "Từ điển Tiếng Việt (BiMM Syllable Trie / Lexicon)",
+                    "file": "resources/dict.txt",
+                    "count": count_lines(dict_path),
+                    "role": "Quyết định âm tiết nào ghép được thành từ khi chạy FMM, BMM, BiMM",
+                    "status": "Hoạt động" if dict_path.is_file() else "Thiếu"
+                },
+                {
+                    "name": "Hư từ ngữ pháp Tầng 1 (Grammar Stopwords)",
+                    "file": "resources/grammar_stopwords.txt",
+                    "count": count_lines(stopwords_path),
+                    "role": "Danh sách từ chức năng thuần túy (giới từ, liên từ...) bị loại sau khi tách từ",
+                    "status": "Hoạt động" if stopwords_path.is_file() else "Thiếu"
+                },
+                {
+                    "name": "Guard bảo vệ Whitelist (Từ phủ định & nhân quả)",
+                    "file": "resources/guard_whitelist.txt",
+                    "count": count_lines(guard_path),
+                    "role": "Không bao giờ được loại ở Tầng 1 vì phủ định (không, chẳng, chớ) làm đảo chiều ngữ nghĩa",
+                    "status": "Hoạt động" if guard_path.is_file() else "Thiếu"
+                }
+            ]
+        })
+
 
 def run_server(port: int = 8000, open_browser: bool = True):
+    if hasattr(sys.stdout, "reconfigure"):
+        try:
+            sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        except Exception:
+            pass
     handler = SearchAPIHandler
     with socketserver.TCPServer(("", port), handler) as httpd:
         url = f"http://localhost:{port}"
         print(f"\n========================================================")
-        print(f" Web Server Đồ Án HCSDL Đa Phương Tiện (Đề tài số 8)")
+        print(f" Web Server Do An HCSDL Da Phuong Tien (De tai so 8)")
         print(f" URL: {url}")
-        print(f" Bấm Ctrl + C để dừng server.")
+        print(f" Bam Ctrl + C de dung server.")
         print(f"========================================================\n")
         if open_browser:
             webbrowser.open(url)
         try:
             httpd.serve_forever()
         except KeyboardInterrupt:
-            print("\nĐang tắt server...")
+            print("\nDang tat server...")
 
 
 if __name__ == "__main__":

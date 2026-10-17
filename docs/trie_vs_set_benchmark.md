@@ -49,10 +49,10 @@ thiếu manifest, thiếu hash hoặc hash sai đều bị từ chối đo (xem
 `test_load_corpus_rejects_*` trong bộ test). Từ điển:
 `resources/dict.txt`, 69.858 mục, SHA256 `175e8b1bdd77…`, `max_syllables = 17`.
 
-> **Nhãn vàng vẫn pending.** Benchmark chỉ đọc `sentence_text` làm đầu vào; nó
+> **Nhãn vàng đã có 150/150 cờ xác nhận, nhưng audit còn mở.** Benchmark chỉ đọc `sentence_text` làm đầu vào; nó
 > không đọc, không ghi, không suy diễn nhãn, và không sửa `data/gold`. Có test
 > `test_benchmark_does_not_mutate_gold_labels` kiểm SHA256 của cả file mẫu lẫn file
-> nhãn trước/sau. Chất lượng phân đoạn chính thức vẫn phải chờ người gán nhãn.
+> nhãn trước/sau. F1 đã tính trên gold hiện có nhưng còn tạm thời vì SG010, SG053 và SG089 cần người gán rà lại.
 
 ## 4. Phương pháp đo
 

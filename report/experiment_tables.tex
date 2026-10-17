@@ -2,11 +2,13 @@
 
 \section{Trạng thái dữ liệu và phạm vi phép đo}
 
-Corpus chính gồm 2.500 bài thuộc 10 lĩnh vực, 250 bài/lĩnh vực. Bộ 20 query có hai query/lĩnh vực. Pool dùng BiMM có 669 cặp, 0 nhãn confirmed; mẫu kiểm tra chéo gồm 134 cặp.
+Corpus chính gồm 2.500 bài thuộc 10 lĩnh vực, 250 bài/lĩnh vực. Bộ 20 query có hai query/lĩnh vực. Pool dùng BiMM có 669 cặp, 669 nhãn confirmed; mẫu kiểm tra chéo gồm 134 cặp.
+
+Có tệp đối chiếu M1 nhưng hash qrels đã đổi; cần đối chiếu lại và xác minh người chấm trước khi tuyên bố kiểm tra chéo 134 cặp.
 
 Ba baseline pooling: TF-IDF Cosine sublinear/smoothed/L2; binary presence Cosine không IDF; BM25 với $k_1=1{,}2$, $b=0{,}75$, IDF một lần. Cùng corpus và tokenizer, hợp Top-20; TF-IDF đã đối soát SearchEngine.
 
-\textbf{P@10, Recall@10, F1@10, MAP và NDCG@10: chưa đo chính thức.} Nhãn pending không được biến thành relevance. Bảng theo query/lĩnh vực dưới đây là độ trễ thật, không thay cho chất lượng truy xuất.
+\textbf{P@10, Recall@10, F1@10, MAP và NDCG@10 đã tính trên nhãn hiện có, nhưng chỉ là số tạm thời vì rà soát ngữ nghĩa còn mở.} Có 37 cặp cần người gán duyệt lại. Cổng kỹ thuật của evaluator không thay thế được bước này. Xem \texttt{docs/label\_review.md}. Bộ nhãn đã thay đổi sau lần audit, cần rà lại review.
 
 \section{Môi trường và thiết lập}
 
@@ -114,4 +116,72 @@ Vi tính & 2 & 1.397 & 0.548 & 0.973 & 0.453 \\
 \caption{Mean ms theo 10 lĩnh vực; chỉ hai query/lĩnh vực.}
 \end{table}
 
-Mỗi lĩnh vực chỉ có hai query nên kết quả nhóm chưa đủ để suy rộng. Các bảng chất lượng toàn query/nhóm sẽ do evaluator xuất khi qrels đủ điều kiện, không thay dữ liệu thiếu bằng số 0.
+\section{Kết quả chất lượng truy xuất trên nhãn hiện có}
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{|l|r|r|r|r|r|}
+\hline
+Cấu hình & MAP & P@10 & R@10 & F1@10 & NDCG@10 \\
+\hline
+C1 & 0.7707 & 0.6250 & 0.5747 & 0.5127 & 0.7956 \\
+C2 & 0.7607 & 0.6200 & 0.5699 & 0.5081 & 0.7930 \\
+C3 & 0.7710 & 0.6250 & 0.5626 & 0.5098 & 0.7920 \\
+C4 & 0.6359 & 0.5150 & 0.5150 & 0.4467 & 0.6820 \\
+C4 + C3 & 0.7177 & 0.6050 & 0.5467 & 0.4931 & 0.7622 \\
+\hline
+\end{tabular}
+\caption{Chất lượng trên 20 query, Top-10; cần rà soát nhãn.}
+\end{table}
+
+\begin{longtable}{|l|r|r|r|r|}
+\hline
+Query & C1 & C2 & C3 & C4 \\
+\hline
+\endhead
+Q01 & 0.815 & 0.819 & 0.815 & 0.841 \\
+Q02 & 0.743 & 0.750 & 0.743 & 0.655 \\
+Q03 & 0.808 & 0.808 & 0.793 & 0.677 \\
+Q04 & 0.738 & 0.797 & 0.756 & 0.000 \\
+Q05 & 0.754 & 0.712 & 0.754 & 0.685 \\
+Q06 & 0.837 & 0.810 & 0.841 & 0.827 \\
+Q07 & 0.979 & 0.979 & 0.979 & 0.979 \\
+Q08 & 0.861 & 0.865 & 0.880 & 0.856 \\
+Q09 & 0.520 & 0.517 & 0.521 & 0.473 \\
+Q10 & 0.732 & 0.700 & 0.725 & 0.629 \\
+Q11 & 0.939 & 0.940 & 0.939 & 0.941 \\
+Q12 & 0.531 & 0.430 & 0.531 & 0.410 \\
+Q13 & 0.519 & 0.468 & 0.510 & 0.568 \\
+Q14 & 1.000 & 1.000 & 1.000 & 1.000 \\
+Q15 & 0.884 & 0.873 & 0.879 & 0.000 \\
+Q16 & 0.799 & 0.797 & 0.805 & 0.799 \\
+Q17 & 0.767 & 0.778 & 0.758 & 0.738 \\
+Q18 & 0.908 & 0.887 & 0.901 & 0.822 \\
+Q19 & 0.509 & 0.501 & 0.508 & 0.446 \\
+Q20 & 0.774 & 0.782 & 0.782 & 0.372 \\
+\hline
+\caption{AP theo từng query trên nhãn hiện có.} \\
+\end{longtable}
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{|p{.32\textwidth}|r|r|r|r|}
+\hline
+Lĩnh vực & C1 & C2 & C3 & C4 \\
+\hline
+Chính trị – Xã hội & 0.779 & 0.785 & 0.779 & 0.748 \\
+Đời sống & 0.773 & 0.802 & 0.775 & 0.338 \\
+Khoa học & 0.795 & 0.761 & 0.797 & 0.756 \\
+Kinh doanh & 0.920 & 0.922 & 0.930 & 0.917 \\
+Pháp luật & 0.626 & 0.609 & 0.623 & 0.551 \\
+Sức khỏe & 0.735 & 0.685 & 0.735 & 0.676 \\
+Thế giới & 0.759 & 0.734 & 0.755 & 0.784 \\
+Thể thao & 0.841 & 0.835 & 0.842 & 0.400 \\
+Văn hóa & 0.837 & 0.832 & 0.829 & 0.780 \\
+Vi tính & 0.642 & 0.641 & 0.645 & 0.409 \\
+\hline
+\end{tabular}
+\caption{MAP theo 10 lĩnh vực; chỉ hai query mỗi lĩnh vực.}
+\end{table}
+
+Mỗi lĩnh vực chỉ có hai query nên kết quả nhóm chưa đủ để suy rộng. Các bảng chất lượng toàn query/nhóm do evaluator xuất khi qrels đủ điều kiện, không thay dữ liệu thiếu bằng số 0.

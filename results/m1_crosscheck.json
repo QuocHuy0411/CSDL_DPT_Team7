@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "status": "requires_human_adjudication",
+  "note": "Self-declared independence only; software cannot verify identity or reading.",
+  "corpus_sha256": "f42acebb1ac34084e859f378243145a3f8e981869350edb41a3dc27e86320fa7",
+  "queries_sha256": "a46100f23d937133a82d709b4b45ded5dcc0125520fe59ead647644e58be692e",
+  "sample_sha256": "03373611109435e15d993f49375e759a10aec646b8c25038906586a413ae2741",
+  "qrels_sha256": "697fafc7a89e40a782428204a4b0df21cb0545f24cbb714477c9328cfc88893f",
+  "m1_labels_sha256": "36247b4b5f92ab15ccb3b4eccc4294b82247d11fc0d2ad6c6291454fa9d71f5d",
+  "m1_reviewer": "Hiep",
+  "sample_size": 134,
+  "agreements": 126,
+  "observed_agreement": 0.9402985074626866,
+  "disagreement_count": 8,
+  "grade_confusion_matrix": {
+    "0": {
+      "0": 77,
+      "1": 0,
+      "2": 0
+    },
+    "1": {
+      "0": 3,
+      "1": 25,
+      "2": 5
+    },
+    "2": {
+      "0": 0,
+      "1": 0,
+      "2": 24
+    }
+  },
+  "disagreements": [
+    {
+      "query_id": "Q03",
+      "doc_id": "vn_706ae3e191d963a8",
+      "original_grade": 1,
+      "m1_grade": 0,
+      "resolution": "pending_human_adjudication"
+    },
+    {
+      "query_id": "Q04",
+      "doc_id": "vn_10288e4d8ae0d55b",
+      "original_grade": 1,
+      "m1_grade": 2,
+      "resolution": "pending_human_adjudication"
+    },
+    {
+      "query_id": "Q08",
+      "doc_id": "vn_a51c84de855dc95c",
+      "original_grade": 1,
+      "m1_grade": 0,
+      "resolution": "pending_human_adjudication"
+    },
+    {
+      "query_id": "Q10",
+      "doc_id": "vn_a7ab1dbd1332334b",
+      "original_grade": 1,
+      "m1_grade": 2,
+      "resolution": "pending_human_adjudication"
+    },
+    {
+      "query_id": "Q16",
+      "doc_id": "vn_cbe182ef26813cda",
+      "original_grade": 1,
+      "m1_grade": 2,
+      "resolution": "pending_human_adjudication"
+    },
+    {
+      "query_id": "Q18",
+      "doc_id": "vn_161f379098b8499f",
+      "original_grade": 1,
+      "m1_grade": 2,
+      "resolution": "pending_human_adjudication"
+    },
+    {
+      "query_id": "Q19",
+      "doc_id": "vn_dfcce0e16a08fae9",
+      "original_grade": 1,
+      "m1_grade": 0,
+      "resolution": "pending_human_adjudication"
+    },
+    {
+      "query_id": "Q20",
+      "doc_id": "vn_2a683b464546fcd2",
+      "original_grade": 1,
+      "m1_grade": 2,
+      "resolution": "pending_human_adjudication"
+    }
+  ]
+}

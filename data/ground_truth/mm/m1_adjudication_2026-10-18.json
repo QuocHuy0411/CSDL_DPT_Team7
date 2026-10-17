@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "record_type": "m1_crosscheck_human_adjudication",
+  "status": "adjudicated_by_team_user",
+  "created_utc": "2026-10-18T00:00:00+00:00",
+  "dispute_source": "results/m1_crosscheck.json",
+  "dispute_source_sha256_note": "m1_crosscheck.json gắn qrels SHA256 697fafc7a89e40a782428204a4b0df21cb0545f24cbb714477c9328cfc88893f và m1_labels SHA256 36247b4b5f92ab15ccb3b4eccc4294b82247d11fc0d2ad6c6291454fa9d71f5d",
+  "qrels_before_sha256": "697fafc7a89e40a782428204a4b0df21cb0545f24cbb714477c9328cfc88893f",
+  "qrels_after_sha256": "6fadfeb9f68fca743c74f59723218cc23ab76b15d73d362ffe6ad8b26b00ccba",
+  "corpus_sha256": "f42acebb1ac34084e859f378243145a3f8e981869350edb41a3dc27e86320fa7",
+  "queries_sha256": "a46100f23d937133a82d709b4b45ded5dcc0125520fe59ead647644e58be692e",
+  "adjudicator": "Team 7 (chủ dự án) quyết định trực tiếp sau khi đọc toàn văn 8 bài và câu truy vấn",
+  "independence_caveat": "Danh tính và tính độc lập của người chấm M1 tự khai 'Hiep' vẫn chưa được xác minh; biên bản này chỉ phân xử rõ kết quả 8 cặp, không xác nhận kiểm tra chéo độc lập đã hoàn tất theo nghĩa 2 gán nhãn độc lập.",
+  "grading": {
+    "0": "không trả lời chủ đề cụ thể của query",
+    "1": "liên quan một phần / chỉ là bối cảnh",
+    "2": "đáp ứng trực tiếp trọng tâm query"
+  },
+  "decisions": [
+    {
+      "query_id": "Q03",
+      "doc_id": "vn_706ae3e191d963a8",
+      "qrels_before": 1,
+      "m1_grade": 0,
+      "final_grade": 0,
+      "reason": "Query hỏi tha thứ cho người vợ ngoại tình; bài khuyên một người vợ bỏ người chồng phản bội — đảo vai chủ thể, không bàn trường hợp vợ ngoại tình."
+    },
+    {
+      "query_id": "Q04",
+      "doc_id": "vn_10288e4d8ae0d55b",
+      "qrels_before": 1,
+      "m1_grade": 2,
+      "final_grade": 2,
+      "reason": "Toàn bài là thư tâm sự/khuyên về hôn nhân, vợ con, ly hôn — đáp ứng trực tiếp query 'tâm sự gia đình'."
+    },
+    {
+      "query_id": "Q08",
+      "doc_id": "vn_a51c84de855dc95c",
+      "qrels_before": 1,
+      "m1_grade": 0,
+      "final_grade": 0,
+      "reason": "Bài chỉ bàn đề nghị bỏ thuế trái phiếu Chính phủ Việt Nam và lãi suất trong nước; không nhắc Fed hay chính sách tiền tệ Fed."
+    },
+    {
+      "query_id": "Q10",
+      "doc_id": "vn_a7ab1dbd1332334b",
+      "qrels_before": 1,
+      "m1_grade": 2,
+      "final_grade": 1,
+      "reason": "Cùng vụ PMU18 và có nghi vấn kẻ chủ mưu, nhưng bài không xác định đường dây hoặc tác nhân chạy án — chỉ hữu ích làm bối cảnh."
+    },
+    {
+      "query_id": "Q16",
+      "doc_id": "vn_cbe182ef26813cda",
+      "qrels_before": 1,
+      "m1_grade": 2,
+      "final_grade": 1,
+      "reason": "Bài nêu sân Mỹ Đình tổ chức ba trận vòng bảng và tình hình bán vé; không nói diễn biến hay kết quả các trận chung kết Tiger Cup 2004."
+    },
+    {
+      "query_id": "Q18",
+      "doc_id": "vn_161f379098b8499f",
+      "qrels_before": 1,
+      "m1_grade": 2,
+      "final_grade": 2,
+      "reason": "Tường thuật liveshow 'Nắng lên' của Thanh Lam, liệt kê nhiều ca khúc và đánh giá phần biểu diễn — trùng chủ đề query."
+    },
+    {
+      "query_id": "Q19",
+      "doc_id": "vn_dfcce0e16a08fae9",
+      "qrels_before": 1,
+      "m1_grade": 0,
+      "final_grade": 1,
+      "reason": "Hồi âm nêu khả năng virus và khuyên cài/cập nhật antivirus, vá Windows — có phần phòng tránh virus; nhưng không bàn đánh cắp mật khẩu nên không đủ mức 2."
+    },
+    {
+      "query_id": "Q20",
+      "doc_id": "vn_2a683b464546fcd2",
+      "qrels_before": 1,
+      "m1_grade": 2,
+      "final_grade": 1,
+      "reason": "Bài phân tích sự cố VinaPhone và cách doanh nghiệp bù/không bù cho khách hàng — đáp ứng mảng thông tin di động, không bàn dịch vụ phần mềm."
+    }
+  ],
+  "summary": {
+    "n_pairs": 8,
+    "final_matches_m1": 4,
+    "final_matches_qrels_before": 4,
+    "changed_from_qrels_before": ["Q03", "Q04", "Q08", "Q18"],
+    "kept_from_qrels_before": ["Q10", "Q16", "Q19", "Q20"]
+  }
+}

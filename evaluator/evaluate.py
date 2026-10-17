@@ -355,6 +355,7 @@ def evaluate(*, indexes: Path, queries_path: Path, qrels_path: Path, out: Path,
     """Điểm vào chính của evaluator; trả về payload kết quả đầy đủ."""
     queries = load_queries(queries_path)
     qrels = load_qrels(qrels_path)
+    qrels_sha256 = file_sha256(qrels_path)
     actual_queries_sha256 = assert_queries_hash(qrels, queries)
     resolved = resolve_corpus_sha256(manifest_path, corpus_path)
     expected_corpus_sha256 = resolved["corpus_sha256"]
@@ -411,6 +412,7 @@ def evaluate(*, indexes: Path, queries_path: Path, qrels_path: Path, out: Path,
             "corpus_sha256": expected_corpus_sha256,
             "corpus_sha256_source": resolved["source"],
             "queries_sha256": actual_queries_sha256,
+            "qrels_sha256": qrels_sha256,
             "queries": queries.summary(),
             "qrels": qrels.summary(),
             "validation": combined.as_dict(),
@@ -462,6 +464,7 @@ def evaluate(*, indexes: Path, queries_path: Path, qrels_path: Path, out: Path,
         "corpus_sha256": expected_corpus_sha256,
         "corpus_sha256_source": resolved["source"],
         "queries_sha256": actual_queries_sha256,
+        "qrels_sha256": qrels_sha256,
         "queries": queries.summary(),
         "qrels": qrels.summary(),
         "validation": combined.as_dict(),

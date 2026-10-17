@@ -36,6 +36,7 @@ from evaluator.qrels import (  # noqa: E402
     Qrels,
     QrelsQueryHashMismatch,
     QuerySet,
+    file_sha256,
     load_qrels,
     preprocessing_status,
     validate_official_run,
@@ -605,6 +606,7 @@ def test_end_to_end_evaluate_measures_four_configurations(frozen_inputs):
     assert payload["metrics_status"] == "measured"
     assert payload["official"] is False
     assert payload["corpus_sha256"] == digest
+    assert payload["qrels_sha256"] == file_sha256(root / "qrels.json")
     assert payload["ranking_depth"] == 6
     assert set(payload["configurations"]) == {"C1", "C2", "C3", "C4", FALLBACK_LABEL}
     for entry in payload["configurations"].values():
@@ -679,6 +681,7 @@ def test_unmeasured_run_writes_no_metric_csvs(frozen_inputs):
                        corpus_path=root / "corpus.jsonl", allow_development=True)
     assert payload["metrics_status"] == "unmeasured"
     assert payload["official"] is False
+    assert payload["qrels_sha256"] == file_sha256(qrels_path)
     assert not (root / "pending_out" / "per_query.csv").exists()
     assert not (root / "pending_out" / "summary.csv").exists()
     assert (root / "pending_out" / "run.json").is_file()

@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "record_type": "segmentation_gold_human_adjudication",
+  "status": "adjudicated_by_team_user",
+  "created_utc": "2026-10-18T00:00:00+00:00",
+  "dispute_source": "docs/m1_gold_review.md",
+  "before_file": "data/gold/segmentation_labels.jsonl",
+  "qrels_note": "Bản gold tại lúc rà soát có SHA256 8f47eaa66342fe9531f556315bed0145c6bb5f22c71414984ae339ee5487b563 (ghi trong results/label_review.json và results/segmentation/evaluation.json).",
+  "gold_before_sha256": "8f47eaa66342fe9531f556315bed0145c6bb5f22c71414984ae339ee5487b563",
+  "gold_after_sha256": "aef365b23bb63034ce06b20178b89353b2a973b193f1ffc74ea3d85c850d5cf0",
+  "corpus_sha256": "f42acebb1ac34084e859f378243145a3f8e981869350edb41a3dc27e86320fa7",
+  "sample_sha256": "37112c076cc9e54e335b2f0930a42dc6cbd672908994ac3ac7189bcf1fd59fb3",
+  "adjudicator": "Team 7 (chủ dự án) xác nhận từng câu sau khi đọc phân ranh giới và đề xuất trong docs/m1_gold_review.md",
+  "caveat": "102/150 câu gold trùng gợi ý BiMM; không có vòng chấm độc lập thứ hai. Số đo trên gold này không được tuyên bố là số đo sau kiểm tra chéo độc lập.",
+  "decisions": [
+    {
+      "sample_id": "SG010",
+      "before_tokens_fragment": "chất_liệu độc_đáo_để trang_trí",
+      "final_tokens_fragment": "chất_liệu độc_đáo để trang_trí",
+      "reason": "Được là từ chỉ mục đích, không là một phần của tính từ 'độc đáo' — ranh giới từ ghép sai."
+    },
+    {
+      "sample_id": "SG053",
+      "before_tokens_fragment": "theo điều tra_của cơ_quan công_an",
+      "final_tokens_fragment": "theo điều_tra của cơ_quan công_an",
+      "reason": "Cụm động từ 'điều tra' và giới từ 'của' không tạo thành một từ 'tra_của'."
+    },
+    {
+      "sample_id": "SG089",
+      "before_tokens_fragment": "tổng_thống phần lan",
+      "final_tokens_fragment": "ngày tổng_thống phần_lan",
+      "reason": "Cùng tên nước phải tách thống nhất một quy ước; coi tên nước là một từ ghép 'phần_lan' ở cả hai lần xuất hiện."
+    }
+  ],
+  "summary": {
+    "n_pairs": 3,
+    "changed": ["SG010", "SG053", "SG089"],
+    "kept": []
+  }
+}

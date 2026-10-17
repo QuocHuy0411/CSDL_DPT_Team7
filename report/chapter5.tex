@@ -52,29 +52,34 @@ chỉ bằng các ca kiểm thử tự viết:
         hoặc không đạt mục tiêu được trình bày ở Chương~4.
 \end{itemize}
 
-\section{Những gì chưa đo được}
+\section{Số đo trên nhãn hiện có và phần cần thẩm định}
 
-Báo cáo nêu rõ hai khoảng trống dữ liệu, và không thay thế chúng bằng kết luận định
-tính:
+Bộ đánh giá đã tính các chỉ số trên tệp nhãn hiện có. Cờ
+\texttt{human\_annotation\_confirmed} và phép kiểm tra hash chứng minh dữ liệu
+đủ điều kiện \emph{kỹ thuật}; chúng không tự chứng minh từng nhãn đúng nội dung.
+Vì vậy phải đọc các số đo cùng kết quả rà soát nhãn:
 
 \begin{enumerate}
-  \item \textbf{Chỉ số chất lượng truy xuất chưa được đo.} Pool đánh giá có hàng
-        trăm cặp ứng viên do ba đường cơ sở đóng góp, nhưng tại thời điểm viết
-        \textbf{chưa có cặp nào được người gán xác nhận}; trạng thái nhãn là
-        \texttt{pending\_human\_annotation}. Vì vậy bộ đánh giá ghi
-        \texttt{metrics\_status = unmeasured} và cố ý không xuất bảng $P@K, R@K,
-        F1@K, MAP, NDCG@K$. Không có kết luận nào về việc cấu hình nào cho chất
-        lượng truy xuất tốt hơn, kể cả khi dung lượng chỉ mục của một cấu hình nhỏ
-        hơn hay truy vấn của nó nhanh hơn.
-  \item \textbf{Chất lượng tách từ chưa được đo.} Bộ mẫu 150 câu (15 câu mỗi lĩnh
-        vực) rút từ kho ngữ liệu đã khóa vẫn ở trạng thái chờ người gán. Do đó
-        không có chỉ số $F1$ tách từ nào cho cả ba phương pháp. Gợi ý của máy chỉ
-        là công cụ hỗ trợ gán nhãn, không phải nhãn vàng.
+  \item \textbf{Truy xuất.} Qrels có 669/669 cặp mang cờ xác nhận. Các chỉ số
+        của từng cấu hình nằm ở bảng sinh từ kết quả đánh giá trong Chương~4,
+        đã chạy lại sau khi Team7 gửi 37 quyết định qrels và sửa thêm một cặp
+        Q16 từ mức 2 xuống mức 1. Biên bản giữ hash bản trước, bản sau 37 cặp
+        và bản cuối. MAP C1/C2/C3/C4 hiện là 0,7764/0,7667/0,7768/0,6431;
+        C4 fallback 0,7248. Số đo vẫn \emph{tạm thời} về mặt ngữ nghĩa: tệp
+        tự khai chấm M1 134 cặp chưa xác minh được người chấm thứ hai độc lập,
+        bản đối chiếu mới có 126/134 cặp trùng và tám bất đồng chưa phân xử.
+  \item \textbf{Tách từ.} Tệp gold có 150/150 câu mang cờ xác nhận; bảng F1 span
+        ở Chương~4 chỉ hiện khi khớp bản gold đang dùng. Bản audit hiện tại thấy
+        102 câu trùng nguyên gợi ý BiMM; SG010, SG053 và SG089 cần người gán
+        xem lại, trong đó SG010 ghép ``độc\_đáo\_để''. Sự trùng gợi ý
+        không tự chứng minh nhãn sai, nhưng cần kiểm tra lại để giảm nguy cơ
+        neo theo output của chính thuật toán đang đánh giá.
 \end{enumerate}
 
-Việc giữ nguyên trạng thái ``chưa đo'' là một phần của kết quả: nó buộc mọi kết
-luận về chất lượng phải chờ dữ liệu người, thay vì dựa vào các con số thời gian và
-dung lượng vốn không phản ánh mức độ liên quan.
+Các đề xuất AI trước nhập và quyết định của Team7 được truy vết tại
+\path{docs/label_review.md}, \path{docs/m2_qrels_review.md} và
+\path{results/label_review_resolution.json}. Không tự chuyển đề xuất của
+máy thành nhãn \texttt{confirmed}; người gán phải đọc bài/câu rồi quyết định.
 
 \section{Hạn chế}
 
@@ -94,6 +99,8 @@ Các hạn chế dưới đây cần được đọc kèm với các kết quả
         khoảng hai câu mỗi lĩnh vực; pool được gộp từ chính các đường cơ sở nên có
         thể bỏ sót tài liệu liên quan không được đường nào trả về. Bộ mẫu tách từ
         150 câu, nếu chỉ một người gán, cũng không đo được đồng thuận giữa người gán.
+        Bộ đánh giá hiện chỉ kiểm tra tính đầy đủ/hash, không có phép tự động
+        xác nhận độ đúng ngữ nghĩa của nhãn.
   \item \textbf{Chi phí dự phòng.} Cơ chế dự phòng cho C4 khi mọi token truy vấn
         đều đã bị lọc đòi hỏi giữ thêm một chỉ mục C3. Việc giữ hai chỉ mục làm
         tổng dung lượng triển khai tăng lên, trái với mục tiêu giảm dung lượng của
@@ -109,11 +116,13 @@ Các hạn chế dưới đây cần được đọc kèm với các kết quả
 Các bước tiếp theo được xác định theo thứ tự ưu tiên rõ ràng:
 
 \begin{enumerate}
-  \item Gán nhãn và xác nhận toàn bộ pool liên quan, sau đó chạy bộ đánh giá chính
-        thức để có $P@K, R@K, F1@K, MAP, NDCG@K$ cho bốn cấu hình và cho từng lĩnh
-        vực.
-  \item Hoàn tất gán nhãn 150 câu mẫu tách từ, rồi chạy bộ đo khớp span để có $F1$
-        cho FMM, BMM, BiMM.
+  \item Xác minh nguồn tệp M1 tự khai chấm 134 cặp là người thứ hai độc lập;
+        nếu đúng, đối chiếu lại với qrels mới và phân xử bất đồng. Nếu không,
+        ghi rõ giới hạn một người gán. Bộ 37 quyết định qrels đã nhập và
+        $P@K, R@K, F1@K, MAP, NDCG@K$ đã chạy lại.
+  \item Người gán quyết định lại phân đoạn SG010, SG053, SG089 và kiểm tra thêm
+        mẫu gold độc lập; sau khi nhập nhãn mới, chạy lại word-span $F1$ cho
+        FMM, BMM, BiMM.
   \item So sánh thêm với một bộ tách từ ngoài đã được công bố, trong điều kiện cho
         phép, để đặt kết quả của nhóm vào một mốc tham chiếu.
   \item Mở rộng bộ mẫu và số người gán để đo đồng thuận giữa người gán và để giảm
@@ -122,7 +131,6 @@ Các bước tiếp theo được xác định theo thứ tự ưu tiên rõ rà
         ngữ nghĩa, và đánh giá lại tác động của việc bảo vệ guard.
 \end{enumerate}
 
-Cho tới khi các bước gán nhãn hoàn tất, kết luận đúng mực của đồ án là: hệ thống đã
-hoàn tất về mặt triển khai và đã kiểm chứng được phần tính toán, thời gian và dung
-lượng; phần kết luận về chất lượng truy xuất và chất lượng tách từ vẫn đang chờ
-nhãn người.
+Cho tới khi rà soát nhãn hoàn tất, kết luận đúng mực là: hệ thống đã hoàn tất
+về mặt triển khai và đã tính được các chỉ số trên tệp nhãn hiện có; độ tin cậy
+của kết luận chất lượng vẫn phụ thuộc bước duyệt nội dung độc lập.

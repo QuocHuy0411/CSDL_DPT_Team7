@@ -111,6 +111,7 @@ def evaluate(directory=DEFAULT_DATA, out=ROOT / "results/segmentation"):
     eligible = (confirmed == len(records) == 150 and len(counts) == 10 and set(counts.values()) == {15})
     payload = {"schema_version": 1, "corpus_sha256": manifest["corpus_sha256"],
                "sample_sha256": manifest["sample_sha256"], "n_samples": len(records),
+               "gold_labels_sha256": digest(Path(directory) / "segmentation_labels.jsonl"),
                "confirmed": confirmed, "official": eligible,
                "metrics_status": "measured" if eligible else "unmeasured",
                "reason": None if eligible else "Need all 150 human-confirmed labels (15/category)"}

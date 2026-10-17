@@ -51,7 +51,15 @@ assessor, nội dung chuẩn hóa và hash trước khi đo.
 khi cả đầu và cuối span đều khớp. Precision là số span khớp chia span dự đoán,
 Recall chia span gold, F1 là trung bình điều hòa. Không dùng tỷ lệ khớp ký tự
 thay cho độ chính xác phân đoạn từ. Quy trình nhập nhãn phải từ chối phân đoạn
-làm mất/thêm/đổi thứ tự âm tiết. Chỉ số chính thức còn chờ gold do người gán.
+làm mất/thêm/đổi thứ tự âm tiết. Tệp hiện có 150/150 câu mang cờ xác nhận;
+đường đánh giá chỉ được dùng làm kết luận sau khi nhãn gold được duyệt nội dung.
+Rà soát bản gold hiện tại thấy 102 câu giữ nguyên toàn bộ gợi ý BiMM. Ít nhất
+SG010, SG053 và SG089 có phân đoạn cần người gán xem lại; ví dụ SG010 ghép
+``độc\_đáo\_để''. Sự trùng gợi ý không tự chứng minh nhãn sai,
+nhưng số đo trên nhãn hiện có cần được kiểm tra độc lập trước khi coi là kết luận
+cuối. Bảng F1 dưới đây được sinh lại từ kết quả đánh giá khớp bản gold đang dùng;
+nếu thiếu hoặc lệch bản gold thì không được giữ số cũ.
+\IfFileExists{segmentation_results.tex}{\input{segmentation_results}}{\par\emph{Chưa có bảng F1 tách từ hợp lệ cho bản gold hiện tại.}}
 
 Đối chứng Trie và Set phải dùng cùng từ điển, câu, cửa sổ và luật BiMM. Kiểm tra
 output parity trước khi so tốc độ. Thời gian khởi tạo và bộ nhớ Python qua
@@ -61,13 +69,12 @@ Phép đo thật trên 150 câu mẫu và 100 bài đầu của corpus khóa (10
 2 lượt warm-up) có 750 đối soát FMM/BMM/BiMM, không có token nào lệch.
 Trên mẫu câu, mean FMM là 0,2328~ms (Trie) so với 0,1147~ms (Set), BiMM là
 0,4557 so với 0,1958~ms; trên lát cắt corpus, BiMM là 6,5355 so với
-2,6611~ms/bài. Như vậy bản Trie emph{hiện tại} chậm hơn Set khoảng 2--2,5
+2,6611~ms/bài. Như vậy bản Trie \emph{hiện tại} chậm hơn Set khoảng 2--2,5
 lần trong hai workload này. Nguyên nhân triển khai là mỗi độ dài ứng viên lại
 tra từ gốc Trie thay vì dùng một lượt dò tiền tố; đây không phải kết luận rằng
 Trie nói chung chậm hơn. Đỉnh heap Python khi dựng Trie/Set lần lượt là
 20.985.701/15.368.109 byte, không phải RSS. Chi tiết và dữ liệu gốc nằm trong
 \texttt{results/lookup/trie\_vs\_set.json} và tài liệu benchmark kèm repo.
-\IfFileExists{segmentation_results.tex}{\input{segmentation_results}}{}
 
 \section{Kiểm chứng triển khai}
 
@@ -106,11 +113,19 @@ phân rã Cosine. Fixture không được đưa vào bảng kết quả corpus c
 
 \section{Giới hạn và kết luận}
 
-Chưa có phép đo chất lượng IR/gold tách từ do nhãn con người chưa đủ. Vì vậy
-chưa kết luận cấu hình nào có MAP/NDCG hay F1 phân đoạn tốt nhất. Tập query nhỏ
-(hai/lĩnh vực) và qrels pooling có thiên lệch theo hệ thống đóng góp; tài liệu
-relevant bị cả ba baseline bỏ sót không có nhãn, không có hướng sai lệch cố định
-của MAP/Recall so với relevance đầy đủ.
+Đường đánh giá đã tính chất lượng trên 669/669 cặp có cờ xác nhận. Các giá trị
+MAP, P@10 và NDCG@10 trong bảng đầu chương là số đo trên tệp nhãn lúc chạy;
+không diễn giải thứ hạng giữa các cấu hình là ưu thế có ý nghĩa thống kê hoặc
+suy rộng sang kho ngữ liệu khác. Hai phiếu rà soát bằng AI đã liệt kê 37 cặp
+qrels không trùng nhau; Team7 gửi quyết định cho cả 37 và sau đó sửa riêng
+Q16/\texttt{vn\_f4f2b5ae9443c172} từ mức 2 xuống mức 1. Phép đo trong bảng
+đã chạy lại trên qrels mới (SHA256 bắt đầu \texttt{697fafc7}); không dùng
+CSV trước lần nhập. Nguồn chấm độc lập M1 vẫn chưa được xác minh, nên kết luận
+ngữ nghĩa còn tạm thời dù cổng kỹ thuật đánh giá đã cho phép. Chi tiết nằm
+trong biên bản \path{results/label_review_resolution.json}.
+Tập query nhỏ (hai/lĩnh vực) và qrels pooling có thiên lệch theo các hệ thống
+đóng góp; tài liệu relevant bị cả ba baseline bỏ sót không có nhãn, không có
+hướng sai lệch cố định của MAP/Recall so với relevance đầy đủ.
 
 Maximum Matching phụ thuộc từ điển, dễ nhập nhằng với tên riêng, từ mới và cụm
 dài; từ điển rộng có cả thành ngữ không đồng nghĩa là phân đoạn tốt. Chính sách
@@ -120,5 +135,5 @@ ngữ nghĩa phủ định.
 
 Số đo latency là warm process trên một máy, không phải cam kết độ trễ mọi máy
 hay mọi kích thước corpus. Kết quả kích thước phải tách chỉ mục C4 thuần khỏi gói
-C4+C3. Phần triển khai, tích hợp và kiểm thử có thể hoàn tất trước; phần kết luận
-chất lượng chỉ hoàn tất sau gán nhãn và đo thật.
+C4+C3. Phần triển khai, tích hợp và phép tính đã chạy; kết luận chất lượng cuối
+cần được cập nhật sau khi mẫu kiểm tra chéo và gold tách từ được duyệt.

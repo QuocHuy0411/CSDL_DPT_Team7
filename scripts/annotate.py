@@ -326,8 +326,22 @@ def cmd_export(args) -> int:
     pool, qrels, index = load_context(args.pool, args.qrels)
     pool_by_pair = {(item["query_id"], item["doc_id"]): item for item in pool["pairs"]}
     query_text = {item["query_id"]: item["text"] for item in pool["queries"]}
+    rows = qrels["judgments"]
+    focused_hash = None
+    if args.review_flags is not None:
+        review = load_json(args.review_flags)
+        current_hash = hashlib.sha256(args.qrels.read_bytes()).hexdigest()
+        if review.get("qrels_sha256_at_review") != current_hash:
+            raise AnnotationError("review flags are stale relative to qrels; update the audit first")
+        keys = [(entry["query_id"], entry["doc_id"])
+                for entry in review.get("qrels_flags", [])]
+        if not keys or len(keys) != len(set(keys)) or not set(keys) <= index.keys():
+            raise AnnotationError("review flags are empty, duplicated or outside qrels")
+        # A focused review is intentionally blind to old grades and AI suggestions.
+        rows = [{**index[key], "relevance": None, "assessor": None} for key in keys]
+        focused_hash = current_hash
     body = [_pair_section(row, pool_by_pair[(row["query_id"], row["doc_id"])],
-                          query_text[row["query_id"]]) for row in qrels["judgments"]]
+                          query_text[row["query_id"]]) for row in rows]
     document = (
         "<!doctype html><html lang='vi'><head><meta charset='utf-8'>"
         "<title>Phiếu gán nhãn liên quan (offline)</title><style>"
@@ -345,6 +359,8 @@ def cmd_export(args) -> int:
         "JSON xuất ra kèm hash corpus và queries; import sẽ từ chối nếu hash không khớp.</p>"
         f"<label>Tên người gán (dùng cho mọi cặp chưa điền): "
         f"<input id='assessor' value='{html.escape(args.assessor or '')}'></label> "
+        + ("<label><input type='checkbox' id='reviewed'>Tôi đã đọc toàn bài và tự "
+           "quyết định đủ các nhãn trong phiếu rà này</label> " if focused_hash else "") +
         "<button onclick='download()'>Xuất JSON nhãn</button>"
         "<p><label>Lọc query <select id='queryFilter' onchange='filterRows()'>"
         "<option value=''>Tất cả</option>"
@@ -356,7 +372,8 @@ def cmd_export(args) -> int:
         "<script>"
         f"var CORPUS_SHA={json.dumps(pool['corpus_sha256'])};"
         f"var QUERIES_SHA={json.dumps(pool.get('queries_sha256'))};"
-        f"var PAIRS_KEY={json.dumps(hashlib.sha256(json.dumps(sorted(pool_by_pair)).encode()).hexdigest())};"
+        f"var REVIEW_QRELS_SHA={json.dumps(focused_hash)};"
+        f"var PAIRS_KEY={json.dumps(hashlib.sha256(json.dumps(sorted((r['query_id'], r['doc_id']) for r in rows)).encode()).hexdigest())};"
         "var STORAGE_KEY='team7-labels:'+CORPUS_SHA+':'+QUERIES_SHA+':'+PAIRS_KEY;"
         "function collect(){var g=document.getElementById('assessor').value.trim();"
         "var labels=[];document.querySelectorAll('select[data-qid]').forEach(function(s){"
@@ -385,6 +402,10 @@ def cmd_export(args) -> int:
         "var a=document.querySelector(sel);var name=(a&&a.value.trim())||g;"
         "if(s.value!=='')out.labels.push({query_id:s.dataset.qid,doc_id:s.dataset.did,"
         "relevance:parseInt(s.value,10),assessor:name});});"
+        "if(REVIEW_QRELS_SHA){var ok=document.getElementById('reviewed').checked;"
+        "if(!g||!ok||out.labels.length!==document.querySelectorAll('select[data-qid]').length){"
+        "alert('Cần tên, đủ nhãn và xác nhận đã tự đọc toàn bài.');return;}"
+        "out.review_qrels_sha256=REVIEW_QRELS_SHA;out.human_review_confirmed=true;}"
         "var blob=new Blob([JSON.stringify(out,null,2)],{type:'application/json'});"
         "var a=document.createElement('a');a.href=URL.createObjectURL(blob);"
         "a.download='labels.json';a.click();}</script></body></html>")
@@ -420,6 +441,12 @@ def cmd_import(args) -> int:
                 f"labels were made against queries {label_queries} but the pool uses "
                 f"{pool.get('queries_sha256')}; the query texts changed, so re-export "
                 "and re-annotate")
+        if "review_qrels_sha256" in payload:
+            current_hash = hashlib.sha256(args.qrels.read_bytes()).hexdigest()
+            if payload["review_qrels_sha256"] != current_hash:
+                raise AnnotationError("focused review was made against older qrels; export again")
+            if payload.get("human_review_confirmed") is not True:
+                raise AnnotationError("focused review requires explicit human-reading confirmation")
     else:
         raise AnnotationError("labels file must be a JSON object with a 'labels' list")
     applied = skipped = 0
@@ -506,6 +533,8 @@ def main(argv: list[str] | None = None) -> int:
     export = sub.add_parser("export", help="write the offline HTML worksheet")
     export.add_argument("--assessor", default="",
                         help="prefill the single global assessor field")
+    export.add_argument("--review-flags", type=Path,
+                        help="export only flagged pairs with grades/assessors blank")
     export.set_defaults(func=cmd_export)
 
     importer = sub.add_parser("import", help="merge labels exported from the worksheet")

@@ -17,3 +17,7 @@ report/*.synctex.gz
 *.log
 _d*.py
 _docx*
+scratch/
+.agents/
+*.before_review*
+*.after_*

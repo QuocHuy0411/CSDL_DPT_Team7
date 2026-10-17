@@ -130,9 +130,11 @@ def test_home_reports_real_corpus_numbers_when_manifest_present():
 
 
 def test_home_never_claims_official_evaluation_while_qrels_pending():
-    qrels = ROOT / "data/ground_truth/qrels.json"
+    qrels = ROOT / "data/ground_truth/mm/qrels.json"
     if not qrels.is_file():
-        pytest.skip("chưa có data/ground_truth/qrels.json")
+        qrels = ROOT / "data/ground_truth/qrels.json"
+    if not qrels.is_file():
+        pytest.skip("chưa có data/ground_truth/mm/qrels.json")
     import json
 
     payload = json.loads(qrels.read_text(encoding="utf-8"))
