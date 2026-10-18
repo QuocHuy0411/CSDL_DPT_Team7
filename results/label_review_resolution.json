@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "status": "submitted_decisions_imported_with_user_amendment",
+  "source": "data/ground_truth/mm/labels.json",
+  "source_sha256": "89fc6e2bb2b1b53a0c6eae78e42359f575f5067d96a2b90525a920bffb305d46",
+  "source_assessor": "Team7",
+  "source_human_review_confirmed": true,
+  "qrels_before_path": "data/ground_truth/mm/qrels.before_review_2026-10-18.json",
+  "qrels_before_sha256": "7785c5a1ff2e56a10ef7944b73f6ce2a3c3618757356b2e9ce7542a3489f9c75",
+  "qrels_after_37_path": "data/ground_truth/mm/qrels.after_37_2026-10-18.json",
+  "qrels_after_37_sha256": "435d07f51ef63ef8206fbc81092098f3209e4d6c98e76bdbb091aafcd0de7ea2",
+  "amendment_source": "data/ground_truth/mm/q16_amendment_2026-10-18.json",
+  "amendment_source_sha256": "f255cd4d2d30cc62604641f989f4d7784125f5a6f1dc115741cacf8501d18dbd",
+  "amendment_decision": "User replied: Đổi sang 1",
+  "qrels_after_sha256": "697fafc7a89e40a782428204a4b0df21cb0545f24cbb714477c9328cfc88893f",
+  "n_submitted_pairs": 37,
+  "n_changed_from_original": 36,
+  "n_matching_ai_proposals": 35,
+  "n_different_from_ai_proposals": 2,
+  "n_final_matching_ai_proposals": 36,
+  "n_final_different_from_ai_proposals": 1,
+  "disagreements": [
+    {
+      "query_id": "Q16",
+      "doc_id": "vn_be3de050c8c6f373",
+      "original_grade": 2,
+      "ai_suggested_grade": 1,
+      "submitted_grade": 0,
+      "status": "lead_agrees_with_submitted_grade",
+      "reason": "Bài về giá vé bán kết, không trả lời việc Việt Nam đăng cai vòng bảng hoặc các trận chung kết."
+    },
+    {
+      "query_id": "Q16",
+      "doc_id": "vn_f4f2b5ae9443c172",
+      "original_grade": 2,
+      "ai_suggested_grade": 1,
+      "submitted_grade": 2,
+      "status": "resolved_by_user_change_to_1",
+      "final_grade": 1,
+      "reason": "Bài xác nhận lễ khai mạc bảng A tại sân Thống Nhất nhưng không mô tả các trận chung kết."
+    }
+  ],
+  "gold_status": "not_imported_from_this_submission",
+  "m1_crosscheck_status": "not_accepted_as_independent_without_reviewer_confirmation"
+}

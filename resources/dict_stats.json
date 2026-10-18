@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "total_words": 69858,
+  "syllable_distribution": {
+    "1": 7092,
+    "2": 48430,
+    "3": 5586,
+    "4": 6950,
+    "5": 727,
+    "6": 794,
+    "7": 150,
+    "8": 113,
+    "9": 10,
+    "10": 3,
+    "11": 1,
+    "15": 1,
+    "17": 1
+  },
+  "max_syllables": 17,
+  "words_with_at_most_4_syllables": 68058,
+  "share_within_4_syllables_percent": 97.4233,
+  "single_syllable_words": 7092,
+  "multi_syllable_words": 62766,
+  "input": {
+    "path": "resources/dictionary_source/Viet74K.txt",
+    "sha256": "b83d49308336f12ca46d06287d8db6e2cdc7a725d9a9dac56930051775fafb90",
+    "bytes": 988627
+  },
+  "output": {
+    "path": "resources/dict.txt",
+    "sha256": "175e8b1bdd77e81d79b12c3d815cd9caa8f5a48f734c7a59f6124bc8cdc5d8ab",
+    "bytes": 931248
+  },
+  "rejected_or_removed": {
+    "blank_lines": 1,
+    "empty_after_whitespace": 0,
+    "invalid_entries_rejected_whole": 2667,
+    "duplicate_entries": 1376,
+    "total_not_kept": 4044
+  },
+  "cleaning_rules": [
+    "strip BOM, decode UTF-8",
+    "unicode NFC",
+    "lowercase (str.lower, not str.casefold)",
+    "REJECT the entry whole if it contains any character outside the Vietnamese letter set; characters are never deleted from inside an entry",
+    "collapse whitespace runs to a single space and strip",
+    "drop empty entries, drop duplicates, sort ascending"
+  ],
+  "window_note": "max_syllables in this file is the longest entry in the dictionary and is the default sliding window bound used by engine.tokenizer.max_matching",
+  "source": {
+    "schema_version": 1,
+    "name": "Viet74K",
+    "pinned": true,
+    "upstream_repository": "https://github.com/duyet/vietnamese-wordlist",
+    "upstream_branch": "master",
+    "pinned_commit": "688b0953c8cdb21ee090ce80b83cefdb052fe2cd",
+    "raw_url": "https://raw.githubusercontent.com/duyet/vietnamese-wordlist/688b0953c8cdb21ee090ce80b83cefdb052fe2cd/Viet74K.txt",
+    "license": "GPL-2.0",
+    "license_evidence": {
+      "github_api_license_field": "gpl-2.0",
+      "license_file_vendored_at": "resources/dictionary_source/LICENSE",
+      "license_sha256": "c03cea027b4b40e4402fabd08557736727ec3d5bc54ad64ab6472de432198cad",
+      "license_first_line": "GNU GENERAL PUBLIC LICENSE",
+      "note": "The LICENSE file is vendored next to the data snapshot, so the grant travels with the data."
+    },
+    "original_author": "Ho Ngoc Duc (Universitaet Leipzig)",
+    "mirror_maintainer": "Van-Duyet Le (duyet)",
+    "vendored_snapshot": {
+      "path": "resources/dictionary_source/Viet74K.txt",
+      "sha256": "b83d49308336f12ca46d06287d8db6e2cdc7a725d9a9dac56930051775fafb90",
+      "bytes": 988627
+    },
+    "why_this_source": [
+      "The dictionary named in the project plan (roy-a/Roy_VnTokenizer) carries no LICENSE file and the GitHub API reports license=null, so its word list cannot be redistributed.",
+      "Viet74K is a real, widely reused Vietnamese word list with an explicit GPL-2.0 grant and multi-syllable entries, which is what a Maximum Matching tokenizer needs.",
+      "It is pinned to one commit and the snapshot SHA256 is verified on every build, so the dictionary is reproducible and fully offline."
+    ],
+    "offline_use": "engine.tokenizer loads resources/dict.txt; no network access at runtime."
+  }
+}

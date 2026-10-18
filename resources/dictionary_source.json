@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "name": "Viet74K",
+  "pinned": true,
+  "upstream_repository": "https://github.com/duyet/vietnamese-wordlist",
+  "upstream_branch": "master",
+  "pinned_commit": "688b0953c8cdb21ee090ce80b83cefdb052fe2cd",
+  "raw_url": "https://raw.githubusercontent.com/duyet/vietnamese-wordlist/688b0953c8cdb21ee090ce80b83cefdb052fe2cd/Viet74K.txt",
+  "license": "GPL-2.0",
+  "license_evidence": {
+    "github_api_license_field": "gpl-2.0",
+    "license_file_vendored_at": "resources/dictionary_source/LICENSE",
+    "license_sha256": "c03cea027b4b40e4402fabd08557736727ec3d5bc54ad64ab6472de432198cad",
+    "license_first_line": "GNU GENERAL PUBLIC LICENSE",
+    "note": "The LICENSE file is vendored next to the data snapshot, so the grant travels with the data."
+  },
+  "original_author": "Ho Ngoc Duc (Universitaet Leipzig)",
+  "mirror_maintainer": "Van-Duyet Le (duyet)",
+  "vendored_snapshot": {
+    "path": "resources/dictionary_source/Viet74K.txt",
+    "sha256": "b83d49308336f12ca46d06287d8db6e2cdc7a725d9a9dac56930051775fafb90",
+    "bytes": 988627
+  },
+  "why_this_source": [
+    "The dictionary named in the project plan (roy-a/Roy_VnTokenizer) carries no LICENSE file and the GitHub API reports license=null, so its word list cannot be redistributed.",
+    "Viet74K is a real, widely reused Vietnamese word list with an explicit GPL-2.0 grant and multi-syllable entries, which is what a Maximum Matching tokenizer needs.",
+    "It is pinned to one commit and the snapshot SHA256 is verified on every build, so the dictionary is reproducible and fully offline."
+  ],
+  "offline_use": "engine.tokenizer loads resources/dict.txt; no network access at runtime."
+}

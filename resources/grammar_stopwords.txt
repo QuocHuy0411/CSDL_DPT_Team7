@@ -1,0 +1,224 @@
+# Tier-1 grammar stopwords (M1) - curated in-repo, one canonical term per line.
+#
+# Format: UTF-8, one term per line, "#" starts a comment, blank lines ignored.
+# Canonical form = NFC + lowercase, compound tokens joined with "_" (same shape
+# as engine.tokenizer.max_matching output).
+#
+# Curation rule: only terms whose primary grammatical function is function-like
+# (pronoun, demonstrative, preposition, auxiliary, particle, degree/focus
+# adverb, discourse connective). A term is listed here even when
+# resources/guard_whitelist.txt protects it, so this file stays a readable
+# record of the full grammar inventory; the effective stopword set is
+# (this file) minus (guards). See resources/tier1_source.md for the rules, the
+# deliberate exclusions and the honest counts.
+#
+# NOT a repackaged external dictionary: no entry was copied from an unlicensed
+# stopword corpus. resources/static_stopwords.txt (C2) is a different,
+# configuration-level list and is deliberately not reused here.
+
+# --- pronouns: personal and reflexive -------------------------------------
+tôi
+tao
+mình
+chúng_tôi
+chúng_ta
+chúng_mình
+bạn
+các_bạn
+chúng_bạn
+mày
+hắn
+y
+họ
+chúng_nó
+bọn_họ
+chúng
+người_ta
+anh
+chị
+em
+
+# --- demonstratives and deixis -------------------------------------------
+này
+đây
+đó
+ấy
+kia
+nọ
+vậy
+thế
+thế_đấy
+đấy
+thế_đó
+thế_này
+
+# --- prepositions ---------------------------------------------------------
+của
+cho
+với
+bằng
+từ
+trong
+ngoài
+trên
+dưới
+giữa
+tại
+theo
+đối_với
+ứng_với
+về_với
+
+# --- auxiliaries, modals and aspect markers -------------------------------
+là
+có
+đã
+sẽ
+đang
+rồi
+phải
+hãy
+cứ
+lại
+
+# --- negation and prohibition (also guarded: never filtered) --------------
+không
+chưa
+chẳng
+chả
+đừng
+chớ
+
+# --- causal, conditional and purpose logic (also guarded) ----------------
+vì
+bởi
+do
+nên
+nếu
+thì
+hoặc
+hay
+nhưng
+mà
+như
+dù
+tuy
+vì_vậy
+vì_thế
+bởi_vậy
+do_đó
+nếu_như
+dù_cho
+cho_dù
+mặc_dù
+song
+song_song
+tuy_nhiên
+nhằm
+
+# --- coordination and sequence --------------------------------------------
+và
+rồi_nữa
+tiếp_theo
+sau_đó
+trước_hết
+đầu_tiên
+kế_tiếp
+cuối_cùng
+từ_đó
+
+# --- degree and intensity adverbs ----------------------------------------
+rất
+quá
+khá
+hơi
+cực
+cực_kỳ
+quá_chừng
+quá_độ
+lắm
+nhất
+hơn
+tương_đối
+vô_cùng
+hết
+hết_sức
+nhiều
+ít
+vừa
+vừa_mới
+
+# --- focus and extent adverbs --------------------------------------------
+cũng
+cũ
+vẫn
+còn
+mãi
+chỉ
+toàn
+bộ
+luôn
+luôn_tuần
+ngay_cả
+thậm_chí
+ít_nhất
+tối_đa
+nhất_là
+hơn_nữa
+khoảng
+chừng
+tầm
+độ
+cỡ
+
+# --- discourse and stance connectives -------------------------------------
+nói_chung
+nhìn_chung
+đại_loại
+cụ_thể
+nói_cụ_thể
+tóm_lại
+ví_dụ
+tức_thì
+ngược_lại
+nói_vậy
+chẳng_hạn
+rõ_ràng
+hiển_nhiên
+
+# --- epistemic adverbs (also guarded) -------------------------------------
+chắc
+chắc_chắn
+chắc_hẳn
+có_lẽ
+dĩ_nhiên
+hình_như
+tất_nhiên
+
+# --- sentence-final particles --------------------------------------------
+à
+ạ
+nhỉ
+hả
+ư
+nhé
+chứ
+thôi
+dạ
+vâng
+
+# --- further degree, focus and extent adverbs -----------------------------
+thêm
+nữa
+tối
+chút
+ngay
+mới
+chính
+đúng
+duy_nhất
+hoàn_toàn
+gần_như
+đặc_biệt
+gần
+quanh

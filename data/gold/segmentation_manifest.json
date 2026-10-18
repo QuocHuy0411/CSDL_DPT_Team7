@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "component": "scripts.prepare_segmentation",
+  "corpus_file": "data/corpus.jsonl",
+  "corpus_sha256": "f42acebb1ac34084e859f378243145a3f8e981869350edb41a3dc27e86320fa7",
+  "sample_file": "segmentation_sample.jsonl",
+  "sample_sha256": "37112c076cc9e54e335b2f0930a42dc6cbd672908994ac3ac7189bcf1fd59fb3",
+  "normalizer_sha256": "6a384d7628c66c999d8e857fa2721955f8856157ce5234839b636bc498d1f438",
+  "labels_file": "segmentation_labels.jsonl",
+  "n_samples": 150,
+  "per_category_target": 15,
+  "seed": 2026,
+  "category_counts": {
+    "Chính trị – Xã hội": 15,
+    "Khoa học": 15,
+    "Kinh doanh": 15,
+    "Pháp luật": 15,
+    "Sức khỏe": 15,
+    "Thế giới": 15,
+    "Thể thao": 15,
+    "Vi tính": 15,
+    "Văn hóa": 15,
+    "Đời sống": 15
+  },
+  "sentence_length_units": {
+    "min": 12,
+    "max": 60
+  },
+  "tokenizer": {
+    "tokenizer": "engine.tokenizer.max_matching:tokenize",
+    "method": "bimm",
+    "dictionary_path": "D:/N23DCCN155- Dang Van Hiep/HK7/Hệ csdl dpt/CSDL_DPT_Team7/resources/dict.txt",
+    "dictionary_sha256": "175e8b1bdd77e81d79b12c3d815cd9caa8f5a48f734c7a59f6124bc8cdc5d8ab",
+    "dictionary_entries": 69858,
+    "probe": [
+      "trí_tuệ_nhân_tạo",
+      "trong",
+      "y_tế"
+    ],
+    "tier1_applied": false
+  },
+  "gold_status": "pending",
+  "status": "pending_human_annotation",
+  "official_evaluation_allowed": false,
+  "eligibility_rules": {
+    "label_status_must_be": "confirmed",
+    "assessor_required": true,
+    "sentence_sha256_must_match": true,
+    "tokens_must_align_to_spans": true,
+    "auto_suggestions_never_eligible": true
+  },
+  "note": "Token suggestions are machine output. Official segmentation accuracy may only be reported after a human confirms labels; hand-authored unit fixtures are not a substitute for this corpus."
+}

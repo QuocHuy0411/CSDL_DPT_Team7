@@ -1,0 +1,145 @@
+# Tier-1 guard whitelist (M1): terms that tier-1 filtering must NEVER remove.
+#
+# Format: UTF-8, one canonical term per line, "#" starts a comment. Canonical
+# form = NFC + lowercase, compounds joined with "_".
+#
+# Rule applied by engine/tokenizer/stopwords.py: a token survives filtering if
+# it is a guard, or if any of its "_"-separated components is a guard. So
+# guarding "không" also protects "không_thể", "chẳng_hạn", "vì_dầu" and
+# "trước_hết" without listing every compound.
+#
+# Curation rule: protect every term whose removal can change the truth
+# conditions, the polarity or the scope of a query. Everything else that is
+# function-like stays in resources/grammar_stopwords.txt and is filtered.
+#
+# Classes below are the audit trail; the class of each entry is also recorded in
+# the metadata() payload of Tier1StopwordFilter.
+
+# --- NEGATION -------------------------------------------------------------
+không
+chưa
+chẳng
+chả
+đừng
+chớ
+hề
+chưa_chắc
+chưa_bao_giờ
+không_bao_giờ
+không_thể
+chẳng_thể
+không_quá
+không_hề
+đâu_có
+
+# --- CAUSAL / CONDITIONAL / PURPOSE LOGIC --------------------------------
+vì
+vì_vậy
+vì_thế
+bởi
+bởi_vậy
+do
+do_đó
+nên
+nếu
+nếu_như
+thì
+miễn
+hễ
+trừ
+trừ_khi
+nhằm
+khi
+khi_nào
+lúc_nào
+
+# --- CONTRAST / DISJUNCTION / CONCESSION ---------------------------------
+nhưng
+mà
+hoặc
+hay
+dù
+dù_cho
+cho_dù
+mặc_dù
+tuy
+tuy_nhiên
+song
+song_song
+mặc
+tức_là
+
+# --- QUESTION AND UNCERTAINTY -------------------------------------------
+ai
+gì
+gì_nữa
+đâu
+nào
+bao_nhiêu
+mấy
+sao
+tại_sao
+thế_nào
+như_thế_nào
+thế
+vậy
+thế_đấy
+gì_gì
+bấy_nhiêu
+nơi
+
+# --- SCOPE / QUANTIFIER --------------------------------------------------
+mọi
+mỗi
+mỗi_một
+tất_cả
+tất_thảy
+toàn_bộ
+cả
+các
+những
+vài
+một
+từng
+bất_kỳ
+bất_cứ
+bất_kỳ_ai
+bất_kỳ_người_nào
+bất_cứ_người_nào
+các_bạn
+phần_lớn
+đa_số
+hầu_hết
+chủ_yếu
+
+# --- COMPARISON / SIMILARITY ---------------------------------------------
+như
+như_nhau
+cùng
+giống_với
+so_với
+
+# --- TEMPORAL AND ORDERING LOGIC -----------------------------------------
+trước
+sau
+trước_hết
+đầu_tiên
+kế_tiếp
+cuối_cùng
+sau_đó
+từ_đó
+tiếp_theo
+
+# --- EPISTEMIC MODALITY --------------------------------------------------
+chắc
+chắc_chắn
+chắc_hẳn
+có_lẽ
+dĩ_nhiên
+hình_như
+tất_nhiên
+
+# --- ABILITY / PERMISSION MODALITY --------------------------------------
+có_thể
+không_thể
+được_không

@@ -1,0 +1,11 @@
+kind,label,mean_ms,median_ms,p95_ms,p99_ms,min_ms,max_ms,stdev_ms,n_queries,repeat_per_query,n_measurements,top_k,serving_bytes,tdv_analysis_bytes,total_bytes,reduction_vs_baseline,meets_30_percent_reduction_target,meets_mean_target_ms,meets_p95_target_ms,tokenizer_status,qrels_status,official_eligible
+configuration,C1,0.993621,1.04955,1.9923099999999998,2.491805,0.0484,5.9277,0.6490664760169023,20,100,2000,10,9621765,0,9621765,0.0,False,,,official,pending_human_annotation,False
+configuration,C2,0.46317169999999996,0.4149,1.0335299999999996,1.352601,0.0467,3.8873,0.3365453977090015,20,100,2000,10,6987156,0,6987156,0.2738176415657626,False,,,official,pending_human_annotation,False
+configuration,C3,0.77187525,0.7149,1.7370499999999993,2.400344,0.0525,5.0688,0.5751464513603796,20,100,2000,10,8748327,0,8748327,0.09077731580432488,False,,,official,pending_human_annotation,False
+configuration,C4,0.48730955,0.35660000000000003,1.354955,1.765758,0.0174,3.1302,0.4326941482199609,20,100,2000,10,6542944,1834419,8377363,0.31998505471709193,True,,,official,pending_human_annotation,False
+latency_only,C4_fallback,0.5029062,0.385,1.226205,1.625132,0.0539,5.7499,0.4027964700708784,20,100,2000,10,,,,,,True,True,official,pending_human_annotation,False
+bundle,C1,,,,,,,,,,,,9621765,0,9621765,0.0,False,,,,pending_human_annotation,
+bundle,C2,,,,,,,,,,,,6987156,0,6987156,0.2738176415657626,False,,,,pending_human_annotation,
+bundle,C3,,,,,,,,,,,,8748327,0,8748327,0.09077731580432488,False,,,,pending_human_annotation,
+bundle,C4,,,,,,,,,,,,6542944,1834419,8377363,0.31998505471709193,True,,,,pending_human_annotation,
+bundle,C4_with_fallback,,,,,,,,,,,,15291271,1834419,17125690,-0.5892376294785832,False,,,,pending_human_annotation,

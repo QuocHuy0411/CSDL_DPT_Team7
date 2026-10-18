@@ -1,0 +1,248 @@
+{
+  "schema_version": 1,
+  "corpus_sha256": "f42acebb1ac34084e859f378243145a3f8e981869350edb41a3dc27e86320fa7",
+  "frozen": true,
+  "notes": {
+    "evidence": "evidence_doc_ids are authoring support: each cited article was read and genuinely answers the information need in the query. They are NOT relevance judgments.",
+    "relevance": "relevance labels exist only in data/ground_truth/qrels.json and start as pending_human_annotation.",
+    "category": "the category labels the evidence topic; it never stands in for a per-query relevance judgment.",
+    "types": {
+      "short": "keyword style, one or two concepts",
+      "long": "natural language question with full context",
+      "negation": "contains a negation or an exclusion that preprocessing must keep",
+      "technical": "domain terminology from the field"
+    },
+    "verification": "every query term and every evidence id was checked against the locked corpus; a query with no supporting article was rewritten."
+  },
+  "queries": [
+    {
+      "query_id": "Q01",
+      "text": "lương tối thiểu",
+      "category": "Chính trị – Xã hội",
+      "types": [
+        "short"
+      ],
+      "evidence_doc_ids": [
+        "vn_035517f7ccc0dcab",
+        "vn_2e7e9a143583639e"
+      ]
+    },
+    {
+      "query_id": "Q02",
+      "text": "biển cấm đỗ xe ô tô ở Hà Nội mất hiệu lực thì người dân đỗ xe ở đâu",
+      "category": "Chính trị – Xã hội",
+      "types": [
+        "negation"
+      ],
+      "evidence_doc_ids": [
+        "vn_5c69a777b0381d88"
+      ]
+    },
+    {
+      "query_id": "Q03",
+      "text": "có nên tha thứ cho người vợ ngoại tình",
+      "category": "Đời sống",
+      "types": [
+        "long"
+      ],
+      "evidence_doc_ids": [
+        "vn_0a2a1fb0d0790c4b"
+      ]
+    },
+    {
+      "query_id": "Q04",
+      "text": "tâm sự gia đình",
+      "category": "Đời sống",
+      "types": [
+        "short"
+      ],
+      "evidence_doc_ids": [
+        "vn_0067b919b1e263b0"
+      ]
+    },
+    {
+      "query_id": "Q05",
+      "text": "nghiên cứu lõi băng để khám phá quy luật biến đổi khí hậu",
+      "category": "Khoa học",
+      "types": [
+        "technical"
+      ],
+      "evidence_doc_ids": [
+        "vn_07c03d0238bc272a"
+      ]
+    },
+    {
+      "query_id": "Q06",
+      "text": "Trung Quốc xây trạm không gian và Nga phóng tàu lên ISS khác nhau như thế nào",
+      "category": "Khoa học",
+      "types": [
+        "long"
+      ],
+      "evidence_doc_ids": [
+        "vn_3e72adf04f330903",
+        "vn_d7ba01490bedc1d3"
+      ]
+    },
+    {
+      "query_id": "Q07",
+      "text": "cổ phiếu",
+      "category": "Kinh doanh",
+      "types": [
+        "short"
+      ],
+      "evidence_doc_ids": [
+        "vn_786bfee6090da664",
+        "vn_7be9fa215488f893"
+      ]
+    },
+    {
+      "query_id": "Q08",
+      "text": "lãi suất cơ bản và chính sách tiền tệ của Fed ảnh hưởng thị trường ra sao",
+      "category": "Kinh doanh",
+      "types": [
+        "technical"
+      ],
+      "evidence_doc_ids": [
+        "vn_b5155fba6793e26c",
+        "vn_a926b6f949f5169f"
+      ]
+    },
+    {
+      "query_id": "Q09",
+      "text": "điều tra vụ biển thủ hơn 8,7 tỷ đồng cá độ bóng đá đã được xử lý ra sao",
+      "category": "Pháp luật",
+      "types": [
+        "long"
+      ],
+      "evidence_doc_ids": [
+        "vn_2d85b73b15e76065"
+      ]
+    },
+    {
+      "query_id": "Q10",
+      "text": "đường dây chạy án trong vụ PMU18",
+      "category": "Pháp luật",
+      "types": [
+        "technical"
+      ],
+      "evidence_doc_ids": [
+        "vn_0a848f375a669300"
+      ]
+    },
+    {
+      "query_id": "Q11",
+      "text": "ung thư",
+      "category": "Sức khỏe",
+      "types": [
+        "short"
+      ],
+      "evidence_doc_ids": [
+        "vn_d35aadb3ea30cc4c",
+        "vn_31552c1bee9b27f6"
+      ]
+    },
+    {
+      "query_id": "Q12",
+      "text": "mỡ máu cao nếu không điều trị có thể gây những biến chứng gì",
+      "category": "Sức khỏe",
+      "types": [
+        "negation"
+      ],
+      "evidence_doc_ids": [
+        "vn_2f6b7deac554edd2"
+      ]
+    },
+    {
+      "query_id": "Q13",
+      "text": "vì sao Mỹ vẫn chưa tìm thấy vũ khí cấm ở Iraq",
+      "category": "Thế giới",
+      "types": [
+        "negation"
+      ],
+      "evidence_doc_ids": [
+        "vn_0a39fb863fb9ad82"
+      ]
+    },
+    {
+      "query_id": "Q14",
+      "text": "xác nhận danh tính hài cốt lính Mỹ mất tích trong Chiến tranh Triều Tiên",
+      "category": "Thế giới",
+      "types": [
+        "technical"
+      ],
+      "evidence_doc_ids": [
+        "vn_4e464bd86de7a05e",
+        "vn_9f4e4f06d4e1315b"
+      ]
+    },
+    {
+      "query_id": "Q15",
+      "text": "vô địch",
+      "category": "Thể thao",
+      "types": [
+        "short"
+      ],
+      "evidence_doc_ids": [
+        "vn_ea81868c1fa6aa14",
+        "vn_e99a9cf17a929fd0"
+      ]
+    },
+    {
+      "query_id": "Q16",
+      "text": "Việt Nam đăng cai một vòng bảng Tiger Cup 2004 và các trận chung kết diễn ra thế nào",
+      "category": "Thể thao",
+      "types": [
+        "long"
+      ],
+      "evidence_doc_ids": [
+        "vn_30a24278045c6e5c",
+        "vn_0e5283a87489dcf9"
+      ]
+    },
+    {
+      "query_id": "Q17",
+      "text": "cảnh nóng và trang phục hở trong phim truyền hình Việt Nam gây tranh luận như thế nào",
+      "category": "Văn hóa",
+      "types": [
+        "long"
+      ],
+      "evidence_doc_ids": [
+        "vn_c36c4a29786fc3e9"
+      ]
+    },
+    {
+      "query_id": "Q18",
+      "text": "ca khúc và chương trình biểu diễn âm nhạc của nghệ sĩ",
+      "category": "Văn hóa",
+      "types": [
+        "technical"
+      ],
+      "evidence_doc_ids": [
+        "vn_054684dcd6dfdb52"
+      ]
+    },
+    {
+      "query_id": "Q19",
+      "text": "virus máy tính đánh cắp mật khẩu Windows và cách phòng tránh",
+      "category": "Vi tính",
+      "types": [
+        "technical"
+      ],
+      "evidence_doc_ids": [
+        "vn_7113d542246c51a1",
+        "vn_b6b40126ef489d45"
+      ]
+    },
+    {
+      "query_id": "Q20",
+      "text": "dịch vụ phần mềm và thông tin di động được doanh nghiệp cung cấp cho khách hàng ra sao",
+      "category": "Vi tính",
+      "types": [
+        "long"
+      ],
+      "evidence_doc_ids": [
+        "vn_30c013c590e26378"
+      ]
+    }
+  ]
+}
