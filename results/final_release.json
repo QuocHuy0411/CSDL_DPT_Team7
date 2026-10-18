@@ -1,0 +1,186 @@
+{
+  "schema_version": 1,
+  "release_date": "2026-10-18",
+  "report": "report/Bao_Cao_Nghiem_Thu_De_Tai_8_Team7_6_Chuong.docx",
+  "sha256": {
+    "report/Bao_Cao_Nghiem_Thu_De_Tai_8_Team7_6_Chuong.docx": "3227b8ab411519a901832b0e18f0ca933d0fa4fd174470f9193fca136e3b0cd9",
+    "data/corpus.jsonl": "f42acebb1ac34084e859f378243145a3f8e981869350edb41a3dc27e86320fa7",
+    "data/queries.json": "a46100f23d937133a82d709b4b45ded5dcc0125520fe59ead647644e58be692e",
+    "data/ground_truth/mm/qrels.json": "3aa9f4a7b8410570ac60b01149cf891ae6e8a94d74f367e4f068c560d257e346",
+    "data/gold/segmentation_sample.jsonl": "37112c076cc9e54e335b2f0930a42dc6cbd672908994ac3ac7189bcf1fd59fb3",
+    "data/gold/segmentation_labels.jsonl": "993d3320faab9315306b9bb896aba76b8f5ead7702327bf8b2190e211a114169",
+    "results/ablation/summary.csv": "ef049d49e03b767ebfa5de24c52394481c6f9051ab6bd29ebfe0aae2a5fddd83",
+    "results/segmentation/evaluation.json": "24483df1437c47f6d133b478d2afb4710f7bd2ee81d00394d6c34e528b946bb6",
+    "results/latency/latency.json": "666f49ce0b9ff09197a3a2419187ca68ec60293aa8ac898644fb90f64b517d1a"
+  },
+  "annotation_scope": "Final labels for this report; pooled relevance and no complete independent second segmentation annotation.",
+  "relevance_decisions": [
+    {
+      "query_id": "Q03",
+      "doc_id": "vn_706ae3e191d963a8",
+      "final_grade": 1,
+      "assessor": "Lê Đình Bảo",
+      "reason": "nội dung gần với câu truy vấn \"có nên tha thứ cho người vợ ngoại tình\" nhưng ở nội dung gốc giống như là một lời khuyên cho một người vợ trước người chồng phản bội hơn"
+    },
+    {
+      "query_id": "Q04",
+      "doc_id": "vn_10288e4d8ae0d55b",
+      "final_grade": 2,
+      "assessor": "Lê Đình Bảo",
+      "reason": "Bài viết trực tiếp chia sẻ và tư vấn về mâu thuẫn hôn nhân, quan hệ vợ chồng và gia đình."
+    },
+    {
+      "query_id": "Q08",
+      "doc_id": "vn_a51c84de855dc95c",
+      "final_grade": 0,
+      "assessor": "Lê Đình Bảo",
+      "reason": "nội dung không liên quan tới lãi suất cơ bản và chính sách tiền tệ của Fed"
+    },
+    {
+      "query_id": "Q10",
+      "doc_id": "vn_a7ab1dbd1332334b",
+      "final_grade": 2,
+      "assessor": "Lê Đình Bảo",
+      "reason": "nội dung liên quan trực tiếp"
+    },
+    {
+      "query_id": "Q16",
+      "doc_id": "vn_cbe182ef26813cda",
+      "final_grade": 0,
+      "assessor": "Lê Đình Bảo",
+      "reason": "nội dung đề cập đến việc đặt vé chứ không đề cập đến các trận chung kết diễn ra như nào"
+    },
+    {
+      "query_id": "Q18",
+      "doc_id": "vn_161f379098b8499f",
+      "final_grade": 2,
+      "assessor": "Lê Đình Bảo",
+      "reason": "Bài viết mô tả liveshow “Nắng lên”, các ca khúc và phần biểu diễn của Thanh Lam."
+    },
+    {
+      "query_id": "Q19",
+      "doc_id": "vn_dfcce0e16a08fae9",
+      "final_grade": 1,
+      "assessor": "Lê Đình Bảo",
+      "reason": "Phần hồi âm hướng dẫn kiểm tra virus, dùng antivirus và cập nhật Windows, nhưng không đề cập đánh cắp mật khẩu."
+    },
+    {
+      "query_id": "Q20",
+      "doc_id": "vn_2a683b464546fcd2",
+      "final_grade": 0,
+      "assessor": "Lê Đình Bảo",
+      "reason": "nội dung không liên quan"
+    }
+  ],
+  "segmentation_decisions": [
+    {
+      "sample_id": "SG010",
+      "sentence_sha256": "3fe72a8d4d35e971e5549906ffdaf8c5ee03317233679838281c171da55bfdf3",
+      "tokens": [
+        "còn",
+        "với",
+        "chủ_đề",
+        "mỹ_thuật",
+        "nếu",
+        "là",
+        "họa_sĩ",
+        "em",
+        "sáng_tạo",
+        "vật_liệu",
+        "gì",
+        "cho",
+        "bức_tranh",
+        "sau",
+        "khi",
+        "thu_hoạch",
+        "nhà_trường",
+        "đã",
+        "có",
+        "được",
+        "những",
+        "bức_tranh",
+        "với",
+        "các",
+        "chất_liệu",
+        "độc_đáo",
+        "để",
+        "trang_trí",
+        "và"
+      ],
+      "label_status": "confirmed",
+      "assessor": "Lê Đình Bảo"
+    },
+    {
+      "sample_id": "SG053",
+      "sentence_sha256": "27e324e8e9945c26b72520791e00c6c3010eb3b14f84c0e704625a0331c6fd6f",
+      "tokens": [
+        "theo",
+        "điều_tra",
+        "của",
+        "cơ_quan",
+        "công_an",
+        "năm",
+        "phương",
+        "vicarrent",
+        "đã",
+        "nhập",
+        "ôtô",
+        "tay_lái",
+        "nghịch",
+        "từ",
+        "nga",
+        "về",
+        "việt_nam"
+      ],
+      "label_status": "confirmed",
+      "assessor": "Lê Đình Bảo"
+    },
+    {
+      "sample_id": "SG089",
+      "sentence_sha256": "aedcd9a0f139fdd21097daee11af22143bdfdbf7b0b93f61f1c856dc860b7f1d",
+      "tokens": [
+        "tổng_thống",
+        "phần_lan",
+        "tái",
+        "đắc_cử",
+        "bà",
+        "tarja",
+        "halonen",
+        "ngày",
+        "tổng_thống",
+        "phần_lan",
+        "bà",
+        "tarja",
+        "halonen",
+        "đã",
+        "giành",
+        "được",
+        "thắng_lợi",
+        "trong",
+        "cuộc",
+        "bầu_cử",
+        "tổng_thống",
+        "nhiệm_kỳ",
+        "hai",
+        "sáu_năm",
+        "với",
+        "số",
+        "phiếu",
+        "vượt",
+        "trước",
+        "ứng_cử_viên",
+        "đảng",
+        "bảo_thủ",
+        "sauli",
+        "niinisto",
+        "người",
+        "đã",
+        "chính_thức",
+        "thừa_nhận",
+        "thất_bại"
+      ],
+      "label_status": "confirmed",
+      "assessor": "Lê Đình Bảo"
+    }
+  ]
+}

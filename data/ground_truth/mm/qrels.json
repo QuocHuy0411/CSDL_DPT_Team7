@@ -29,9 +29,9 @@
     "confirmed": 669,
     "pending": 0,
     "graded_distribution": {
-      "0": 385,
-      "1": 141,
-      "2": 143
+      "0": 388,
+      "1": 135,
+      "2": 146
     }
   },
   "judgments": [
@@ -1091,9 +1091,9 @@
       "query_id": "Q03",
       "doc_id": "vn_706ae3e191d963a8",
       "category": "Đời sống",
-      "relevance": 0,
+      "relevance": 1,
       "status": "confirmed",
-      "assessor": "Team7",
+      "assessor": "Lê Đình Bảo",
       "notes": "",
       "in_m1_sample": true,
       "retrieved_by": [
@@ -1700,7 +1700,7 @@
       "category": "Đời sống",
       "relevance": 2,
       "status": "confirmed",
-      "assessor": "Team7",
+      "assessor": "Lê Đình Bảo",
       "notes": "",
       "in_m1_sample": true,
       "retrieved_by": [
@@ -3467,7 +3467,7 @@
       "category": "Kinh doanh",
       "relevance": 0,
       "status": "confirmed",
-      "assessor": "Team7",
+      "assessor": "Lê Đình Bảo",
       "notes": "",
       "in_m1_sample": true,
       "retrieved_by": [
@@ -4817,9 +4817,9 @@
       "query_id": "Q10",
       "doc_id": "vn_a7ab1dbd1332334b",
       "category": "Pháp luật",
-      "relevance": 1,
+      "relevance": 2,
       "status": "confirmed",
-      "assessor": "Team7",
+      "assessor": "Lê Đình Bảo",
       "notes": "",
       "in_m1_sample": true,
       "retrieved_by": [
@@ -7559,9 +7559,9 @@
       "query_id": "Q16",
       "doc_id": "vn_cbe182ef26813cda",
       "category": "Thể thao",
-      "relevance": 1,
+      "relevance": 0,
       "status": "confirmed",
-      "assessor": "Team7",
+      "assessor": "Lê Đình Bảo",
       "notes": "",
       "in_m1_sample": true,
       "retrieved_by": [
@@ -8692,7 +8692,7 @@
       "category": "Văn hóa",
       "relevance": 2,
       "status": "confirmed",
-      "assessor": "Team7",
+      "assessor": "Lê Đình Bảo",
       "notes": "",
       "in_m1_sample": true,
       "retrieved_by": [
@@ -9108,7 +9108,7 @@
       "category": "Vi tính",
       "relevance": 1,
       "status": "confirmed",
-      "assessor": "Team7",
+      "assessor": "Lê Đình Bảo",
       "notes": "",
       "in_m1_sample": true,
       "retrieved_by": [
@@ -9487,9 +9487,9 @@
       "query_id": "Q20",
       "doc_id": "vn_2a683b464546fcd2",
       "category": "Vi tính",
-      "relevance": 1,
+      "relevance": 0,
       "status": "confirmed",
-      "assessor": "Team7",
+      "assessor": "Lê Đình Bảo",
       "notes": "",
       "in_m1_sample": true,
       "retrieved_by": [

@@ -21,3 +21,5 @@ scratch/
 .agents/
 *.before_review*
 *.after_*
+output/report_review/
+report/~$*.docx

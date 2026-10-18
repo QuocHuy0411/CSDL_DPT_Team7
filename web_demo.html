@@ -582,13 +582,13 @@
                 </div>
                 <div class="metric-card">
                     <div class="metric-title">Độ chính xác P@10 (C3)</div>
-                    <div class="metric-value" style="color: var(--blue-link);">63.50%</div>
-                    <div class="metric-desc">MAP: 0.7768 · NDCG: 0.7977 · tạm thời</div>
+                    <div class="metric-value" style="color: var(--blue-link);">62.00%</div>
+                    <div class="metric-desc">MAP: 0.7689 · NDCG: 0.7881</div>
                 </div>
                 <div class="metric-card">
                     <div class="metric-title">F1 Tách từ (BiMM)</div>
-                    <div class="metric-value" style="color: #15803d;">96.37%</div>
-                    <div class="metric-desc">150 câu mang cờ xác nhận; gold còn câu cần duyệt</div>
+                    <div class="metric-value" style="color: #15803d;">96.19%</div>
+                    <div class="metric-desc">150 câu gold; chưa có vòng chấm độc lập đầy đủ</div>
                 </div>
                 <div class="metric-card">
                     <div class="metric-title">Nén chỉ mục C4 (TDV)</div>
@@ -598,16 +598,16 @@
             </div>
 
             <p style="font-size: 0.88rem; color: #92400e; margin: 0.75rem 0 1rem;">
-                Số đo truy xuất đã chạy lại ngày 18/10/2026 sau khi Team7 nhập 37 quyết định và sửa thêm một cặp Q16; chưa phải kết luận cuối.
-                Gold SG010, SG053, SG089 vẫn cần duyệt. Tệp tự khai chấm M1 134 cặp chưa xác minh được người thứ hai độc lập.
-                Xem docs/label_review.md và results/label_review_resolution.json; không coi đề xuất AI là nhãn người.
+                Kết quả trên corpus 2.500 bài, 20 truy vấn và 669 nhãn relevance đã chốt cho báo cáo.
+                Nhãn theo pool chưa bao phủ toàn corpus; gold chưa có vòng gán nhãn độc lập đầy đủ thứ hai.
+                Tham khảo báo cáo Word chính thức và các tệp kết quả trong results/.
             </p>
 
             <!-- Ablation Study Table -->
             <div class="section-box">
                 <h3 class="section-title"><i class="fas fa-table" style="color: var(--primary);"></i> Kết quả thực nghiệm 4 cấu hình (Ablation Study)</h3>
                 <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 0.75rem;">
-                    Số đo trên 20 query và 669 cặp mang cờ xác nhận, qrels SHA256 bắt đầu 697fafc7 (P@10, NDCG@10; MAP trên ranking đầy đủ).
+                    Số đo trên 20 query và 669 cặp mang cờ xác nhận, qrels SHA256 bắt đầu 3aa9f4a7 (P@10, NDCG@10; MAP trên ranking đầy đủ).
                     Cờ xác nhận chưa chứng minh nhãn đúng nội dung hay có hai người gán độc lập.
                 </p>
                 <table class="academic-table">
@@ -627,46 +627,46 @@
                             <td><strong>C1 (Baseline)</strong></td>
                             <td>Giữ nguyên 100% từ sau khi tách</td>
                             <td class="font-mono">9.62 MB</td>
-                            <td class="font-mono">0.994 ms</td>
-                            <td class="font-mono text-right">0.7764</td>
-                            <td class="font-mono text-right">63.50%</td>
-                            <td class="font-mono text-right">0.8012</td>
+                            <td class="font-mono">0.770 ms</td>
+                            <td class="font-mono text-right">0.7685</td>
+                            <td class="font-mono text-right">62.00%</td>
+                            <td class="font-mono text-right">0.7917</td>
                         </tr>
                         <tr>
                             <td><strong>C2 (Stoplist tĩnh)</strong></td>
                             <td>Lọc theo danh sách tĩnh 1.942 từ (xóa mất từ phủ định)</td>
                             <td class="font-mono">6.98 MB</td>
-                            <td class="font-mono">0.463 ms</td>
-                            <td class="font-mono text-right">0.7667</td>
-                            <td class="font-mono text-right">63.00%</td>
-                            <td class="font-mono text-right">0.7987</td>
+                            <td class="font-mono">0.363 ms</td>
+                            <td class="font-mono text-right">0.7585</td>
+                            <td class="font-mono text-right">61.50%</td>
+                            <td class="font-mono text-right">0.7891</td>
                         </tr>
                         <tr>
                             <td><strong>C3 (Tầng 1)</strong></td>
                             <td>Lọc hư từ ngữ pháp + Bảo vệ từ phủ định (Whitelist)</td>
                             <td class="font-mono">8.74 MB</td>
-                            <td class="font-mono">0.772 ms</td>
-                            <td class="font-mono text-right">0.7768</td>
-                            <td class="font-mono text-right">63.50%</td>
-                            <td class="font-mono text-right">0.7977</td>
+                            <td class="font-mono">0.606 ms</td>
+                            <td class="font-mono text-right">0.7689</td>
+                            <td class="font-mono text-right">62.00%</td>
+                            <td class="font-mono text-right">0.7881</td>
                         </tr>
                         <tr>
                             <td><strong>C4 (Salton TDV)</strong></td>
                             <td>Cắt tỉa các term có giá trị phân biệt âm (TDV &lt; 0)</td>
                             <td class="font-mono" style="color: #b45309; font-weight: 600;">6.54 MB (-32%)</td>
-                            <td class="font-mono">0.487 ms</td>
-                            <td class="font-mono text-right">0.6431</td>
-                            <td class="font-mono text-right">52.50%</td>
-                            <td class="font-mono text-right">0.6855</td>
+                            <td class="font-mono">0.403 ms</td>
+                            <td class="font-mono text-right">0.6385</td>
+                            <td class="font-mono text-right">51.50%</td>
+                            <td class="font-mono text-right">0.6809</td>
                         </tr>
                         <tr>
                             <td><strong>C4 + C3 (Fallback)</strong></td>
                             <td>Triển khai thực tế: Tự động dùng C3 khi C4 rỗng</td>
-                            <td class="font-mono">15.28 MB</td>
-                            <td class="font-mono">0.503 ms</td>
-                            <td class="font-mono text-right">0.7248</td>
-                            <td class="font-mono text-right">61.50%</td>
-                            <td class="font-mono text-right">0.7682</td>
+                            <td class="font-mono">15.29 MB</td>
+                            <td class="font-mono">0.415 ms</td>
+                            <td class="font-mono text-right">0.7202</td>
+                            <td class="font-mono text-right">60.50%</td>
+                            <td class="font-mono text-right">0.7611</td>
                         </tr>
                     </tbody>
                 </table>
@@ -1004,6 +1004,8 @@
 
             let hits = [];
             let elapsed = 0.772;
+            let usedConfiguration = config;
+            let fallbackUsed = false;
 
             if (IS_ONLINE) {
                 try {
@@ -1011,12 +1013,20 @@
                     if (res.ok) {
                         const data = await res.json();
                         hits = data.results || [];
-                        elapsed = data.elapsed_ms || 0.7;
+                        elapsed = data.elapsed_ms ?? 0;
+                        usedConfiguration = data.used_configuration || config;
+                        fallbackUsed = Boolean(data.fallback_used);
+                    } else {
+                        throw new Error(`HTTP ${res.status}`);
                     }
-                } catch (e) {}
+                } catch (e) {
+                    meta.textContent = 'Không thể truy vấn backend. Vui lòng kiểm tra server và chỉ mục.';
+                    list.innerHTML = '';
+                    return;
+                }
             }
 
-            if (!hits.length) {
+            if (!IS_ONLINE) {
                 hits = [
                     {
                         doc_id: 'vn_035517f7ccc0dcab',
@@ -1035,7 +1045,14 @@
                 ];
             }
 
-            meta.innerHTML = `Tìm thấy ${hits.length} kết quả (${elapsed.toFixed(3)} ms) · Cấu hình: <strong>${config}</strong> · Không gian vector TF-IDF Cosine`;
+            const sourceLabel = IS_ONLINE ? '' : '[MINH HỌA OFFLINE] ';
+            const configurationLabel = fallbackUsed ? `${config} → ${usedConfiguration} (fallback)` : usedConfiguration;
+            meta.innerHTML = `${sourceLabel}Tìm thấy ${hits.length} kết quả (${elapsed.toFixed(3)} ms) · Cấu hình: <strong>${configurationLabel}</strong> · Không gian vector TF-IDF Cosine`;
+
+            if (!hits.length) {
+                list.innerHTML = '<p style="padding: 1rem 0; color: var(--text-muted);">Không có kết quả phù hợp trong cấu hình đã chọn.</p>';
+                return;
+            }
 
             list.innerHTML = hits.map((hit, idx) => `
                 <div class="result-item">
@@ -1052,7 +1069,7 @@
                         <button class="explain-toggle-btn" style="background:#f8fafc; border-color:#cbd5e1; color:#334155;" onclick="openDocContent('${hit.doc_id}', '${encodeURIComponent(hit.title)}')">
                             <i class="fas fa-file-alt"></i> Đọc toàn bộ bài
                         </button>
-                        <button class="explain-toggle-btn" onclick="openExplain('${encodeURIComponent(query)}', '${hit.doc_id}', '${config}', '${hit.score.toFixed(6)}')">
+                        <button class="explain-toggle-btn" onclick="openExplain('${encodeURIComponent(query)}', '${hit.doc_id}', '${usedConfiguration}', '${hit.score.toFixed(6)}')">
                             <i class="fas fa-calculator"></i> Bóc tách trọng số TF-IDF
                         </button>
                     </div>
@@ -1204,7 +1221,7 @@
                 if (act === 'SINGLE') singleCount++;
                 const actBadge = actionLabels[act] || act;
                 const isMatched = step.matched ? '<span style="color:#15803d; font-weight:600;">có</span>' : '<span style="color:#94a3b8;">không</span>';
-                const dirBadge = step.direction === 'forward' ? '<span style="font-weight:600; color:#2563eb;">FORWARD</span>' : '<span style="font-weight:600; color:#7c3aed;">BACKWARD</span>';
+                const dirBadge = ['forward', 'fmm'].includes(step.direction) ? '<span style="font-weight:600; color:#2563eb;">FORWARD</span>' : '<span style="font-weight:600; color:#7c3aed;">BACKWARD</span>';
 
                 return `
                     <tr>

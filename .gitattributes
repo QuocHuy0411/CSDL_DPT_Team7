@@ -1,0 +1,10 @@
+# Preserve byte-sensitive datasets and preprocessing fingerprints on every OS.
+* whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+data/** -text
+resources/** -text
+engine/** -text
+results/** -text
+*.docx binary
+*.pdf binary
+*.png binary
+*.jpg binary

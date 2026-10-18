@@ -3,35 +3,35 @@
   "corpus_sha256": "f42acebb1ac34084e859f378243145a3f8e981869350edb41a3dc27e86320fa7",
   "sample_sha256": "37112c076cc9e54e335b2f0930a42dc6cbd672908994ac3ac7189bcf1fd59fb3",
   "n_samples": 150,
-  "gold_labels_sha256": "aef365b23bb63034ce06b20178b89353b2a973b193f1ffc74ea3d85c850d5cf0",
+  "gold_labels_sha256": "993d3320faab9315306b9bb896aba76b8f5ead7702327bf8b2190e211a114169",
   "confirmed": 150,
   "official": true,
   "metrics_status": "measured",
   "reason": null,
   "metrics": {
     "fmm": {
-      "precision": 0.9517264498826684,
-      "recall": 0.9643342391304348,
-      "f1": 0.957988864518306,
-      "correct_spans": 2839,
+      "precision": 0.9510559839088166,
+      "recall": 0.963982330954808,
+      "f1": 0.9574755315558556,
+      "correct_spans": 2837,
       "predicted_spans": 2983,
-      "gold_spans": 2944
+      "gold_spans": 2943
     },
     "bmm": {
-      "precision": 0.9560844787127053,
-      "recall": 0.96875,
-      "f1": 0.9623755694280413,
-      "correct_spans": 2852,
+      "precision": 0.9554140127388535,
+      "recall": 0.9683995922528033,
+      "f1": 0.9618629767127911,
+      "correct_spans": 2850,
       "predicted_spans": 2983,
-      "gold_spans": 2944
+      "gold_spans": 2943
     },
     "bimm": {
-      "precision": 0.9560844787127053,
-      "recall": 0.96875,
-      "f1": 0.9623755694280413,
-      "correct_spans": 2852,
+      "precision": 0.9554140127388535,
+      "recall": 0.9683995922528033,
+      "f1": 0.9618629767127911,
+      "correct_spans": 2850,
       "predicted_spans": 2983,
-      "gold_spans": 2944
+      "gold_spans": 2943
     }
   },
   "by_category": {
@@ -77,12 +77,12 @@
         "gold_spans": 285
       },
       "Thế giới": {
-        "precision": 0.9422382671480144,
-        "recall": 0.9666666666666667,
-        "f1": 0.9542961608775137,
-        "correct_spans": 261,
+        "precision": 0.9350180505415162,
+        "recall": 0.9628252788104089,
+        "f1": 0.9487179487179486,
+        "correct_spans": 259,
         "predicted_spans": 277,
-        "gold_spans": 270
+        "gold_spans": 269
       },
       "Thể thao": {
         "precision": 0.9609120521172638,
@@ -159,12 +159,12 @@
         "gold_spans": 285
       },
       "Thế giới": {
-        "precision": 0.9422382671480144,
-        "recall": 0.9666666666666667,
-        "f1": 0.9542961608775137,
-        "correct_spans": 261,
+        "precision": 0.9350180505415162,
+        "recall": 0.9628252788104089,
+        "f1": 0.9487179487179486,
+        "correct_spans": 259,
         "predicted_spans": 277,
-        "gold_spans": 270
+        "gold_spans": 269
       },
       "Thể thao": {
         "precision": 0.9609120521172638,
@@ -241,12 +241,12 @@
         "gold_spans": 285
       },
       "Thế giới": {
-        "precision": 0.9422382671480144,
-        "recall": 0.9666666666666667,
-        "f1": 0.9542961608775137,
-        "correct_spans": 261,
+        "precision": 0.9350180505415162,
+        "recall": 0.9628252788104089,
+        "f1": 0.9487179487179486,
+        "correct_spans": 259,
         "predicted_spans": 277,
-        "gold_spans": 270
+        "gold_spans": 269
       },
       "Thể thao": {
         "precision": 0.9609120521172638,

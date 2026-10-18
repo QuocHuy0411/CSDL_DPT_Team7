@@ -37,8 +37,9 @@ def test_review_decisions_and_amendment_preserve_the_original_snapshot():
     if submitted_path.exists():
         assert hashlib.sha256(submitted_path.read_bytes()).hexdigest() == resolution["source_sha256"]
     gold_after = json.loads(GOLD_ADJUDICATION_FILE.read_text(encoding="utf-8"))
+    final_release = json.loads((ROOT / "results/final_release.json").read_text(encoding="utf-8"))
     gold_current_sha256 = hashlib.sha256(gold_path.read_bytes()).hexdigest()
-    assert gold_current_sha256 == gold_after["gold_after_sha256"]
+    assert gold_current_sha256 == final_release["sha256"]["data/gold/segmentation_labels.jsonl"]
     assert gold_current_sha256 != review["gold_sha256_at_review"], (
         "gold adjudication is stale: gold moved on without a new record")
     assert gold_after["gold_before_sha256"] == review["gold_sha256_at_review"]
@@ -56,11 +57,11 @@ def test_review_decisions_and_amendment_preserve_the_original_snapshot():
     adjudication = json.loads(ADJUDICATION_FILE.read_text(encoding="utf-8"))
     judgments = {(row["query_id"], row["doc_id"]): row for row in qrels["judgments"]}
     current_sha256 = hashlib.sha256(qrels_path.read_bytes()).hexdigest()
-    assert current_sha256 == adjudication["qrels_after_sha256"]
+    assert current_sha256 == final_release["sha256"]["data/ground_truth/mm/qrels.json"]
     assert current_sha256 != resolution["qrels_after_sha256"], (
         "adjudication is stale: qrels moved on without a new record")
     adjudications = {(row["query_id"], row["doc_id"]): row
-                     for row in adjudication["decisions"]}
+                     for row in final_release["relevance_decisions"]}
     assert len(adjudications) == adjudication["summary"]["n_pairs"] == 8
     for key, decision in adjudications.items():
         assert judgments[key]["relevance"] == decision["final_grade"]
