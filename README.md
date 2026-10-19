@@ -4,7 +4,7 @@ Dự án đề tài 8, học phần Hệ cơ sở dữ liệu đa phương tiệ
 
 ## Báo cáo chính thức
 
-**Bản nộp cuối: [Bao_Cao_Nghiem_Thu_De_Tai_8_Team7_6_Chuong.docx](report/Bao_Cao_Nghiem_Thu_De_Tai_8_Team7_6_Chuong.docx).** Báo cáo gồm 32 trang A4, 6 chương, 19 bảng, 10 hình và 3 phụ lục. Các bản Word, PDF, LaTeX cũ trong repo là tài liệu lịch sử; dùng bản Word được liên kết tại đây để nộp và đối chiếu kết quả.
+**Bản nộp chính thức: [Bao_Cao_De_Tai_8.docx](report/Bao_Cao_De_Tai_8.docx) và [Bao_Cao_De_Tai_8.pdf](report/Bao_Cao_De_Tai_8.pdf).** Báo cáo gồm đầy đủ 6 chương, 20 bảng biểu, các hình ảnh thực nghiệm, trích dẫn nguồn VNTC và 3 phụ lục. Các bản Word và PDF cũ đã được dọn dẹp để tránh nhầm lẫn; sử dụng các bản báo cáo được liên kết tại đây để nộp và đối chiếu kết quả.
 
 Giảng viên: **Nguyễn Ngọc Duy**.
 
