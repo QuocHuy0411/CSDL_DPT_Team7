@@ -24,27 +24,40 @@ Giảng viên: **Nguyễn Ngọc Duy**.
 
 Corpus cố định gồm **2.500 bài thuộc 10 lĩnh vực, 250 bài/lĩnh vực**. Bộ đánh giá có **20 truy vấn, 669 nhãn relevance và 150 câu gold tách từ**. Từ điển sau làm sạch có 69.858 mục. Chỉ mục dùng tệp JSON/NPZ và ma trận thưa, không yêu cầu máy chủ cơ sở dữ liệu riêng.
 
-## Chạy trên máy nhóm
+## Hướng dẫn cài đặt và khởi chạy hệ thống
 
-Môi trường đã kiểm tra: **Python 3.13**. Tại thư mục gốc repo, chạy PowerShell:
+Hệ thống hoạt động độc lập (offline), không cần cấu hình cơ sở dữ liệu bên ngoài. Môi trường khuyến nghị: **Python 3.10+** (đã kiểm thử hoàn hảo trên Python 3.13).
+
+### 1. Khởi tạo môi trường & Cài đặt thư viện
+Tại thư mục gốc của dự án, mở terminal (PowerShell trên Windows):
 
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -X utf8 -m pip install -r requirements-dev.txt
-python -X utf8 -m scripts.build_indexes
-python -X utf8 app/server.py --port 8000
 ```
+*(Trên Linux/macOS, kích hoạt môi trường ảo bằng lệnh: `source .venv/bin/activate`)*
 
-Mở `http://localhost:8000`. Chạy backend để tìm kiếm trên dữ liệu thật; mở trực tiếp HTML chỉ cung cấp phần minh họa offline được đánh dấu rõ.
-
-Giao diện Streamlit:
+### 2. Dựng chỉ mục tìm kiếm (Bắt buộc cho lần đầu chạy)
+Kho ngữ liệu chuẩn 2.500 bài đã được lưu sẵn trong Git (`data/corpus.jsonl`). Để tối ưu dung lượng kho lưu trữ, các tệp ma trận chỉ mục không đưa lên Git. Người dùng chỉ cần chạy lệnh sau để tự động tạo lại toàn bộ 4 chỉ mục C1–C4 (chỉ mất ~10–15 giây):
 
 ```powershell
-python -X utf8 -m streamlit run app/Home.py
+python -X utf8 -m scripts.build_indexes
 ```
 
-`data/indexes/` được dựng lại từ corpus đã lưu trong Git. Dữ liệu raw và môi trường ảo không được đưa vào repo. Không cần dữ liệu raw để dựng chỉ mục và chạy tìm kiếm từ corpus cố định. Trên Linux/macOS, kích hoạt môi trường bằng `source .venv/bin/activate`.
+### 3. Trải nghiệm hệ thống
+Hệ thống cung cấp hai giao diện trực quan:
+
+- **Giao diện Web chính thức (Khuyên dùng - Nhanh, nhẹ, đầy đủ tính năng)**:
+  ```powershell
+  python -X utf8 app/server.py --port 8000
+  ```
+  Sau đó mở trình duyệt truy cập: `http://localhost:8000`. Giao diện hỗ trợ tra cứu Top-10 tài liệu, chuyển đổi 4 cấu hình C1–C4, bóc tách trọng số Cosine và kiểm tra thuật toán tách từ BiMM.
+
+- **Giao diện phân tích Streamlit (Dành cho nghiên cứu chuyên sâu)**:
+  ```powershell
+  python -X utf8 -m streamlit run app/Home.py
+  ```
 
 ## Kết quả chốt
 
